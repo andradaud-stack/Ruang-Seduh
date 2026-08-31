@@ -343,11 +343,13 @@
         <main class="content">
             <div class="table-card">
                 <span>Meja</span>
-                <strong>{{ $selectedTable->table_number }}</strong>
+                <strong>{{ $selectedTableId ? ($tableOptions[$selectedTableId] ?? 'Meja Dipilih') : '07' }}</strong>
             </div>
 
             <form action="{{ route('customer.checkout.store') }}" method="POST" id="checkoutForm">
                 @csrf
+                <input type="hidden" name="table_id" value="{{ $selectedTableId ?? old('table_id') ?? 1 }}">
+
                 <section class="payment-section">
                     <p class="section-title">Metode Bayar</p>
 

@@ -154,4 +154,32 @@ class OrdersController extends Controller
 		return back()->with('message_success', 'Orders berhasil dihapus!');
 	}
 
+	public function management(Request $request)
+	{
+		// Show only customer orders (those with pengguna_id)
+		$orders = Orders::with(['pengguna', 'tabel', 'orderItems'])
+			->whereNotNull('pengguna_id')
+			->whereIn('status', ['menunggu_konfirmasi', 'diproses', 'siap_disajikan'])
+			->orderBy('created_at', 'desc')
+			->get();
+
+		$this->log($request, 'melihat halaman manajemen status pesanan customer');
+		return view('Orders::orders_management', ['orders' => $orders]);
+	}
+
+	public function updateStatus(Request $request, Orders $orders)
+	{
+		$this->validate($request, [
+			'status' => 'required|in:menunggu_konfirmasi,diproses,siap_disajikan,selesai,dibatalkan'
+		]);
+
+		$oldStatus = $orders->status;
+		$orders->status = $request->input('status');
+		$orders->updated_by = Auth::id();
+		$orders->save();
+
+		$this->log($request, "mengubah status pesanan dari {$oldStatus} ke {$orders->status}", ['orders.id' => $orders->id]);
+		
+		return back()->with('message_success', "Status pesanan berhasil diubah menjadi " . ucfirst(str_replace('_', ' ', $orders->status)) . "!");
+	}
 }

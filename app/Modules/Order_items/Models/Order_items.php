@@ -30,7 +30,17 @@ protected $casts      = ['deleted_at' => 'datetime', 'created_at' => 'datetime',
 
 protected $table      = 'order_items';
 
-protected $fillable   = ['*'];
+protected $fillable = [
+    'order_id',
+    'menu_id',
+    'menu_name',
+    'price',
+    'qty',
+    'subtotal',
+    'created_by',
+    'updated_by',
+    'deleted_by',
+];
 
 
 

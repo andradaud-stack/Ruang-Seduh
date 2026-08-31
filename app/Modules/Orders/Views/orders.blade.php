@@ -61,15 +61,46 @@
                                     <td>{{ $no++ }}</td>
                                     <td>{{ $item->user_id }}</td>
 									<td>{{ $item->table_id }}</td>
-									<td>{{ $item->status }}</td>
-									<td>{{ $item->metode_pembayaran }}</td>
-									<td>{{ $item->status_pembayaran }}</td>
-									<td>{{ $item->total }}</td>
-									
+												<td>
+                                            @php
+                                                $statusMap = [
+                                                    'menunggu_konfirmasi' => 'Menunggu Konfirmasi',
+                                                    'diproses' => 'Diproses',
+                                                    'siap_disajikan' => 'Siap Disajikan',
+                                                    'selesai' => 'Selesai',
+                                                    'dibatalkan' => 'Dibatalkan',
+                                                ];
+                                                $nextStatus = match($item->status) {
+                                                    'menunggu_konfirmasi' => 'diproses',
+                                                    'diproses' => 'siap_disajikan',
+                                                    'siap_disajikan' => 'selesai',
+                                                    default => null,
+                                                };
+                                            @endphp
+                                            <span class="badge bg-light-secondary text-secondary">{{ $statusMap[$item->status] ?? ucfirst(str_replace('_', ' ', $item->status)) }}</span>
+                                        </td>
+												<td>{{ $item->metode_pembayaran }}</td>
+												<td>{{ $item->status_pembayaran }}</td>
+												<td>{{ $item->total }}</td>
+												
                                     <td>
-										{!! button('orders.show','', $item->id) !!}
-										{!! button('orders.edit', $title, $item->id) !!}
-                                        {!! button('orders.destroy', $title, $item->id) !!}
+                                        @if($nextStatus)
+                                            <form action="{{ route('orders.update-status', $item->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                @method('PATCH')
+                                                <input type="hidden" name="status" value="{{ $nextStatus }}">
+                                                <button type="submit" class="btn btn-sm btn-success">
+                                                    {{ $item->status === 'menunggu_konfirmasi' ? 'Konfirmasi' : ($item->status === 'diproses' ? 'Siap Disajikan' : 'Selesai') }}
+                                                </button>
+                                            </form>
+                                        @else
+                                            <span class="badge bg-success">Selesai</span>
+                                        @endif
+                                        <div class="mt-2">
+                                            {!! button('orders.show','', $item->id) !!}
+                                            {!! button('orders.edit', $title, $item->id) !!}
+                                            {!! button('orders.destroy', $title, $item->id) !!}
+                                        </div>
                                     </td>
                                 </tr>
                             @empty

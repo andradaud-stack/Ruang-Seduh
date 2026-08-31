@@ -32,7 +32,18 @@ protected $casts      = ['deleted_at' => 'datetime', 'created_at' => 'datetime',
 
 protected $table      = 'orders';
 
-protected $fillable   = ['*'];
+protected $fillable = [
+    'user_id',
+    'pengguna_id',
+    'table_id',
+    'status',
+    'metode_pembayaran',
+    'status_pembayaran',
+    'total',
+    'created_by',
+    'updated_by',
+    'deleted_by',
+];
 
 
 

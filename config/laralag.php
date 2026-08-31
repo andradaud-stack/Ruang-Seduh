@@ -5,14 +5,16 @@ return [
 							'dashboard', 'frontend', 'profile'],
 
 	'translate_action' => [
-		'index'   => 'read',
-		'show'    => 'show',
-		'create'  => 'create',
-		'store'   => 'create',
-		'edit'    => 'update',
-		'update'  => 'update',
-		'destroy' => 'delete',
-		'delete'  => 'delete'
+		'index'         => 'read',
+		'management'    => 'read',
+		'show'          => 'show',
+		'create'        => 'create',
+		'store'         => 'create',
+		'edit'          => 'update',
+		'update'        => 'update',
+		'update-status' => 'update',
+		'destroy'       => 'delete',
+		'delete'        => 'delete'
 	],
 
 	'login_using' => env('LOGIN_USING', 'email'),

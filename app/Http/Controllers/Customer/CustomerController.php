@@ -80,6 +80,29 @@ public function showRegister()
         return view('customer.order.detail', compact('order'));
     }
 
+    public function getOrderStatus(Orders $order)
+    {
+        $user = Auth::guard('customer')->user();
+
+        if ($order->pengguna_id !== $user->id) {
+            abort(404);
+        }
+
+        $statusStage = [
+            'menunggu_konfirmasi' => 0,
+            'diproses'            => 1,
+            'siap_disajikan'      => 2,
+            'selesai'             => 3,
+            'dibatalkan'          => -1,
+        ];
+
+        return response()->json([
+            'status' => $order->status,
+            'stage' => $statusStage[$order->status] ?? -1,
+            'updated_at' => $order->updated_at,
+        ]);
+    }
+
     public function editProfile()
     {
         $user = Auth::guard('customer')->user();
@@ -242,6 +265,7 @@ public function showRegister()
         }
 
         $order = Orders::create([
+            'user_id' => null,
             'pengguna_id' => Auth::guard('customer')->id(),
             'table_id' => $table->id,
             'status' => 'menunggu_konfirmasi',

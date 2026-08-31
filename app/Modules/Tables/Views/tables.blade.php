@@ -45,7 +45,7 @@
                             <tr>
                                 <th width="15">No</th>
                                 <td>Table Number</td>
-								<td>Qr Token</td>
+                                <td>QR Meja</td>
 								
                                 <th width="20%">Aksi</th>
                             </tr>
@@ -56,7 +56,10 @@
                                 <tr>
                                     <td>{{ $no++ }}</td>
                                     <td>{{ $item->table_number }}</td>
-									<td>{{ $item->qr_token }}</td>
+                                    <td>
+                                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data={{ urlencode(route('customer.table.scan', $item->qr_token)) }}" alt="QR {{ $item->table_number }}" width="90" height="90">
+                                        <div class="small text-muted mt-1">Scan untuk meja ini</div>
+                                    </td>
 									
                                     <td>
 										{!! button('tables.show','', $item->id) !!}

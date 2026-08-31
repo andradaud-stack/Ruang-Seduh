@@ -4,6 +4,7 @@ use App\Http\Controllers\Customer\CustomerAuthController;
 use App\Http\Controllers\Customer\CustomerController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/customer/table/{qrToken}', [CustomerController::class, 'scanTable'])->name('customer.table.scan');
 Route::get('/customer/home', [CustomerController::class, 'home'])->middleware('customer.auth')->name('customer.home');
 Route::get('/customer/menu/{menu}', [CustomerController::class, 'show'])->middleware('customer.auth')->name('customer.menu.show');
 Route::get('/customer/profile', [CustomerController::class, 'profile'])->middleware('customer.auth')->name('customer.profile.index');

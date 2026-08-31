@@ -36,6 +36,15 @@ public function showRegister()
         return view('customer.home', compact('categories', 'menus'));
     }
 
+    public function scanTable(string $qrToken)
+    {
+        $table = Tables::where('qr_token', $qrToken)->firstOrFail();
+
+        session(['customer_table_id' => $table->id]);
+
+        return redirect()->route('customer.home');
+    }
+
     public function show(Menus $menu)
     {
         if (! $menu->is_active) {
@@ -202,10 +211,13 @@ public function showRegister()
             $total += $item['price'] * $item['qty'];
         }
 
-        $selectedTableId = session('customer_table_id');
-        $tableOptions = Tables::orderBy('table_number')->pluck('table_number', 'id');
+        $selectedTable = Tables::find(session('customer_table_id'));
 
-        return view('customer.checkout.index', compact('cart', 'total', 'selectedTableId', 'tableOptions'));
+        if (! $selectedTable) {
+            return redirect()->route('customer.home')->with('message_error', 'Silakan scan QR meja terlebih dahulu.');
+        }
+
+        return view('customer.checkout.index', compact('cart', 'total', 'selectedTable'));
     }
 
     public function checkoutStore(Request $request)
@@ -216,12 +228,13 @@ public function showRegister()
             return redirect()->route('customer.cart.index')->with('message_error', 'Keranjang masih kosong.');
         }
 
-        $request->validate([
-            'table_id' => ['required', 'exists:tables,id'],
-            'metode_pembayaran' => ['required', 'string', 'max:50'],
-        ]);
+        $request->validate(['metode_pembayaran' => ['required', 'string', 'max:50']]);
 
-        $table = Tables::findOrFail($request->table_id);
+        $table = Tables::find(session('customer_table_id'));
+
+        if (! $table) {
+            return redirect()->route('customer.home')->with('message_error', 'Silakan scan QR meja terlebih dahulu.');
+        }
 
         $total = 0;
         foreach ($cart as $item) {

@@ -11,6 +11,7 @@ use App\Modules\Orders\Models\Orders;
 use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 
 
@@ -29,6 +30,13 @@ protected $casts      = ['deleted_at' => 'datetime', 'created_at' => 'datetime',
 protected $table      = 'tables';
 
 protected $fillable   = ['*'];
+
+protected static function booted(): void
+{
+	static::creating(function (Tables $table) {
+		$table->qr_token ??= (string) Str::uuid();
+	});
+}
 
 
 

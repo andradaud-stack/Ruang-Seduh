@@ -32,7 +32,11 @@
                     <div class="col-lg-10 offset-lg-2">
                         <div class="row kt-detail-grid">
                             <div class='col-lg-2'><p>Table Number</p></div><div class='col-lg-10'><p class='fw-bold'>{{ $tables->table_number }}</p></div>
-									<div class='col-lg-2'><p>Qr Token</p></div><div class='col-lg-10'><p class='fw-bold'>{{ $tables->qr_token }}</p></div>
+                                                                <div class='col-lg-2'><p>QR Meja</p></div>
+                                                                <div class='col-lg-10'>
+                                                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data={{ urlencode(route('customer.table.scan', $tables->qr_token)) }}" alt="QR {{ $tables->table_number }}" width="240" height="240">
+                                                                    <p class="small text-muted mt-2 mb-0">{{ route('customer.table.scan', $tables->qr_token) }}</p>
+                                                                </div>
 									
                         </div>
                     </div>

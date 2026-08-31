@@ -38,7 +38,6 @@ class TablesController extends Controller
 		
 		$data['forms'] = array(
 			'table_number' => ['label' => 'Table Number', 'type' => 'text', 'value' => old("table_number"), 'required' => true],
-			'qr_token' => ['label' => 'Qr Token', 'type' => 'text', 'value' => old("qr_token"), 'required' => true],
 			
 		);
 
@@ -50,13 +49,11 @@ class TablesController extends Controller
 	{
 		$this->validate($request, [
 			'table_number' => 'required',
-			'qr_token' => 'required',
 			
 		]);
 
 		$tables = new Tables();
 		$tables->table_number = $request->input("table_number");
-		$tables->qr_token = $request->input("qr_token");
 		
 		$tables->created_by = Auth::id();
 		$tables->save();
@@ -82,7 +79,6 @@ class TablesController extends Controller
 		
 		$data['forms'] = array(
 			'table_number' => ['label' => 'Table Number', 'type' => 'text', 'value' => $tables->table_number, 'required' => true, 'id' => 'table_number'],
-			'qr_token' => ['label' => 'Qr Token', 'type' => 'text', 'value' => $tables->qr_token, 'required' => true, 'id' => 'qr_token'],
 			
 		);
 
@@ -95,13 +91,11 @@ class TablesController extends Controller
 	{
 		$this->validate($request, [
 			'table_number' => 'required',
-			'qr_token' => 'required',
 			
 		]);
 
 		$tables = Tables::find($id);
 		$tables->table_number = $request->input("table_number");
-		$tables->qr_token = $request->input("qr_token");
 		
 		$tables->updated_by = Auth::id();
 		$tables->save();

@@ -9,7 +9,9 @@ use Illuminate\Validation\Rules\Password;
 use App\Http\Controllers\Controller;
 use App\Modules\Categories\Models\Categories;
 use App\Modules\Menus\Models\Menus;
+use App\Modules\Order_items\Models\Order_items;
 use App\Modules\Orders\Models\Orders;
+use App\Modules\Tables\Models\Tables;
 
 class CustomerController extends Controller
 {
@@ -185,5 +187,70 @@ public function showRegister()
         session(['cart' => $cart]);
 
         return back();
+    }
+
+    public function checkoutIndex()
+    {
+        $cart = session('cart', []);
+
+        if (empty($cart)) {
+            return redirect()->route('customer.cart.index')->with('message_error', 'Keranjang masih kosong.');
+        }
+
+        $total = 0;
+        foreach ($cart as $item) {
+            $total += $item['price'] * $item['qty'];
+        }
+
+        $selectedTableId = session('customer_table_id');
+        $tableOptions = Tables::orderBy('table_number')->pluck('table_number', 'id');
+
+        return view('customer.checkout.index', compact('cart', 'total', 'selectedTableId', 'tableOptions'));
+    }
+
+    public function checkoutStore(Request $request)
+    {
+        $cart = session('cart', []);
+
+        if (empty($cart)) {
+            return redirect()->route('customer.cart.index')->with('message_error', 'Keranjang masih kosong.');
+        }
+
+        $request->validate([
+            'table_id' => ['required', 'exists:tables,id'],
+            'metode_pembayaran' => ['required', 'string', 'max:50'],
+        ]);
+
+        $table = Tables::findOrFail($request->table_id);
+
+        $total = 0;
+        foreach ($cart as $item) {
+            $total += $item['price'] * $item['qty'];
+        }
+
+        $order = Orders::create([
+            'pengguna_id' => Auth::guard('customer')->id(),
+            'table_id' => $table->id,
+            'status' => 'menunggu_konfirmasi',
+            'metode_pembayaran' => $request->metode_pembayaran,
+            'status_pembayaran' => 'belum_bayar',
+            'total' => $total,
+        ]);
+
+        foreach ($cart as $item) {
+            Order_items::create([
+                'order_id' => $order->id,
+                'menu_id' => $item['menu_id'],
+                'menu_name' => $item['name'],
+                'price' => $item['price'],
+                'qty' => $item['qty'],
+                'subtotal' => $item['price'] * $item['qty'],
+            ]);
+        }
+
+        session()->forget('cart');
+        session(['customer_table_id' => $table->id]);
+
+        return redirect()->route('customer.order.detail', $order->id)->with('message_success', 'Pesanan berhasil dibuat.');
     }
 }

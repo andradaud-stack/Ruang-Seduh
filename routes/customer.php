@@ -17,6 +17,8 @@ Route::put('/customer/profile', [CustomerController::class, 'updateProfile'])->m
 Route::get('/customer/cart', [CustomerController::class, 'cartIndex'])->middleware('customer.auth')->name('customer.cart.index');
 Route::post('/customer/cart', [CustomerController::class, 'addToCart'])->middleware('customer.auth')->name('customer.cart.add');
 Route::post('/customer/cart/update', [CustomerController::class, 'cartUpdate'])->middleware('customer.auth')->name('customer.cart.update');
+Route::get('/customer/checkout', [CustomerController::class, 'checkoutIndex'])->middleware('customer.auth')->name('customer.checkout');
+Route::post('/customer/checkout', [CustomerController::class, 'checkoutStore'])->middleware('customer.auth')->name('customer.checkout.store');
 
 Route::middleware('customer.guest')->group(function () {
     Route::get('/', [CustomerController::class,'index'])->name('frontend.index');

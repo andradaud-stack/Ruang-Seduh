@@ -1,11 +1,11 @@
 <?php
 
-// Tampilkan error agar tidak menghasilkan layar 500 kosong
+// Tampilkan error jika terjadi kegagalan serverless
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
-// Pastikan direktori writable untuk cache, session, views, dan logs di serverless /tmp
+// Pastikan direktori writable di serverless /tmp
 $storageDirs = [
     '/tmp/storage',
     '/tmp/storage/app',
@@ -16,6 +16,8 @@ $storageDirs = [
     '/tmp/storage/framework/views',
     '/tmp/storage/framework/sessions',
     '/tmp/storage/logs',
+    '/tmp/bootstrap',
+    '/tmp/bootstrap/cache',
 ];
 
 foreach ($storageDirs as $dir) {
@@ -24,6 +26,7 @@ foreach ($storageDirs as $dir) {
     }
 }
 
+// Arahkan storage path Laravel ke /tmp
 putenv('LARAVEL_STORAGE_PATH=/tmp/storage');
 $_ENV['LARAVEL_STORAGE_PATH'] = '/tmp/storage';
 $_SERVER['LARAVEL_STORAGE_PATH'] = '/tmp/storage';
@@ -31,6 +34,28 @@ $_SERVER['LARAVEL_STORAGE_PATH'] = '/tmp/storage';
 putenv('VIEW_COMPILED_PATH=/tmp/storage/framework/views');
 $_ENV['VIEW_COMPILED_PATH'] = '/tmp/storage/framework/views';
 $_SERVER['VIEW_COMPILED_PATH'] = '/tmp/storage/framework/views';
+
+// Arahkan bootstrap manifest cache ke /tmp agar tidak gagal saat menulis di Vercel (read-only)
+$bootstrapCache = '/tmp/bootstrap/cache';
+putenv('APP_SERVICES_CACHE=' . $bootstrapCache . '/services.php');
+$_ENV['APP_SERVICES_CACHE'] = $bootstrapCache . '/services.php';
+$_SERVER['APP_SERVICES_CACHE'] = $bootstrapCache . '/services.php';
+
+putenv('APP_PACKAGES_CACHE=' . $bootstrapCache . '/packages.php');
+$_ENV['APP_PACKAGES_CACHE'] = $bootstrapCache . '/packages.php';
+$_SERVER['APP_PACKAGES_CACHE'] = $bootstrapCache . '/packages.php';
+
+putenv('APP_CONFIG_CACHE=' . $bootstrapCache . '/config.php');
+$_ENV['APP_CONFIG_CACHE'] = $bootstrapCache . '/config.php';
+$_SERVER['APP_CONFIG_CACHE'] = $bootstrapCache . '/config.php';
+
+putenv('APP_ROUTES_CACHE=' . $bootstrapCache . '/routes-v7.php');
+$_ENV['APP_ROUTES_CACHE'] = $bootstrapCache . '/routes-v7.php';
+$_SERVER['APP_ROUTES_CACHE'] = $bootstrapCache . '/routes-v7.php';
+
+putenv('APP_EVENTS_CACHE=' . $bootstrapCache . '/events.php');
+$_ENV['APP_EVENTS_CACHE'] = $bootstrapCache . '/events.php';
+$_SERVER['APP_EVENTS_CACHE'] = $bootstrapCache . '/events.php';
 
 if (empty($_ENV['LOG_CHANNEL'])) {
     putenv('LOG_CHANNEL=stderr');
@@ -50,7 +75,7 @@ if (empty($_ENV['SESSION_DRIVER'])) {
     $_SERVER['SESSION_DRIVER'] = 'cookie';
 }
 
-// Tangkap shutdown error (jika terjadi fatal error sebelum response)
+// Tangkap shutdown error (jika fatal error terjadi sebelum response)
 register_shutdown_function(function () {
     $error = error_get_last();
     if ($error !== null && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {

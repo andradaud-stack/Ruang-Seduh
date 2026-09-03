@@ -206,7 +206,13 @@
 
     @php
       $variants = $menu->variants ?? ['Ice', 'Hot'];
+      $stockReady = (int) ($menu->stock ?? 0) > 0;
     @endphp
+
+    <div class="pd-section-title" style="margin-bottom:8px;">Stok</div>
+    <div style="font-size:14px; color: {{ $stockReady ? '#dfe9d8' : '#f2b9b5' }}; font-weight:700; margin-bottom:20px;">
+      {{ $stockReady ? 'Tersedia: ' . $menu->stock . ' item' : 'Stok habis' }}
+    </div>
 
     @if(!empty($variants))
     <div class="pd-section-title">Pilih Varian</div>
@@ -226,7 +232,7 @@
         @if(!empty($variants))
           <input type="hidden" name="variant" id="pdVariantInput" value="{{ $variants[0] }}">
         @endif
-        <button type="submit" class="pd-cta">Tambah ke keranjang</button>
+        <button type="submit" class="pd-cta" {{ $stockReady ? '' : 'disabled' }}> {{ $stockReady ? 'Tambah ke keranjang' : 'Stok habis' }} </button>
       </form>
     @else
       <button type="button" class="pd-cta" disabled>Tambah ke keranjang</button>

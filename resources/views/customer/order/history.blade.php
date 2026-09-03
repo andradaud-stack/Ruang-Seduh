@@ -157,17 +157,15 @@
     cursor:pointer;
     text-decoration:none;
   }
-  .nav-item svg{
-    width:22px; height:22px;
-    stroke:var(--dark);
-    stroke-width:1.8;
-    fill:none;
+  .nav-item img{
+    width:22px;
+    height:22px;
+    object-fit:contain;
   }
   .nav-item.active{
     background: var(--accent);
     box-shadow: 0 0 0 4px #ffffff, 0 4px 10px rgba(224,122,95,0.5);
   }
-  .nav-item.active svg{ stroke:#ffffff; }
 
   @media (min-width:700px){
     .oh-wrap{ margin-top:24px; margin-bottom:24px; border-radius:28px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,.4); }
@@ -229,31 +227,16 @@
   <div class="navbar-wrap">
     <nav class="navbar">
       <a href="{{ route('customer.profile.index') }}" class="nav-item" aria-label="Profil">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+        <img src="{{ asset('assets/images/navbar/profile.png') }}" alt="" aria-hidden="true">
       </a>
       <a href="{{ route('customer.order.history') }}" class="nav-item active" aria-label="Riwayat">
-        <svg viewBox="0 0 24 24">
-          <rect x="5" y="4" width="14" height="17" rx="2"/>
-          <path d="M9 2h6v3H9z"/>
-          <circle cx="12" cy="14" r="3.2"/>
-          <path d="M12 12.5v1.7l1.2 1"/>
-        </svg>
+        <img src="{{ asset('assets/images/navbar/history.png') }}" alt="" aria-hidden="true">
       </a>
       <a href="{{ route('customer.home') }}" class="nav-item" aria-label="Beranda">
-        <svg viewBox="0 0 24 24"><path d="M4 11 12 4l8 7"/><path d="M6 10v9h12v-9"/></svg>
+        <img src="{{ asset('assets/images/navbar/home.png') }}" alt="" aria-hidden="true">
       </a>
-      <a href="{{ Route::has('customer.cart.index') ? route('customer.cart.index') : '#' }}" class="nav-item" aria-label="Keranjang">
-        <svg viewBox="0 0 24 24">
-          <path d="M4 5h2l1.5 10.5A2 2 0 0 0 9.5 17h7a2 2 0 0 0 2-1.7L20 8H6.2"/>
-          <circle cx="10" cy="20" r="1.2" fill="currentColor" stroke="none"/>
-          <circle cx="17" cy="20" r="1.2" fill="currentColor" stroke="none"/>
-        </svg>
-      </a>
-      <a href="{{ Route::has('customer.notification') ? route('customer.notification') : '#' }}" class="nav-item" aria-label="Notifikasi">
-        <svg viewBox="0 0 24 24">
-          <path d="M6 10a6 6 0 0 1 12 0c0 4 1.5 5.5 1.5 5.5H4.5S6 14 6 10Z"/>
-          <path d="M10 19a2 2 0 0 0 4 0"/>
-        </svg>
+      <a href="{{ route('customer.cart.index') }}" class="nav-item" aria-label="Keranjang">
+        <img src="{{ asset('assets/images/navbar/cart.png') }}" alt="" aria-hidden="true">
       </a>
     </nav>
   </div>

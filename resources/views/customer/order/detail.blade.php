@@ -353,7 +353,7 @@
       </div>
       <div class="od-info-row">
         <span class="od-info-label">Tanggal</span>
-        <span class="od-info-value">{{ $order->created_at->diffForHumans() }}</span>
+        <span class="od-info-value">{{ $order->created_at->format('d M Y, H:i') }}</span>
       </div>
     </div>
 

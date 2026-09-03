@@ -343,7 +343,7 @@
         <main class="content">
             <div class="table-card">
                 <span>Meja</span>
-                <strong>{{ $selectedTableId ? ($tableOptions[$selectedTableId] ?? 'Meja Dipilih') : '07' }}</strong>
+                <strong>{{ $selectedTableId ? ($tableOptions[$selectedTableId] ?? 'Meja Dipilih') : '' }}</strong>
             </div>
 
             <form action="{{ route('customer.checkout.store') }}" method="POST" id="checkoutForm">

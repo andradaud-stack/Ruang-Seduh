@@ -4,13 +4,16 @@ namespace App\Http\Controllers\Customer;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rules\Password;
 use App\Http\Controllers\Controller;
 use App\Modules\Categories\Models\Categories;
 use App\Modules\Menus\Models\Menus;
 use App\Modules\Order_items\Models\Order_items;
 use App\Modules\Orders\Models\Orders;
+use App\Modules\Pengguna\Models\Pengguna;
 use App\Modules\Tables\Models\Tables;
 
 class CustomerController extends Controller
@@ -112,6 +115,7 @@ public function showRegister()
 
     public function updateProfile(Request $request)
     {
+        /** @var Pengguna $user */
         $user = Auth::guard('customer')->user();
 
         $request->validate([
@@ -133,6 +137,7 @@ public function showRegister()
             'password' => ['required', 'confirmed', Password::min(8)],
         ]);
 
+        /** @var Pengguna $user */
         $user = Auth::guard('customer')->user();
 
         if (! $user || ! Hash::check($request->current_password, $user->password)) {
@@ -179,7 +184,7 @@ public function showRegister()
 
         $menu = Menus::findOrFail($request->product_id);
 
-        if (! $menu->is_active) {
+        if (! $menu->is_active || $menu->stock <= 0) {
             return back()->with('message_error', 'Menu sedang tidak tersedia.');
         }
 
@@ -187,6 +192,11 @@ public function showRegister()
         $key     = $menu->id . '_' . ($variant ?? 'DEFAULT');
 
         $cart = session('cart', []);
+        $currentQty = $cart[$key]['qty'] ?? 0;
+
+        if ($currentQty + 1 > $menu->stock) {
+            return back()->with('message_error', 'Stok tidak cukup untuk menambah item ini.');
+        }
 
         if (isset($cart[$key])) {
             $cart[$key]['qty']++;
@@ -213,6 +223,12 @@ public function showRegister()
         $cart = session('cart', []);
 
         if (isset($cart[$key])) {
+            $menu = Menus::find($cart[$key]['menu_id']);
+
+            if ($menu && $qty > $menu->stock) {
+                return back()->with('message_error', 'Stok menu tidak cukup untuk kuantitas yang diminta.');
+            }
+
             if ($qty <= 0) {
                 unset($cart[$key]);
             } else {
@@ -257,6 +273,14 @@ public function showRegister()
             'metode_pembayaran' => ['required', 'string', 'max:50'],
         ]);
 
+        foreach ($cart as $item) {
+            $menu = Menus::find($item['menu_id']);
+
+            if (! $menu || $menu->stock <= 0 || $item['qty'] > $menu->stock) {
+                return redirect()->route('customer.cart.index')->with('message_error', 'Stok untuk ' . ($item['name'] ?? 'menu') . ' tidak cukup.');
+            }
+        }
+
         $table = Tables::findOrFail($request->table_id);
 
         $total = 0;
@@ -264,26 +288,40 @@ public function showRegister()
             $total += $item['price'] * $item['qty'];
         }
 
-        $order = Orders::create([
-            'user_id' => null,
-            'pengguna_id' => Auth::guard('customer')->id(),
-            'table_id' => $table->id,
-            'status' => 'menunggu_konfirmasi',
-            'metode_pembayaran' => $request->metode_pembayaran,
-            'status_pembayaran' => 'belum_bayar',
-            'total' => $total,
-        ]);
+        $order = DB::transaction(function () use ($cart, $request, $table, $total) {
+            $orderData = [
+                'pengguna_id' => Auth::guard('customer')->id(),
+                'table_id' => $table->id,
+                'status' => 'menunggu_konfirmasi',
+                'metode_pembayaran' => $request->metode_pembayaran,
+                'status_pembayaran' => 'belum_bayar',
+                'total' => $total,
+            ];
 
-        foreach ($cart as $item) {
-            Order_items::create([
-                'order_id' => $order->id,
-                'menu_id' => $item['menu_id'],
-                'menu_name' => $item['name'],
-                'price' => $item['price'],
-                'qty' => $item['qty'],
-                'subtotal' => $item['price'] * $item['qty'],
-            ]);
-        }
+            if (Schema::hasColumn('orders', 'user_id')) {
+                $orderData['user_id'] = null;
+            }
+
+            $order = Orders::create($orderData);
+
+            foreach ($cart as $item) {
+                Order_items::create([
+                    'order_id' => $order->id,
+                    'menu_id' => $item['menu_id'],
+                    'menu_name' => $item['name'],
+                    'price' => $item['price'],
+                    'qty' => $item['qty'],
+                    'subtotal' => $item['price'] * $item['qty'],
+                ]);
+
+                $menu = Menus::find($item['menu_id']);
+                if ($menu) {
+                    $menu->decrement('stock', $item['qty']);
+                }
+            }
+
+            return $order;
+        });
 
         session()->forget('cart');
         session(['customer_table_id' => $table->id]);

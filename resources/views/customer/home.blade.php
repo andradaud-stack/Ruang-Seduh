@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Ruang Seduh</title>
+<link rel="icon" href="{{ asset('assets/images/LOGO_RUANG_SEDUH(putih).png') }}" type="image/png">
 <style>
   :root{
     --bg: #f7f3ee;
@@ -53,8 +54,8 @@
     font-weight:700;
     color:var(--dark);
   }
-  .logo{ 
-    width: 60px; 
+  .logo{
+    width: 130px;
     height: auto; 
     object-fit: contain; 
   }
@@ -173,6 +174,12 @@
     font-weight:700;
     color:var(--price);
   }
+  .card-stock{
+    margin-top:6px;
+    font-size:11px;
+    font-weight:600;
+    color:var(--muted);
+  }
 
   /* Bottom Navbar (floating, fixed to real screen) */
   .navbar-wrap{
@@ -208,19 +215,16 @@
     cursor:pointer;
     transition: background .2s ease, transform .15s ease;
   }
-  .nav-item svg{
-    width:22px; height:22px;
-    stroke:var(--dark);
-    stroke-width:1.8;
-    fill:none;
-    transition: stroke .2s ease;
+  .nav-item img{
+    width:22px;
+    height:22px;
+    object-fit:contain;
   }
   .nav-item:hover{ transform: translateY(-2px); }
   .nav-item.active{
     background: var(--accent);
     box-shadow: 0 0 0 4px #ffffff, 0 4px 10px rgba(224,122,95,0.5);
   }
-  .nav-item.active svg{ stroke:#ffffff; }
 
   @media (max-width: 340px){
     .content{ padding:20px 14px 120px; }
@@ -229,7 +233,7 @@
     .grid{ gap:10px; }
     .card-name{ font-size:13px; }
     .nav-item{ padding:7px; }
-    .nav-item svg{ width:19px; height:19px; }
+    .nav-item img{ width:25px; height:25px; }
   }
 
   @media (min-width: 700px){
@@ -285,6 +289,7 @@
             <div class="card-tag">{{ $menu->kategori->name ?? 'Lainnya' }}</div>
             <div class="card-name">{{ $menu->name }}</div>
             <div class="card-price">{{ $menu->hargaRupiah() }}</div>
+            <div class="card-stock">Stok: {{ $menu->stock }}</div>
           </div>
         </a>
       @empty
@@ -297,32 +302,17 @@
   <div class="navbar-wrap">
   <nav class="navbar" id="navbar">
     <a href="{{ route('customer.profile.index') }}" class="nav-item" data-name="profile" aria-label="Profil">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+      <img src="{{ asset('assets/images/navbar/profile.png') }}" alt="" aria-hidden="true">
     </a>
     <a href="{{ route('customer.order.history') }}" class="nav-item" data-name="history" aria-label="Riwayat">
-      <svg viewBox="0 0 24 24">
-        <rect x="5" y="4" width="14" height="17" rx="2"/>
-        <path d="M9 2h6v3H9z"/>
-        <circle cx="12" cy="14" r="3.2"/>
-        <path d="M12 12.5v1.7l1.2 1"/>
-      </svg>
+      <img src="{{ asset('assets/images/navbar/history.png') }}" alt="" aria-hidden="true">
     </a>
     <a href="{{ route('customer.home') }}" class="nav-item active" data-name="home" aria-label="Beranda">
-      <svg viewBox="0 0 24 24"><path d="M4 11 12 4l8 7"/><path d="M6 10v9h12v-9"/></svg>
+      <img src="{{ asset('assets/images/navbar/home.png') }}" alt="" aria-hidden="true">
     </a>
-    <button class="nav-item" data-name="cart" aria-label="Keranjang">
-      <svg viewBox="0 0 24 24">
-        <path d="M4 5h2l1.5 10.5A2 2 0 0 0 9.5 17h7a2 2 0 0 0 2-1.7L20 8H6.2"/>
-        <circle cx="10" cy="20" r="1.2" fill="currentColor" stroke="none"/>
-        <circle cx="17" cy="20" r="1.2" fill="currentColor" stroke="none"/>
-      </svg>
-    </button>
-    <button class="nav-item" data-name="notification" aria-label="Notifikasi">
-      <svg viewBox="0 0 24 24">
-        <path d="M6 10a6 6 0 0 1 12 0c0 4 1.5 5.5 1.5 5.5H4.5S6 14 6 10Z"/>
-        <path d="M10 19a2 2 0 0 0 4 0"/>
-      </svg>
-    </button>
+    <a href="{{ route('customer.cart.index') }}" class="nav-item" data-name="cart" aria-label="Keranjang">
+      <img src="{{ asset('assets/images/navbar/cart.png') }}" alt="" aria-hidden="true">
+    </a>
   </nav>
   </div>
 </div>

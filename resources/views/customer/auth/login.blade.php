@@ -244,11 +244,17 @@
 
                 <label>Password</label>
 
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Masukkan password"
-                    required>
+                <div class="password-field">
+                    <input
+                        type="password"
+                        name="password"
+                        id="login-password"
+                        placeholder="Masukkan password"
+                        required>
+                    <button type="button" class="password-toggle" data-target="login-password" aria-label="Lihat password">
+                        <img src="{{ asset('assets/images/toggle/view.png') }}" alt="" aria-hidden="true">
+                    </button>
+                </div>
 
             </div>
 
@@ -275,6 +281,52 @@
     </div>
 
 </div>
+
+<style>
+    .password-field {
+        position: relative;
+    }
+
+    .password-field input {
+        width: 100%;
+        padding-right: 44px;
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        border: none;
+        background: transparent;
+        color: #6b7280;
+        cursor: pointer;
+        font-size: 16px;
+        line-height: 1;
+        padding: 4px;
+    }
+
+    .password-toggle img {
+        display: block;
+        width: 20px;
+        height: 20px;
+        object-fit: contain;
+    }
+</style>
+
+<script>
+    document.querySelectorAll('.password-toggle').forEach(function(button) {
+        button.addEventListener('click', function () {
+            const target = document.getElementById(this.dataset.target);
+            const isPassword = target.type === 'password';
+            target.type = isPassword ? 'text' : 'password';
+            this.querySelector('img').src = isPassword
+                ? "{{ asset('assets/images/toggle/hide.png') }}"
+                : "{{ asset('assets/images/toggle/view.png') }}";
+            this.setAttribute('aria-label', isPassword ? 'Sembunyikan password' : 'Lihat password');
+        });
+    });
+</script>
 
 </body>
 </html>

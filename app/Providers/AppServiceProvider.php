@@ -6,7 +6,7 @@ use App\Listeners\LogSuccessfullLogin;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +23,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if (config('app.env') === 'production' || isset($_SERVER['VERCEL']) || isset($_ENV['VERCEL']) || app()->environment('production')) {
+            URL::forceScheme('https');
+        }
+
         Event::listen(Login::class, LogSuccessfullLogin::class);
 
         Paginator::useBootstrapFive();

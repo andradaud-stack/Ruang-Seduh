@@ -25,7 +25,7 @@ class MenusController extends Controller
 
 	public function index(Request $request)
 	{
-		$query = Menus::query();
+		$query = Menus::with('kategori');
 		if($request->has('search')){
 			$search = $request->get('search');
 			// $query->where('name', 'like', "%$search%");
@@ -89,6 +89,7 @@ class MenusController extends Controller
 
 	public function show(Request $request, Menus $menus)
 	{
+		$menus->load('kategori');
 		$data['menus'] = $menus;
 
 		$text = 'melihat detail '.$this->title;//.' '.$menus->what;

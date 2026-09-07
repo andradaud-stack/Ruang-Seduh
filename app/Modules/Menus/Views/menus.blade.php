@@ -44,7 +44,7 @@
                         <thead>
                             <tr>
                                 <th width="15">No</th>
-                                <td>Category Id</td>
+                                <td>Category</td>
 								<td>Name</td>
 								<td>Description</td>
 								<td>Image</td>
@@ -60,7 +60,7 @@
                             @forelse ($data as $item)
                                 <tr>
                                     <td>{{ $no++ }}</td>
-                                    <td>{{ $item->category_id }}</td>
+                                    <td>{{ $item->kategori->name ?? '-' }}</td>
 									<td>{{ $item->name }}</td>
 									<td>{{ $item->description }}</td>
 									<td>

@@ -45,6 +45,55 @@
             </div>
         </div>
 
+        <div class="card kt-table-card mt-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Order Items</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive col-12">
+                    <table class="table table-hover align-middle kt-table" id="tableOrderItems">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Menu</th>
+                                <th>Quantity</th>
+                                <th>Harga</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($orders->orderItems as $item)
+                                <tr>
+                                    <td>{{ $item->order_id }}</td>
+                                    <td>
+                                        <span class="fw-bold">{{ $item->menu_name ?? ($item->menu->name ?? '-') }}</span>
+                                        @if(!empty($item->notes))
+                                            <div class="text-muted small fst-italic">{{ $item->notes }}</div>
+                                        @endif
+                                    </td>
+                                    <td>{{ $item->qty }}</td>
+                                    <td>Rp {{ number_format($item->price, 0, ',', '.') }}</td>
+                                    <td class="fw-bold">Rp {{ number_format($item->subtotal ?: ($item->price * $item->qty), 0, ',', '.') }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted py-3"><i>Tidak ada item pada pesanan ini.</i></td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                        @if($orders->orderItems && $orders->orderItems->count() > 0)
+                            <tfoot>
+                                <tr>
+                                    <th colspan="4" class="text-end fw-bold">Total:</th>
+                                    <th class="fw-bold text-primary">Rp {{ number_format($orders->total, 0, ',', '.') }}</th>
+                                </tr>
+                            </tfoot>
+                        @endif
+                    </table>
+                </div>
+            </div>
+        </div>
+
     </section>
 </div>
 @endsection

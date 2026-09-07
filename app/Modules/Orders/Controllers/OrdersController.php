@@ -84,6 +84,7 @@ class OrdersController extends Controller
 
 	public function show(Request $request, Orders $orders)
 	{
+		$orders->load('orderItems');
 		$data['orders'] = $orders;
 
 		$text = 'melihat detail '.$this->title;//.' '.$orders->what;

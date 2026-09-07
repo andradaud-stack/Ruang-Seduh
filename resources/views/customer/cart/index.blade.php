@@ -138,8 +138,18 @@
         <div class="ck-item-info">
           <div class="ck-item-name">{{ $item['name'] }}</div>
           <div class="ck-item-price">Rp {{ number_format($item['price'], 0, ',', '.') }}</div>
-          @if($item['variant'])
-            <div class="ck-item-variant">{{ $item['variant'] }}</div>
+          @php
+            $details = [];
+            if (!empty($item['variant'])) $details[] = $item['variant'];
+            if (!empty($item['sugar_level'])) $details[] = $item['sugar_level'];
+          @endphp
+          @if(!empty($details))
+            <div class="ck-item-variant">{{ implode(' · ', $details) }}</div>
+          @endif
+          @if(!empty($item['notes']))
+            <div class="ck-item-notes" style="font-size:11.5px; color:#b45309; margin-top:3px; font-style:italic;">
+              Catatan: "{{ $item['notes'] }}"
+            </div>
           @endif
         </div>
         <div class="ck-item-side">

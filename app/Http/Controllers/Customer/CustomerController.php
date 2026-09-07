@@ -15,6 +15,7 @@ use App\Modules\Order_items\Models\Order_items;
 use App\Modules\Orders\Models\Orders;
 use App\Modules\Pengguna\Models\Pengguna;
 use App\Modules\Tables\Models\Tables;
+use App\Models\ServiceCall;
 
 class CustomerController extends Controller
 {
@@ -33,10 +34,12 @@ public function showRegister()
 
     public function home()
     {
-        $categories = Categories::orderBy('name')->get();
-        $menus      = Menus::active()->with('kategori')->get();
+        $categories  = Categories::orderBy('name')->get();
+        $menus       = Menus::active()->with('kategori')->get();
+        $tables      = Tables::orderBy('table_number')->get();
+        $activeTable = session('customer_table_id') ? Tables::find(session('customer_table_id')) : null;
 
-        return view('customer.home', compact('categories', 'menus'));
+        return view('customer.home', compact('categories', 'menus', 'tables', 'activeTable'));
     }
 
     public function show(Menus $menu)
@@ -178,8 +181,10 @@ public function showRegister()
     public function addToCart(Request $request)
     {
         $request->validate([
-            'product_id' => ['required', 'integer', 'exists:menus,id'],
-            'variant'    => ['nullable', 'string', 'max:50'],
+            'product_id'  => ['required', 'integer', 'exists:menus,id'],
+            'variant'     => ['nullable', 'string', 'max:50'],
+            'sugar_level' => ['nullable', 'string', 'max:50'],
+            'notes'       => ['nullable', 'string', 'max:255'],
         ]);
 
         $menu = Menus::findOrFail($request->product_id);
@@ -188,8 +193,12 @@ public function showRegister()
             return back()->with('message_error', 'Menu sedang tidak tersedia.');
         }
 
-        $variant = $request->input('variant');
-        $key     = $menu->id . '_' . ($variant ?? 'DEFAULT');
+        $variant    = $request->input('variant');
+        $sugarLevel = $request->input('sugar_level');
+        $notes      = $request->input('notes');
+
+        $customSignature = ($variant ?? 'DEFAULT') . '|' . ($sugarLevel ?? 'DEFAULT') . '|' . trim($notes ?? '');
+        $key = $menu->id . '_' . substr(md5($customSignature), 0, 8);
 
         $cart = session('cart', []);
         $currentQty = $cart[$key]['qty'] ?? 0;
@@ -202,12 +211,14 @@ public function showRegister()
             $cart[$key]['qty']++;
         } else {
             $cart[$key] = [
-                'menu_id' => $menu->id,
-                'name'    => $menu->name,
-                'variant' => $variant,
-                'price'   => $menu->price,
-                'qty'     => 1,
-                'image'   => $menu->image,
+                'menu_id'     => $menu->id,
+                'name'        => $menu->name,
+                'variant'     => $variant,
+                'sugar_level' => $sugarLevel,
+                'notes'       => $notes,
+                'price'       => $menu->price,
+                'qty'         => 1,
+                'image'       => $menu->image,
             ];
         }
 
@@ -269,8 +280,9 @@ public function showRegister()
         }
 
         $request->validate([
-            'table_id' => ['required', 'exists:tables,id'],
+            'table_id'          => ['required', 'exists:tables,id'],
             'metode_pembayaran' => ['required', 'string', 'max:50'],
+            'catatan'           => ['nullable', 'string', 'max:500'],
         ]);
 
         foreach ($cart as $item) {
@@ -290,12 +302,13 @@ public function showRegister()
 
         $order = DB::transaction(function () use ($cart, $request, $table, $total) {
             $orderData = [
-                'pengguna_id' => Auth::guard('customer')->id(),
-                'table_id' => $table->id,
-                'status' => 'menunggu_konfirmasi',
+                'pengguna_id'       => Auth::guard('customer')->id(),
+                'table_id'          => $table->id,
+                'status'            => 'menunggu_konfirmasi',
                 'metode_pembayaran' => $request->metode_pembayaran,
                 'status_pembayaran' => 'belum_bayar',
-                'total' => $total,
+                'total'             => $total,
+                'catatan'           => $request->input('catatan'),
             ];
 
             if (Schema::hasColumn('orders', 'user_id')) {
@@ -305,13 +318,26 @@ public function showRegister()
             $order = Orders::create($orderData);
 
             foreach ($cart as $item) {
+                $notesParts = [];
+                if (!empty($item['variant'])) {
+                    $notesParts[] = $item['variant'];
+                }
+                if (!empty($item['sugar_level'])) {
+                    $notesParts[] = 'Gula: ' . $item['sugar_level'];
+                }
+                if (!empty($item['notes'])) {
+                    $notesParts[] = 'Catatan: ' . $item['notes'];
+                }
+                $itemNotes = !empty($notesParts) ? implode(' · ', $notesParts) : null;
+
                 Order_items::create([
-                    'order_id' => $order->id,
-                    'menu_id' => $item['menu_id'],
+                    'order_id'  => $order->id,
+                    'menu_id'   => $item['menu_id'],
                     'menu_name' => $item['name'],
-                    'price' => $item['price'],
-                    'qty' => $item['qty'],
-                    'subtotal' => $item['price'] * $item['qty'],
+                    'price'     => $item['price'],
+                    'qty'       => $item['qty'],
+                    'subtotal'  => $item['price'] * $item['qty'],
+                    'notes'     => $itemNotes,
                 ]);
 
                 $menu = Menus::find($item['menu_id']);
@@ -327,5 +353,54 @@ public function showRegister()
         session(['customer_table_id' => $table->id]);
 
         return redirect()->route('customer.order.detail', $order->id)->with('message_success', 'Pesanan berhasil dibuat.');
+    }
+
+    public function callWaiter(Request $request)
+    {
+        $request->validate([
+            'table_id' => ['nullable', 'exists:tables,id'],
+            'type'     => ['required', 'string', 'in:panggil_pelayan,minta_bill,minta_air,bersih_meja,lainnya'],
+            'notes'    => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $tableId = $request->table_id ?? session('customer_table_id');
+        if (!$tableId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Silakan scan QR meja terlebih dahulu atau pilih nomor meja.',
+            ], 422);
+        }
+
+        $call = ServiceCall::create([
+            'table_id'    => $tableId,
+            'pengguna_id' => Auth::guard('customer')->id(),
+            'type'        => $request->type,
+            'notes'       => $request->notes,
+            'status'      => 'pending',
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Panggilan berhasil dikirim! Pelayan kami segera menuju ke mejamu.',
+            'data'    => $call,
+        ]);
+    }
+
+    public function getCallWaiterStatus()
+    {
+        $tableId = session('customer_table_id');
+        if (!$tableId) {
+            return response()->json(['active' => false]);
+        }
+
+        $call = ServiceCall::where('table_id', $tableId)
+            ->where('status', 'pending')
+            ->latest()
+            ->first();
+
+        return response()->json([
+            'active' => (bool) $call,
+            'call'   => $call,
+        ]);
     }
 }

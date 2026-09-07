@@ -19,6 +19,7 @@ class Order_items extends Model
         'price',
         'qty',
         'subtotal',
+        'notes',
         'created_by',
         'updated_by',
         'deleted_by',

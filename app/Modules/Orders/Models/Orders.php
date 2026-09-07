@@ -20,6 +20,7 @@ class Orders extends Model
         'metode_pembayaran',
         'status_pembayaran',
         'total',
+        'catatan',
         'created_by',
         'updated_by',
         'deleted_by',

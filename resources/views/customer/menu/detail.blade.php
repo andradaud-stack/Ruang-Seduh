@@ -139,6 +139,48 @@
     color:var(--accent);
   }
 
+  .pd-sugar{
+    flex:1;
+    text-align:center;
+    padding:10px 4px;
+    border-radius:999px;
+    font-size:12.5px;
+    font-weight:700;
+    cursor:pointer;
+    border:2px solid transparent;
+    background:#2b211d;
+    color:#fff;
+    transition: all .15s ease;
+  }
+  .pd-sugar.active{
+    background:transparent;
+    border-color:var(--accent);
+    color:var(--accent);
+  }
+
+  .pd-notes-wrap{
+    margin-bottom:28px;
+  }
+  .pd-notes-input{
+    width:100%;
+    padding:13px 16px;
+    border-radius:14px;
+    background:#2b211d;
+    border:1px solid rgba(255,255,255,0.1);
+    color:#fff;
+    font-size:13.5px;
+    outline:none;
+    box-sizing:border-box;
+    transition: border-color .15s ease;
+  }
+  .pd-notes-input:focus{
+    border-color:var(--accent);
+  }
+  .pd-notes-input::placeholder{
+    color:var(--muted);
+    font-size:12.5px;
+  }
+
   .pd-cta{
     width:100%;
     border:none;
@@ -214,17 +256,6 @@
       {{ $stockReady ? 'Tersedia: ' . $menu->stock . ' item' : 'Stok habis' }}
     </div>
 
-    @if(!empty($variants))
-    <div class="pd-section-title">Pilih Varian</div>
-    <div class="pd-variants" id="pdVariants">
-      @foreach($variants as $i => $variant)
-        <div class="pd-variant {{ $i === 0 ? 'active' : '' }}" data-variant="{{ $variant }}">
-          {{ $variant }}
-        </div>
-      @endforeach
-    </div>
-    @endif
-
     @if(Route::has('customer.cart.add'))
       <form action="{{ route('customer.cart.add') }}" method="POST" id="pdForm">
         @csrf
@@ -232,7 +263,34 @@
         @if(!empty($variants))
           <input type="hidden" name="variant" id="pdVariantInput" value="{{ $variants[0] }}">
         @endif
-        <button type="submit" class="pd-cta" {{ $stockReady ? '' : 'disabled' }}> {{ $stockReady ? 'Tambah ke keranjang' : 'Stok habis' }} </button>
+        <input type="hidden" name="sugar_level" id="pdSugarInput" value="Normal (100%)">
+
+        @if(!empty($variants))
+          <div class="pd-section-title">Pilihan Suhu</div>
+          <div class="pd-variants" id="pdVariants">
+            @foreach($variants as $i => $variant)
+              <div class="pd-variant {{ $i === 0 ? 'active' : '' }}" data-variant="{{ $variant }}">
+                {{ $variant }}
+              </div>
+            @endforeach
+          </div>
+        @endif
+
+        <div class="pd-section-title">Tingkat Kemanisan (Sugar Level)</div>
+        <div class="pd-variants" id="pdSugars">
+          <div class="pd-sugar active" data-sugar="Normal (100%)">Normal (100%)</div>
+          <div class="pd-sugar" data-sugar="Less Sugar (50%)">Less (50%)</div>
+          <div class="pd-sugar" data-sugar="No Sugar (0%)">No Sugar (0%)</div>
+        </div>
+
+        <div class="pd-section-title">Catatan untuk Barista (Opsional)</div>
+        <div class="pd-notes-wrap">
+          <input type="text" name="notes" class="pd-notes-input" placeholder="Contoh: Es sedikit, jangan terlalu manis..." maxlength="150">
+        </div>
+
+        <button type="submit" class="pd-cta" {{ $stockReady ? '' : 'disabled' }}>
+          {{ $stockReady ? 'Tambah ke keranjang' : 'Stok habis' }}
+        </button>
       </form>
     @else
       <button type="button" class="pd-cta" disabled>Tambah ke keranjang</button>
@@ -242,13 +300,25 @@
 </div>
 
 <script>
+  // Variant selection (Ice/Hot)
   const variantEls = document.querySelectorAll('.pd-variant');
   const variantInput = document.getElementById('pdVariantInput');
-  variantEls.forEach(el=>{
-    el.addEventListener('click', ()=>{
-      variantEls.forEach(v=>v.classList.remove('active'));
+  variantEls.forEach(el => {
+    el.addEventListener('click', () => {
+      variantEls.forEach(v => v.classList.remove('active'));
       el.classList.add('active');
       if (variantInput) variantInput.value = el.dataset.variant;
+    });
+  });
+
+  // Sugar level selection
+  const sugarEls = document.querySelectorAll('.pd-sugar');
+  const sugarInput = document.getElementById('pdSugarInput');
+  sugarEls.forEach(el => {
+    el.addEventListener('click', () => {
+      sugarEls.forEach(s => s.classList.remove('active'));
+      el.classList.add('active');
+      if (sugarInput) sugarInput.value = el.dataset.sugar;
     });
   });
 </script>

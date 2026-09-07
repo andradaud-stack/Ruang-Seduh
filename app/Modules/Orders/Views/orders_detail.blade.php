@@ -36,7 +36,8 @@
 									<div class='col-lg-2'><p>Status</p></div><div class='col-lg-10'><p class='fw-bold'>{{ $orders->status }}</p></div>
 									<div class='col-lg-2'><p>Metode Pembayaran</p></div><div class='col-lg-10'><p class='fw-bold'>{{ $orders->metode_pembayaran }}</p></div>
 									<div class='col-lg-2'><p>Status Pembayaran</p></div><div class='col-lg-10'><p class='fw-bold'>{{ $orders->status_pembayaran }}</p></div>
-									<div class='col-lg-2'><p>Total</p></div><div class='col-lg-10'><p class='fw-bold'>{{ $orders->total }}</p></div>
+									<div class='col-lg-2'><p>Total</p></div><div class='col-lg-10'><p class='fw-bold'>Rp {{ number_format($orders->total, 0, ',', '.') }}</p></div>
+									<div class='col-lg-2'><p>Catatan Pesanan</p></div><div class='col-lg-10'><p class='fw-bold text-muted'>{{ $orders->catatan ?? '-' }}</p></div>
 									
                         </div>
                     </div>

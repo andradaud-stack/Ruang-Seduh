@@ -392,12 +392,25 @@
                                 <span>x{{ $item['qty'] }}</span>
                             </div>
                             <div class="product-price">Rp {{ number_format($item['price'], 0, ',', '.') }}</div>
-                            @if(!empty($item['variant']))
-                                <div class="product-variant">{{ $item['variant'] }}</div>
+                            @php
+                                $itemDetails = [];
+                                if (!empty($item['variant'])) $itemDetails[] = $item['variant'];
+                                if (!empty($item['sugar_level'])) $itemDetails[] = $item['sugar_level'];
+                            @endphp
+                            @if(!empty($itemDetails))
+                                <div class="product-variant">{{ implode(' · ', $itemDetails) }}</div>
+                            @endif
+                            @if(!empty($item['notes']))
+                                <div class="product-variant" style="color:#b45309; font-style:italic;">"{{ $item['notes'] }}"</div>
                             @endif
                         </div>
                     </section>
                 @endforeach
+
+                <section style="margin-top:20px;">
+                    <p class="section-title" style="margin-bottom:8px;">Catatan untuk Dapur/Barista (Opsional)</p>
+                    <textarea name="catatan" placeholder="Contoh: Tolong disajikan bersamaan..." rows="2" style="width:100%; border-radius:14px; border:1px solid #e0d0c0; background:#fff; padding:12px 14px; font-size:13.5px; font-family:inherit; outline:none; resize:none; box-sizing:border-box;"></textarea>
+                </section>
 
                 <div class="total-card">
                     <span>Total Bayar</span>

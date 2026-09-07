@@ -360,10 +360,24 @@
     <!-- Order Items -->
     @foreach($order->orderItems as $item)
       <div class="od-item-card">
-        <div class="od-item-name">{{ $item->menu_name }} <span class="od-item-qty">x{{ $item->qty }}</span></div>
-        <div class="od-item-price">Rp {{ number_format($item->price, 0, ',', '.') }}</div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div>
+            <div class="od-item-name">{{ $item->menu_name }} <span class="od-item-qty">x{{ $item->qty }}</span></div>
+            @if(!empty($item->notes))
+              <div style="font-size:12px; color:#b45309; margin-top:4px;">{{ $item->notes }}</div>
+            @endif
+          </div>
+          <div class="od-item-price" style="font-weight:700; color:var(--dark);">Rp {{ number_format($item->price * $item->qty, 0, ',', '.') }}</div>
+        </div>
       </div>
     @endforeach
+
+    @if(!empty($order->catatan))
+      <div class="od-info-card" style="background:#fff8f0; border:1px dashed #e8c8a8;">
+        <div class="od-info-label" style="color:#8a532d; font-weight:700; margin-bottom:4px;">Catatan Pesanan:</div>
+        <div style="font-size:13.5px; color:#5c3a21;">"{{ $order->catatan }}"</div>
+      </div>
+    @endif
 
     <!-- Total -->
     <div class="od-total-card">

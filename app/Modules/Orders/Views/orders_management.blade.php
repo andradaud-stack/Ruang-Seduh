@@ -133,6 +133,48 @@
 
     <section class="section">
         @include('include.flash')
+
+        @if(isset($serviceCalls) && $serviceCalls->count() > 0)
+            <div class="card mb-4" style="border: 2px solid #e07a5f; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(224, 122, 95, 0.15);">
+                <div class="card-header d-flex justify-content-between align-items-center" style="background: #fdf5ee; border-bottom: 1px solid #fed7aa;">
+                    <h5 class="card-title mb-0" style="color: #9a3412;">
+                        🛎️ Panggilan Meja Menunggu
+                        <span class="badge bg-danger ms-2" style="font-size: 0.85rem;">{{ $serviceCalls->count() }} Permintaan</span>
+                    </h5>
+                    <small class="text-muted">Perlu respon staf / pelayan segera</small>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        @foreach($serviceCalls as $call)
+                            <div class="list-group-item d-flex justify-content-between align-items-center py-3 px-4">
+                                <div>
+                                    <div class="d-flex align-items-center gap-2 mb-1">
+                                        <span class="badge bg-dark" style="font-size: 0.9rem;">Meja {{ $call->tabel->table_number ?? $call->table_id }}</span>
+                                        <strong style="color: #c2410c; font-size: 0.95rem;">{{ $call->type_label }}</strong>
+                                        <small class="text-muted">({{ $call->created_at->diffForHumans() }})</small>
+                                    </div>
+                                    <div class="text-muted small">
+                                        Pelanggan: <strong>{{ $call->pengguna->name ?? 'Tamu' }}</strong>
+                                        @if(!empty($call->notes))
+                                            &bull; Catatan: <span class="fst-italic text-dark fw-semibold">"{{ $call->notes }}"</span>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div>
+                                    <form action="{{ route('orders.resolve-service-call', $call->id) }}" method="POST">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="btn btn-sm btn-success fw-bold px-3 py-2" onclick="return confirm('Tandai panggilan meja ini selesai dilayani?')">
+                                            ✓ Layani & Selesai
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        @endif
         
         <div class="card">
             <div class="card-header">
@@ -176,12 +218,25 @@
                             <strong>Menu yang dipesan:</strong>
                             @forelse($order->orderItems as $item)
                                 <div class="order-item">
-                                    <span>{{ $item->menu_name }} x{{ $item->qty }}</span>
+                                    <div>
+                                        <span>{{ $item->menu_name }} x{{ $item->qty }}</span>
+                                        @if(!empty($item->notes))
+                                            <div style="font-size: 0.8rem; color: #b45309; font-style: italic; margin-top: 2px;">
+                                                🔍 {{ $item->notes }}
+                                            </div>
+                                        @endif
+                                    </div>
                                     <span>Rp {{ number_format($item->price * $item->qty, 0, ',', '.') }}</span>
                                 </div>
                             @empty
                                 <p class="mb-0">Tidak ada item</p>
                             @endforelse
+
+                            @if(!empty($order->catatan))
+                                <div style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed #cbd5e1; font-size: 0.85rem; color: #475569;">
+                                    <strong>Catatan Pesanan:</strong> "{{ $order->catatan }}"
+                                </div>
+                            @endif
                         </div>
 
                         <div class="order-actions">

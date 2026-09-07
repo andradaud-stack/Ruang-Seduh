@@ -163,8 +163,27 @@ class OrdersController extends Controller
 			->orderBy('created_at', 'desc')
 			->get();
 
+		$serviceCalls = \App\Models\ServiceCall::with(['tabel', 'pengguna'])
+			->where('status', 'pending')
+			->orderBy('created_at', 'asc')
+			->get();
+
 		$this->log($request, 'melihat halaman manajemen status pesanan customer');
-		return view('Orders::orders_management', ['orders' => $orders]);
+		return view('Orders::orders_management', [
+			'orders'       => $orders,
+			'serviceCalls' => $serviceCalls,
+		]);
+	}
+
+	public function resolveServiceCall(Request $request, \App\Models\ServiceCall $serviceCall)
+	{
+		$serviceCall->status = 'selesai';
+		$serviceCall->save();
+
+		$tableNumber = $serviceCall->tabel->table_number ?? $serviceCall->table_id;
+		$this->log($request, "menyelesaikan panggilan meja #{$tableNumber}", ['service_calls.id' => $serviceCall->id]);
+
+		return back()->with('message_success', "Panggilan dari Meja {$tableNumber} telah ditandai selesai.");
 	}
 
 	public function updateStatus(Request $request, Orders $orders)

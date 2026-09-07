@@ -13,5 +13,6 @@ Route::controller(OrdersController::class)->middleware(['web','auth'])->name('or
 	Route::get('/orders/{orders}/edit', 'edit')->name('edit');
 	Route::patch('/orders/{orders}', 'update')->name('update');
 	Route::patch('/orders/{orders}/status', 'updateStatus')->name('update-status');
+	Route::patch('/orders/service-call/{serviceCall}/resolve', 'resolveServiceCall')->name('resolve-service-call');
 	Route::get('/orders/{orders}/delete', 'destroy')->name('destroy');
 });

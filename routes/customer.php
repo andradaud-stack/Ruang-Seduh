@@ -22,6 +22,8 @@ Route::post('/customer/cart', [CustomerController::class, 'addToCart'])->middlew
 Route::post('/customer/cart/update', [CustomerController::class, 'cartUpdate'])->middleware('customer.auth')->name('customer.cart.update');
 Route::get('/customer/checkout', [CustomerController::class, 'checkoutIndex'])->middleware('customer.auth')->name('customer.checkout');
 Route::post('/customer/checkout', [CustomerController::class, 'checkoutStore'])->middleware('customer.auth')->name('customer.checkout.store');
+Route::post('/customer/call-waiter', [CustomerController::class, 'callWaiter'])->middleware('customer.auth')->name('customer.call-waiter');
+Route::get('/customer/call-waiter/status', [CustomerController::class, 'getCallWaiterStatus'])->middleware('customer.auth')->name('customer.call-waiter.status');
 
 Route::middleware('customer.guest')->group(function () {
     Route::get('/', [CustomerController::class,'index'])->name('frontend.index');

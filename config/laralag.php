@@ -13,6 +13,7 @@ return [
 		'edit'          => 'update',
 		'update'        => 'update',
 		'update-status' => 'update',
+		'resolve-service-call' => 'update',
 		'destroy'       => 'delete',
 		'delete'        => 'delete'
 	],

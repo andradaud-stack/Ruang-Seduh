@@ -20,9 +20,9 @@ class AuthorizeRequest
      */
     public function handle(Request $request, Closure $next)
     {
-        $route = $request->route()->getName();
+        $route = $request->route() ? $request->route()->getName() : null;
 
-        if (str_starts_with($route, 'customer.')) {
+        if (!$route || str_starts_with($route, 'customer.') || str_starts_with($route, 'auth.google.') || str_starts_with($route, 'frontend.')) {
             return $next($request);
         }
 

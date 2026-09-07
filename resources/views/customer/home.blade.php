@@ -277,7 +277,7 @@
         <a href="{{ route('customer.menu.show', $menu->id) }}" class="card" data-name="{{ $menu->name }}" data-category="{{ $menu->kategori->name ?? '' }}">
           <div class="thumb">
             @if($menu->image)
-              <img src="{{ asset('storage/' . $menu->image) }}" alt="{{ $menu->name }}" style="width:100%;height:100%;object-fit:cover;">
+              <img src="{{ asset('storage/' . $menu->image) }}" alt="{{ $menu->name }}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;">
             @else
               {!! $index % 2 === 0
                 ? '<svg viewBox="0 0 200 140" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="g'. $index .'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3d2b1f"/><stop offset="1" stop-color="#1a1210"/></linearGradient></defs><rect width="200" height="140" fill="#1a1210"/><ellipse cx="100" cy="70" rx="55" ry="38" fill="url(#g'. $index .')"/><rect x="60" y="60" width="80" height="55" rx="8" fill="#3d2b1f" opacity="0.9"/><ellipse cx="100" cy="60" rx="40" ry="14" fill="#1a1210" opacity="0.85"/></svg>'

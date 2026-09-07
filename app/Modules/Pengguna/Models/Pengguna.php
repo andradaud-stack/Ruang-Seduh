@@ -18,7 +18,7 @@ class Pengguna extends Authenticatable
         'password'   => 'hashed',
     ];
     protected $table      = 'pengguna';
-    protected $fillable   = ['name', 'email', 'password', 'role'];
+    protected $fillable   = ['name', 'email', 'google_id', 'avatar', 'password', 'role'];
 
     public function orders()
     {

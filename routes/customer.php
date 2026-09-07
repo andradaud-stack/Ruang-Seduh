@@ -29,6 +29,9 @@ Route::middleware('customer.guest')->group(function () {
     Route::post('customer/login', [CustomerAuthController::class, 'login'])->name('customer.login.store');
     Route::get('customer/register', [CustomerAuthController::class, 'showRegister'])->name('customer.register');
     Route::post('customer/register', [CustomerAuthController::class, 'register'])->name('customer.register.store');
+
+    Route::get('auth/google/redirect', [CustomerAuthController::class, 'redirectToGoogle'])->name('auth.google.redirect');
+    Route::get('auth/google/callback', [CustomerAuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 });
 
 Route::middleware('customer.auth')->group(function () {

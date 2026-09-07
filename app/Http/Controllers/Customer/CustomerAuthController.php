@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Laravel\Socialite\Facades\Socialite;
 
 class CustomerAuthController extends Controller
 {
@@ -88,5 +89,57 @@ class CustomerAuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('customer.login');
+    }
+
+    /**
+     * Redirect the user to the Google authentication page.
+     */
+    public function redirectToGoogle(): RedirectResponse
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    /**
+     * Obtain the user information from Google.
+     */
+    public function handleGoogleCallback(): RedirectResponse
+    {
+        try {
+            $googleUser = Socialite::driver('google')->user();
+        } catch (\Throwable $e) {
+            return redirect()->route('customer.login')->withErrors([
+                'email' => 'Gagal masuk dengan Google. Silakan coba lagi.',
+            ]);
+        }
+
+        $pengguna = Pengguna::withTrashed()
+            ->where('google_id', $googleUser->getId())
+            ->orWhere('email', $googleUser->getEmail())
+            ->first();
+
+        if ($pengguna) {
+            if ($pengguna->trashed()) {
+                $pengguna->restore();
+            }
+
+            $pengguna->update([
+                'name'      => $googleUser->getName() ?: $pengguna->name,
+                'google_id' => $googleUser->getId(),
+                'avatar'    => $googleUser->getAvatar(),
+            ]);
+        } else {
+            $pengguna = Pengguna::create([
+                'name'      => $googleUser->getName() ?: 'Customer',
+                'email'     => $googleUser->getEmail(),
+                'google_id' => $googleUser->getId(),
+                'avatar'    => $googleUser->getAvatar(),
+                'role'      => 'user',
+            ]);
+        }
+
+        Auth::guard('customer')->login($pengguna, true);
+        request()->session()->regenerate();
+
+        return redirect()->intended(route('customer.home'));
     }
 }

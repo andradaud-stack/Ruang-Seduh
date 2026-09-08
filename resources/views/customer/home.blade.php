@@ -1,866 +1,1464 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Ruang Seduh - Order Online</title>
-<link rel="icon" href="{{ asset('assets/images/LOGO_RUANG_SEDUH(putih).png') }}" type="image/png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg-page: #f8fafc;
-    --card-bg: #ffffff;
-    --border: #e2e8f0;
-    --border-hover: #cbd5e1;
-    --text-primary: #0f172a;
-    --text-secondary: #475569;
-    --text-muted: #94a3b8;
-    --brand: #0f172a;
-    --brand-hover: #1e293b;
-    --accent: #d97706;
-    --accent-light: #fef3c7;
-    --success: #10b981;
-    --success-light: #ecfdf5;
-    --radius-lg: 16px;
-    --radius-md: 12px;
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Ruang Seduh — Coffee & Artisan Brew</title>
+  <link rel="icon" href="{{ asset('assets/images/LOGO_RUANG_SEDUH(putih).png') }}" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600;1,700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { min-height: 100%; background: #0f172a; }
-  body {
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    color: var(--text-primary);
-    -webkit-font-smoothing: antialiased;
-  }
+    :root {
+      --ink: #24170f;
+      --muted: #84776e;
+      --cream: #f7f1e9;
+      --paper: #fffdf9;
+      --brown: #5a351f;
+      --brown-2: #754a2c;
+      --line: #e9e0d6;
+      --green: #39775b;
+      --green-bg: #e7f3eb;
+      --gold: #c99b51;
+    }
 
-  /* Main Container */
-  .app-wrap {
-    width: 100%;
-    max-width: 480px;
-    margin: 0 auto;
-    min-height: 100vh;
-    background: var(--bg-page);
-    position: relative;
-    padding-bottom: 120px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  }
+    body {
+      min-height: 100vh;
+      background: #eee8df;
+      color: var(--ink);
+      font-family: "DM Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
 
-  /* Header Section */
-  .header-bar {
-    padding: 24px 20px 16px;
-    background: #ffffff;
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 40;
-  }
-  .header-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 14px;
-  }
-  .brand-area {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .brand-logo {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    background: #0f172a;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-  }
-  .brand-logo img {
-    width: 22px;
-    height: 22px;
-    object-fit: contain;
-  }
-  .brand-title {
-    font-size: 17px;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    color: var(--text-primary);
-    line-height: 1.2;
-  }
-  .brand-sub {
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--text-muted);
-  }
+    button, input {
+      font: inherit;
+    }
 
-  /* Table Pill Indicator */
-  .table-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 700;
-    background: #f1f5f9;
-    color: #475569;
-    border: 1px solid #e2e8f0;
-  }
-  .table-pill.active {
-    background: var(--success-light);
-    color: #065f46;
-    border-color: #a7f3d0;
-  }
-  .status-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #94a3b8;
-  }
-  .table-pill.active .status-dot {
-    background: var(--success);
-    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
-    animation: pulseDot 2s infinite;
-  }
-  @keyframes pulseDot {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
-  }
+    button {
+      border: 0;
+      cursor: pointer;
+    }
 
-  /* Search Input */
-  .search-wrap {
-    position: relative;
-    width: 100%;
-  }
-  .search-wrap svg {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 16px;
-    height: 16px;
-    stroke: var(--text-muted);
-    stroke-width: 2;
-    fill: none;
-    pointer-events: none;
-  }
-  .search-input {
-    width: 100%;
-    padding: 10px 14px 10px 40px;
-    border-radius: var(--radius-md);
-    background: #f8fafc;
-    border: 1px solid var(--border);
-    font-family: inherit;
-    font-size: 13.5px;
-    color: var(--text-primary);
-    outline: none;
-    transition: all 0.15s ease;
-  }
-  .search-input:focus {
-    background: #ffffff;
-    border-color: #0f172a;
-    box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
-  }
-  .search-input::placeholder {
-    color: var(--text-muted);
-  }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-  /* Body Content */
-  .main-content {
-    padding: 18px 20px;
-  }
+    .app-shell {
+      width: min(100%, 1180px);
+      min-height: 100vh;
+      margin: auto;
+      background: var(--cream);
+      position: relative;
+      overflow: hidden;
+      padding-bottom: 135px;
+      box-shadow: 0 0 50px rgba(36, 23, 15, 0.08);
+    }
 
-  /* Category Filter Pills */
-  .category-bar {
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    padding-bottom: 14px;
-    margin-bottom: 12px;
-    scrollbar-width: none;
-  }
-  .category-bar::-webkit-scrollbar { display: none; }
-  .chip {
-    flex-shrink: 0;
-    padding: 8px 16px;
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: 600;
-    background: #ffffff;
-    color: var(--text-secondary);
-    border: 1px solid var(--border);
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.15s ease;
-  }
-  .chip:hover {
-    border-color: var(--border-hover);
-    color: var(--text-primary);
-  }
-  .chip.active {
-    background: #0f172a;
-    color: #ffffff;
-    border-color: #0f172a;
-    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15);
-  }
+    /* Topbar */
+    .topbar {
+      height: 86px;
+      padding: 22px 42px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: rgba(247, 241, 233, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 30;
+      border-bottom: 1px solid rgba(233, 224, 214, 0.6);
+    }
 
-  /* Section Title */
-  .section-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 14px;
-  }
-  .section-heading {
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    color: var(--text-primary);
-  }
-  .section-count {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-muted);
-  }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
 
-  /* Menu Cards Grid */
-  .menu-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
-  .menu-card {
-    display: flex;
-    flex-direction: column;
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    text-decoration: none;
-    color: inherit;
-    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.02);
-  }
-  .menu-card:hover {
-    transform: translateY(-2px);
-    border-color: #cbd5e1;
-    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.06);
-  }
-  .card-image-wrap {
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    position: relative;
-    background: #f1f5f9;
-    overflow: hidden;
-  }
-  .card-image-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.3s ease;
-  }
-  .menu-card:hover .card-image-wrap img {
-    transform: scale(1.04);
-  }
-  .card-fallback {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-    color: #94a3b8;
-    font-size: 28px;
-  }
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+      background: var(--ink);
+      color: #fff;
+      font-size: 21px;
+      box-shadow: 0 10px 25px rgba(36, 23, 15, 0.12);
+      flex-shrink: 0;
+    }
 
-  .card-content {
-    padding: 12px 14px 14px;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-  }
-  .card-category {
-    font-size: 10.5px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-muted);
-    margin-bottom: 4px;
-  }
-  .card-title {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--text-primary);
-    line-height: 1.35;
-    margin-bottom: 6px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .card-footer-info {
-    margin-top: auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    padding-top: 8px;
-  }
-  .card-price {
-    font-size: 14px;
-    font-weight: 800;
-    color: #0f172a;
-    font-variant-numeric: tabular-nums;
-  }
-  .card-stock {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--text-muted);
-  }
-  .card-stock.in-stock { color: #059669; }
-  .card-stock.out-stock { color: #dc2626; }
+    .brand-name {
+      font-family: "Playfair Display", serif;
+      font-size: 23px;
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--ink);
+    }
 
-  /* Floating Call Waiter Button */
-  .btn-call-waiter {
-    position: fixed;
-    bottom: 84px;
-    right: max(18px, calc(50% - 220px));
-    z-index: 50;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: #0f172a;
-    color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 999px;
-    padding: 10px 18px;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.35);
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .btn-call-waiter:hover {
-    background: #1e293b;
-    transform: translateY(-2px);
-  }
-  .btn-call-waiter:active {
-    transform: scale(0.96);
-  }
-  .bell-icon {
-    font-size: 15px;
-    display: inline-block;
-  }
+    .brand-sub {
+      color: var(--muted);
+      font-size: 9px;
+      letter-spacing: 3px;
+      margin-top: 2px;
+      font-weight: 600;
+    }
 
-  /* Floating Bottom Navigation Dock */
-  .dock-wrap {
-    position: fixed;
-    bottom: 16px;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-    z-index: 45;
-    pointer-events: none;
-  }
-  .dock-nav {
-    width: calc(100% - 32px);
-    max-width: 440px;
-    pointer-events: auto;
-    background: rgba(255, 255, 255, 0.94);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(226, 232, 240, 0.9);
-    border-radius: 24px;
-    padding: 8px 12px;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    box-shadow: 0 12px 30px -8px rgba(15, 23, 42, 0.12);
-  }
-  .dock-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3px;
-    text-decoration: none;
-    color: var(--text-muted);
-    padding: 6px 14px;
-    border-radius: 16px;
-    transition: all 0.15s ease;
-    position: relative;
-  }
-  .dock-item svg {
-    width: 20px;
-    height: 20px;
-    stroke: currentColor;
-    stroke-width: 2;
-    fill: none;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    transition: transform 0.15s ease;
-  }
-  .dock-item span {
-    font-size: 11px;
-    font-weight: 600;
-  }
-  .dock-item:hover {
-    color: var(--text-primary);
-  }
-  .dock-item.active {
-    color: #0f172a;
-    background: #f1f5f9;
-  }
-  .dock-item.active svg {
-    stroke-width: 2.3;
-    transform: translateY(-1px);
-  }
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-  /* Call Waiter Modal */
-  .modal-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(15, 23, 42, 0.6);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    z-index: 100;
-    display: none;
-    align-items: flex-end;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-  }
-  .modal-backdrop.show {
-    display: flex;
-    opacity: 1;
-  }
-  .modal-sheet {
-    width: 100%;
-    max-width: 480px;
-    background: #ffffff;
-    border-radius: 28px 28px 0 0;
-    padding: 24px 22px calc(24px + env(safe-area-inset-bottom));
-    box-shadow: 0 -20px 40px rgba(0, 0, 0, 0.15);
-    transform: translateY(100%);
-    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    max-height: 90vh;
-    overflow-y: auto;
-  }
-  .modal-backdrop.show .modal-sheet {
-    transform: translateY(0);
-  }
-  .modal-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 18px;
-  }
-  .modal-title {
-    font-size: 18px;
-    font-weight: 800;
-    color: var(--text-primary);
-    letter-spacing: -0.02em;
-  }
-  .modal-desc {
-    font-size: 13px;
-    color: var(--text-secondary);
-    margin-top: 2px;
-  }
-  .modal-close-btn {
-    background: #f1f5f9;
-    border: none;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    color: #64748b;
-    cursor: pointer;
-  }
-  .modal-table-badge {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    color: #1e293b;
-    padding: 10px 14px;
-    border-radius: var(--radius-md);
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .service-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-  .service-opt {
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 12px 10px;
-    text-align: center;
-    font-size: 12.5px;
-    font-weight: 700;
-    color: var(--text-secondary);
-    cursor: pointer;
-    transition: all 0.15s ease;
-    user-select: none;
-  }
-  .service-opt input { display: none; }
-  .service-opt.active {
-    background: #f8fafc;
-    border-color: #0f172a;
-    color: #0f172a;
-    box-shadow: 0 0 0 1px #0f172a;
-  }
-  .service-notes {
-    width: 100%;
-    padding: 11px 14px;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border);
-    font-family: inherit;
-    font-size: 13px;
-    outline: none;
-    margin-bottom: 20px;
-    transition: border-color 0.15s ease;
-  }
-  .service-notes:focus {
-    border-color: #0f172a;
-  }
-  .btn-submit-action {
-    width: 100%;
-    border: none;
-    background: #0f172a;
-    color: #ffffff;
-    padding: 14px;
-    border-radius: var(--radius-md);
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.15s ease;
-  }
-  .btn-submit-action:hover { background: #1e293b; }
-  .btn-submit-action:disabled { opacity: 0.6; cursor: not-allowed; }
-</style>
+    .icon-btn {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: #fff;
+      color: var(--ink);
+      box-shadow: 0 7px 22px rgba(36, 23, 15, 0.09);
+      font-size: 19px;
+      display: grid;
+      place-items: center;
+      position: relative;
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+
+    .icon-btn:hover {
+      transform: translateY(-2px);
+      background: #fffdfa;
+    }
+
+    .icon-btn:active {
+      transform: scale(0.95);
+    }
+
+    .cart-top span {
+      position: absolute;
+      top: -3px;
+      right: -2px;
+      width: 20px;
+      height: 20px;
+      display: grid;
+      place-items: center;
+      background: var(--brown);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 10px;
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(90, 53, 31, 0.4);
+    }
+
+    .table-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #fff;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--brown);
+      box-shadow: 0 4px 14px rgba(36, 23, 15, 0.05);
+    }
+
+    .table-indicator .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulseGreen 2s infinite;
+    }
+
+    @keyframes pulseGreen {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    /* Hero */
+    .hero {
+      margin: 12px 42px 25px;
+      min-height: 265px;
+      border-radius: 34px;
+      padding: 42px 44px;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 90% 20%, #ead9c4 0 24%, transparent 25%),
+        linear-gradient(120deg, #fffaf2 0%, #f3e9dc 100%);
+      box-shadow: 0 16px 36px rgba(54, 35, 22, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 2;
+      max-width: 580px;
+    }
+
+    .eyebrow, .section-kicker {
+      color: var(--brown-2);
+      letter-spacing: 3px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      font-family: "Playfair Display", serif;
+      font-size: clamp(34px, 4.5vw, 56px);
+      line-height: 1.05;
+      margin: 15px 0 14px;
+      color: var(--ink);
+    }
+
+    .hero h1 em {
+      color: var(--brown-2);
+      font-style: italic;
+    }
+
+    .hero p {
+      color: #665950;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .hero-art {
+      position: absolute;
+      width: 360px;
+      height: 260px;
+      right: 12px;
+      bottom: -18px;
+      pointer-events: none;
+    }
+
+    .coffee-cup {
+      position: absolute;
+      width: 205px;
+      height: 125px;
+      right: 60px;
+      bottom: 23px;
+      background: #fff;
+      border-radius: 45% 45% 48% 48%;
+      box-shadow: 0 22px 30px rgba(72, 43, 24, 0.22);
+      transform: rotate(-5deg);
+    }
+
+    .coffee {
+      position: absolute;
+      width: 180px;
+      height: 53px;
+      top: 7px;
+      left: 12px;
+      background: radial-gradient(circle at 50% 50%, #d79b5f, #6c361b 70%);
+      border-radius: 50%;
+    }
+
+    .latte-art {
+      position: absolute;
+      top: 14px;
+      left: 80px;
+      color: #f2d6af;
+      font-size: 30px;
+      transform: rotate(-4deg);
+      user-select: none;
+    }
+
+    .handle {
+      position: absolute;
+      width: 65px;
+      height: 65px;
+      border: 16px solid #fff;
+      border-left: 0;
+      border-radius: 0 50% 50% 0;
+      right: -48px;
+      top: 30px;
+    }
+
+    .steam {
+      position: absolute;
+      width: 10px;
+      height: 70px;
+      border-left: 3px solid rgba(111, 80, 55, 0.25);
+      border-radius: 50%;
+      bottom: 145px;
+    }
+    .s1 { right: 160px; transform: rotate(10deg); animation: steamMove 3s infinite ease-in-out; }
+    .s2 { right: 120px; transform: rotate(-12deg); height: 55px; animation: steamMove 3s 1.5s infinite ease-in-out; }
+
+    @keyframes steamMove {
+      0%, 100% { transform: translateY(0) rotate(10deg); opacity: 0.25; }
+      50% { transform: translateY(-8px) rotate(6deg); opacity: 0.55; }
+    }
+
+    /* Search row */
+    .search-row {
+      display: flex;
+      gap: 12px;
+      margin: 0 42px 20px;
+    }
+
+    .search-box {
+      height: 61px;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      background: #fff;
+      border: 1px solid #eee5db;
+      border-radius: 20px;
+      padding: 0 22px;
+      box-shadow: 0 10px 30px rgba(54, 35, 22, 0.05);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .search-box:focus-within {
+      border-color: var(--brown);
+      box-shadow: 0 10px 30px rgba(90, 53, 31, 0.1);
+    }
+
+    .search-box span {
+      font-size: 26px;
+      line-height: 0;
+      color: var(--muted);
+    }
+
+    .search-box input {
+      width: 100%;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--ink);
+      font-size: 15px;
+    }
+
+    .search-box input::placeholder {
+      color: #aaa19a;
+    }
+
+    .filter-btn {
+      width: 61px;
+      height: 61px;
+      border-radius: 20px;
+      background: var(--brown);
+      color: #fff;
+      font-size: 22px;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 10px 25px rgba(90, 53, 31, 0.2);
+      transition: transform 0.15s, background 0.15s;
+    }
+
+    .filter-btn:hover {
+      background: var(--brown-2);
+      transform: translateY(-2px);
+    }
+
+    .filter-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* Categories */
+    .categories {
+      display: flex;
+      gap: 10px;
+      padding: 0 42px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .categories::-webkit-scrollbar {
+      display: none;
+    }
+
+    .category {
+      flex: 0 0 auto;
+      padding: 13px 20px;
+      border-radius: 999px;
+      background: #fff;
+      color: #655950;
+      border: 1px solid var(--line);
+      font-weight: 600;
+      font-size: 13.5px;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .category:hover {
+      transform: translateY(-2px);
+      border-color: var(--brown-2);
+      color: var(--brown-2);
+    }
+
+    .category.active {
+      background: var(--brown);
+      color: #fff;
+      border-color: var(--brown);
+      box-shadow: 0 8px 18px rgba(90, 53, 31, 0.18);
+    }
+
+    /* Menu section */
+    .menu-section {
+      padding: 35px 42px 0;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .section-heading h2 {
+      font-family: "Playfair Display", serif;
+      font-size: 30px;
+      margin-top: 5px;
+      color: var(--ink);
+    }
+
+    .item-count {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* Menu Grid */
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .menu-card {
+      background: #fff;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid #eee5db;
+      box-shadow: 0 12px 30px rgba(54, 35, 22, 0.055);
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .menu-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 18px 35px rgba(54, 35, 22, 0.11);
+      border-color: #dfd3c5;
+    }
+
+    .product-art {
+      height: 205px;
+      position: relative;
+      overflow: hidden;
+      background: #d9c1a6;
+      display: grid;
+      place-items: center;
+    }
+
+    .product-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.35s ease;
+    }
+
+    .menu-card:hover .product-img {
+      transform: scale(1.06);
+    }
+
+    .product-art::before {
+      content: "";
+      position: absolute;
+      width: 210px;
+      height: 210px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.14);
+      top: -90px;
+      right: -50px;
+    }
+
+    /* Stylized CSS Cup Art (Fallback when no image uploaded) */
+    .cup-art {
+      width: 125px;
+      height: 88px;
+      border-radius: 22px 22px 43px 43px;
+      background: #f8f5ef;
+      position: relative;
+      box-shadow: 0 18px 24px rgba(52, 28, 15, 0.22);
+      transform: translateY(10px);
+    }
+
+    .cup-art::before {
+      content: "";
+      position: absolute;
+      width: 102px;
+      height: 31px;
+      top: 5px;
+      left: 12px;
+      border-radius: 50%;
+      background: var(--drink, #4a2415);
+      box-shadow: inset 0 5px 8px rgba(255, 255, 255, 0.22);
+    }
+
+    .cup-art::after {
+      content: "";
+      position: absolute;
+      width: 35px;
+      height: 39px;
+      border: 10px solid #f8f5ef;
+      border-left: 0;
+      border-radius: 0 50% 50% 0;
+      right: -27px;
+      top: 21px;
+    }
+
+    .art-espresso { background: linear-gradient(135deg, #7b4b2d, #c89a68); --drink: #3b1b0b; }
+    .art-americano { background: linear-gradient(135deg, #4d3a2d, #b47d50); --drink: #2b170c; }
+    .art-cappuccino { background: linear-gradient(135deg, #bb9876, #e2c9aa); --drink: #d79b5f; }
+    .art-mocha { background: linear-gradient(135deg, #80614e, #c9a48b); --drink: #4e2e1e; }
+    .art-matcha { background: linear-gradient(135deg, #70855c, #c5d5aa); --drink: #556b2f; }
+    .art-chocolate { background: linear-gradient(135deg, #72503f, #b88868); --drink: #402213; }
+    .art-tea { background: linear-gradient(135deg, #8d9b78, #d4d9b5); --drink: #85532c; }
+    .art-pastry { background: linear-gradient(135deg, #b98754, #efd09f); --drink: #b97a38; }
+
+    .card-body {
+      padding: 16px 17px 18px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .card-category {
+      color: #998c82;
+      letter-spacing: 2px;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .card-name {
+      font-size: 17px;
+      font-weight: 700;
+      margin: 5px 0 4px;
+      color: var(--ink);
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-desc {
+      color: #8c8179;
+      font-size: 12px;
+      line-height: 1.4;
+      min-height: 34px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 7px;
+      margin-top: auto;
+      padding-top: 12px;
+    }
+
+    .price {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stock {
+      color: var(--green);
+      background: var(--green-bg);
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 10px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .stock.out {
+      color: #b91c1c;
+      background: #fee2e2;
+    }
+
+    .best-seller {
+      position: absolute;
+      left: 12px;
+      bottom: 12px;
+      padding: 6px 11px;
+      background: #d7a65a;
+      color: #fff;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 700;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      z-index: 2;
+    }
+
+    /* Floating Cart with Table Details */
+    .floating-cart {
+      position: fixed;
+      z-index: 25;
+      right: max(24px, calc((100vw - 1180px) / 2 + 24px));
+      bottom: 104px;
+      min-width: 215px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 18px;
+      border-radius: 22px;
+      background: var(--ink);
+      color: #fff;
+      box-shadow: 0 16px 35px rgba(36, 23, 15, 0.28);
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .floating-cart:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 40px rgba(36, 23, 15, 0.35);
+    }
+
+    .cart-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: #fff;
+      color: var(--brown);
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .floating-cart strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.2;
+    }
+
+    .floating-cart small {
+      display: block;
+      color: #cbd5e1;
+      margin-top: 2px;
+      font-size: 11px;
+    }
+
+    .arrow {
+      margin-left: auto;
+      font-size: 18px;
+      transition: transform 0.2s;
+    }
+
+    .floating-cart:hover .arrow {
+      transform: translateX(4px);
+    }
+
+    /* Bottom Navigation Dock */
+    .bottom-nav {
+      position: fixed;
+      z-index: 24;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 18px;
+      width: min(calc(100% - 36px), 540px);
+      height: 74px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      padding: 6px;
+      border-radius: 25px;
+      background: rgba(255, 253, 249, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 16px 45px rgba(54, 35, 22, 0.17);
+    }
+
+    .nav-item {
+      background: transparent;
+      color: #a29a93;
+      border-radius: 19px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      position: relative;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+
+    .nav-item > span {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .nav-item small {
+      font-size: 10.5px;
+      font-weight: 700;
+    }
+
+    .nav-item.active {
+      background: #f2e9df;
+      color: var(--brown);
+    }
+
+    .nav-item b {
+      position: absolute;
+      top: 6px;
+      margin-left: 6px;
+      width: 17px;
+      height: 17px;
+      display: grid;
+      place-items: center;
+      background: var(--brown);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 9px;
+      font-weight: 800;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      z-index: 50;
+      left: 50%;
+      bottom: 106px;
+      transform: translate(-50%, 20px);
+      opacity: 0;
+      pointer-events: none;
+      padding: 12px 20px;
+      border-radius: 999px;
+      background: var(--ink);
+      color: #fff;
+      font-size: 12.5px;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+      transition: all 0.25s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* Call Waiter Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(36, 23, 15, 0.65);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      z-index: 100;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .modal-backdrop.show {
+      display: flex;
+      opacity: 1;
+    }
+    .modal-sheet {
+      width: 100%;
+      max-width: 520px;
+      background: var(--paper);
+      border-radius: 28px 28px 0 0;
+      padding: 26px 24px calc(24px + env(safe-area-inset-bottom));
+      box-shadow: 0 -20px 40px rgba(36, 23, 15, 0.25);
+      transform: translateY(100%);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      max-height: 90vh;
+      overflow-y: auto;
+      border-top: 1px solid rgba(255, 255, 255, 0.8);
+    }
+    .modal-backdrop.show .modal-sheet {
+      transform: translateY(0);
+    }
+    .modal-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 18px;
+    }
+    .modal-title {
+      font-family: "Playfair Display", serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .modal-desc {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .modal-close-btn {
+      background: #f1e8dd;
+      border: none;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: var(--ink);
+      cursor: pointer;
+      line-height: 1;
+    }
+    .modal-table-badge {
+      background: #f4ede4;
+      border: 1px solid var(--line);
+      color: var(--brown);
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .service-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .service-opt {
+      border: 1.5px solid var(--line);
+      border-radius: 14px;
+      padding: 13px 10px;
+      text-align: center;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #655950;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      background: #fff;
+      user-select: none;
+    }
+    .service-opt input { display: none; }
+    .service-opt.active {
+      background: #fbf5ee;
+      border-color: var(--brown);
+      color: var(--brown);
+      box-shadow: 0 0 0 1px var(--brown);
+    }
+    .service-notes {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      font-family: inherit;
+      font-size: 13px;
+      outline: none;
+      margin-bottom: 20px;
+      background: #fff;
+      transition: border-color 0.15s ease;
+    }
+    .service-notes:focus {
+      border-color: var(--brown);
+    }
+    .btn-submit-action {
+      width: 100%;
+      border: none;
+      background: var(--brown);
+      color: #ffffff;
+      padding: 14px;
+      border-radius: 14px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(90, 53, 31, 0.25);
+      transition: all 0.15s ease;
+    }
+    .btn-submit-action:hover {
+      background: var(--brown-2);
+    }
+    .btn-submit-action:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* Responsive Queries */
+    @media (max-width: 980px) {
+      .menu-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 720px) {
+      .topbar {
+        padding: 16px 20px 10px;
+      }
+      .hero {
+        margin: 8px 20px 20px;
+        padding: 28px 22px;
+        min-height: 245px;
+      }
+      .hero h1 {
+        font-size: 34px;
+      }
+      .hero p {
+        font-size: 14px;
+      }
+      .hero-art {
+        opacity: 0.45;
+        right: -80px;
+        transform: scale(0.85);
+      }
+      .search-row {
+        margin: 0 20px 16px;
+      }
+      .categories {
+        padding: 0 20px;
+      }
+      .menu-section {
+        padding: 24px 20px 0;
+      }
+      .menu-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+      .product-art {
+        height: 155px;
+      }
+      .card-body {
+        padding: 12px;
+      }
+      .card-name {
+        font-size: 15px;
+      }
+      .price {
+        font-size: 14px;
+      }
+      .stock {
+        font-size: 9px;
+      }
+      .floating-cart {
+        right: 18px;
+        bottom: 100px;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .brand-name {
+        font-size: 19px;
+      }
+      .brand-sub {
+        font-size: 7.5px;
+        letter-spacing: 2px;
+      }
+      .icon-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 17px;
+      }
+      .hero {
+        border-radius: 24px;
+        padding: 24px 18px;
+      }
+      .hero h1 {
+        font-size: 30px;
+      }
+      .hero p {
+        font-size: 13px;
+      }
+      .menu-section {
+        padding-top: 20px;
+      }
+      .section-heading h2 {
+        font-size: 24px;
+      }
+      .product-art {
+        height: 135px;
+      }
+      .cup-art {
+        transform: scale(0.78) translateY(12px);
+      }
+      .card-desc {
+        display: none;
+      }
+      .card-bottom {
+        margin-top: 8px;
+      }
+      .floating-cart {
+        min-width: 175px;
+        padding: 10px 14px;
+      }
+      .floating-cart strong {
+        font-size: 12px;
+      }
+      .floating-cart small {
+        font-size: 9.5px;
+      }
+      .cart-icon {
+        width: 34px;
+        height: 34px;
+        font-size: 15px;
+        border-radius: 10px;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<div class="app-wrap">
+  @php
+    $cart = session('cart', []);
+    $cartCount = is_array($cart) ? array_sum(array_column($cart, 'qty')) : 0;
+  @endphp
 
-  <!-- Header Section -->
-  <header class="header-bar">
-    <div class="header-top">
-      <div class="brand-area">
-        <div class="brand-logo">
-          <img src="{{ asset('assets/images/LOGO_RUANG_SEDUH(putih).png') }}" alt="RS">
-        </div>
+  <main class="app-shell">
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">☕</div>
         <div>
-          <h1 class="brand-title">Ruang Seduh</h1>
-          <p class="brand-sub">Coffee & Artisan Brew</p>
+          <div class="brand-name">Ruang Seduh</div>
+          <div class="brand-sub">COFFEE & ARTISAN BREW</div>
         </div>
       </div>
-      
-      @if($activeTable)
-        <div class="table-pill active" title="Terhubung ke Meja {{ $activeTable->table_number }}">
-          <span class="status-dot"></span>
-          <span>Meja {{ $activeTable->table_number }}</span>
+
+      <div class="top-actions">
+        <!-- Panggil Pelayan Button -->
+        <button class="icon-btn" id="btnOpenCallWaiter" aria-label="Panggil Pelayan" title="Panggil Pelayan">
+          🛎️
+        </button>
+
+        <!-- Cart Top Button -->
+        <a href="{{ route('customer.cart.index') }}" class="icon-btn cart-top" id="cartTop" aria-label="Keranjang">
+          🛒 <span id="cartCount">{{ $cartCount }}</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow">GOOD COFFEE • GOOD MOOD</span>
+        <h1>Kopi yang bikin<br><em>hari lebih baik.</em></h1>
+        <p>Ruang untuk jeda, rasa untuk cerita.</p>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="steam s1"></div>
+        <div class="steam s2"></div>
+        <div class="coffee-cup">
+          <div class="coffee"></div>
+          <div class="latte-art">♥</div>
+          <div class="handle"></div>
         </div>
-      @else
-        <div class="table-pill" title="Silakan scan QR code di mejamu">
-          <span class="status-dot"></span>
-          <span>Scan QR Meja</span>
-        </div>
-      @endif
+      </div>
+    </section>
+
+    <!-- Search Row -->
+    <div class="search-row">
+      <label class="search-box">
+        <span>⌕</span>
+        <input id="searchInput" type="search" placeholder="Cari menu favorit kamu..." autocomplete="off" />
+      </label>
+      <button class="filter-btn" id="sortBtn" title="Urutkan Harga">☷</button>
     </div>
 
-    <!-- Search Box -->
-    <div class="search-wrap">
-      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-      <input type="text" class="search-input" id="searchInput" placeholder="Cari menu favorit kamu...">
-    </div>
-  </header>
-
-  <!-- Main Content -->
-  <main class="main-content">
-
-    <!-- Categories Filter Pills -->
-    <div class="category-bar">
-      <button type="button" class="chip active" data-category="Semua">Semua</button>
+    <!-- Category Filter Pills -->
+    <div class="categories" id="categories">
+      <button class="category active" data-category="Semua">☕ Semua</button>
       @foreach($categories as $category)
-        <button type="button" class="chip" data-category="{{ $category->name }}">{{ $category->name }}</button>
+        @php
+          $catLower = strtolower($category->name);
+          $icon = '🍽️';
+          if (str_contains($catLower, 'coffee') || str_contains($catLower, 'kopi')) {
+            $icon = '☕';
+          } elseif (str_contains($catLower, 'non') || str_contains($catLower, 'drink') || str_contains($catLower, 'minum')) {
+            $icon = '🥤';
+          } elseif (str_contains($catLower, 'pastry') || str_contains($catLower, 'roti') || str_contains($catLower, 'bakery')) {
+            $icon = '🥐';
+          } elseif (str_contains($catLower, 'tea') || str_contains($catLower, 'teh')) {
+            $icon = '🍵';
+          } elseif (str_contains($catLower, 'food') || str_contains($catLower, 'makan') || str_contains($catLower, 'snack')) {
+            $icon = '🍟';
+          }
+        @endphp
+        <button class="category" data-category="{{ $category->name }}">{{ $icon }} {{ $category->name }}</button>
       @endforeach
     </div>
 
-    <!-- Section Heading -->
-    <div class="section-row">
-      <h2 class="section-heading" id="sectionTitle">Semua Menu</h2>
-      <span class="section-count" id="menuCount">{{ $menus->count() }} item</span>
-    </div>
-
-    <!-- Menu Cards Grid -->
-    <div class="menu-grid" id="menuGrid">
-      @forelse($menus as $menu)
-        <a href="{{ route('customer.menu.show', $menu->id) }}" class="menu-card" data-name="{{ $menu->name }}" data-category="{{ $menu->kategori->name ?? '' }}">
-          <div class="card-image-wrap">
-            @if($menu->image)
-              <img src="{{ asset('storage/' . $menu->image) }}" alt="{{ $menu->name }}" loading="lazy" decoding="async">
-            @else
-              <div class="card-fallback">☕</div>
-            @endif
-          </div>
-          <div class="card-content">
-            <span class="card-category">{{ $menu->kategori->name ?? 'Menu' }}</span>
-            <h3 class="card-title">{{ $menu->name }}</h3>
-            <div class="card-footer-info">
-              <span class="card-price">{{ $menu->hargaRupiah() }}</span>
-              <span class="card-stock {{ $menu->stock > 0 ? 'in-stock' : 'out-stock' }}">
-                {{ $menu->stock > 0 ? 'Tersedia ' . $menu->stock : 'Habis' }}
-              </span>
-            </div>
-          </div>
-        </a>
-      @empty
-        <div style="grid-column: 1/-1; text-align: center; padding: 40px 0; color: var(--text-muted); font-size: 13px;">
-          Belum ada menu yang tersedia.
+    <!-- Menu Section -->
+    <section class="menu-section">
+      <div class="section-heading">
+        <div>
+          <span class="section-kicker">OUR SELECTION</span>
+          <h2 id="sectionTitle">Semua Menu</h2>
         </div>
-      @endforelse
-    </div>
+        <span class="item-count" id="itemCount">{{ $menus->count() }} item</span>
+      </div>
 
-  </main>
+      <!-- Menu Grid -->
+      <div class="menu-grid" id="menuGrid">
+        @forelse($menus as $menu)
+          @php
+            $catName = $menu->kategori->name ?? 'Menu';
+            $catLower = strtolower($catName);
+            $nameLower = strtolower($menu->name);
+            
+            // Assign art class for fallback cup
+            $artClass = 'art-espresso';
+            if (str_contains($nameLower, 'americano') || str_contains($nameLower, 'long black')) {
+              $artClass = 'art-americano';
+            } elseif (str_contains($nameLower, 'cappuccino') || str_contains($nameLower, 'latte')) {
+              $artClass = 'art-cappuccino';
+            } elseif (str_contains($nameLower, 'mocha')) {
+              $artClass = 'art-mocha';
+            } elseif (str_contains($nameLower, 'matcha')) {
+              $artClass = 'art-matcha';
+            } elseif (str_contains($nameLower, 'choco') || str_contains($nameLower, 'coklat')) {
+              $artClass = 'art-chocolate';
+            } elseif (str_contains($nameLower, 'tea') || str_contains($nameLower, 'teh')) {
+              $artClass = 'art-tea';
+            } elseif (str_contains($catLower, 'pastry') || str_contains($catLower, 'croissant')) {
+              $artClass = 'art-pastry';
+            }
+          @endphp
 
-  <!-- Floating Call Waiter Button -->
-  <button type="button" class="btn-call-waiter" id="btnOpenCallWaiter" aria-label="Panggil Pelayan">
-    <span class="bell-icon">🛎️</span>
-    <span>{{ $activeTable ? 'Meja ' . $activeTable->table_number : 'Panggil Pelayan' }}</span>
-  </button>
+          <a href="{{ route('customer.menu.show', $menu->id) }}" class="menu-card" data-name="{{ $nameLower }}" data-category="{{ $catName }}" data-price="{{ $menu->price }}">
+            <div class="product-art {{ $artClass }}">
+              @if($menu->image)
+                <img src="{{ asset('storage/' . $menu->image) }}" alt="{{ $menu->name }}" class="product-img" loading="lazy" decoding="async">
+              @else
+                <div class="cup-art"></div>
+              @endif
 
-  <!-- Floating Dock Navigation Bar -->
-  <div class="dock-wrap">
-    <nav class="dock-nav">
-      <a href="{{ route('customer.home') }}" class="dock-item active" aria-label="Beranda">
-        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-        <span>Beranda</span>
+              @if($loop->index < 2)
+                <span class="best-seller">★ Rekomendasi</span>
+              @endif
+            </div>
+
+            <div class="card-body">
+              <span class="card-category">{{ $catName }}</span>
+              <h3 class="card-name">{{ $menu->name }}</h3>
+              <p class="card-desc">{{ $menu->description ?? 'Dibuat segar dengan racikan istimewa barista Ruang Seduh.' }}</p>
+
+              <div class="card-bottom">
+                <span class="price">{{ $menu->hargaRupiah() }}</span>
+                <span class="stock {{ $menu->stock > 0 ? '' : 'out' }}">
+                  {{ $menu->stock > 0 ? 'Tersedia ' . $menu->stock : 'Habis' }}
+                </span>
+              </div>
+            </div>
+          </a>
+        @empty
+          <div class="empty">
+            Belum ada menu yang tersedia.
+          </div>
+        @endforelse
+      </div>
+    </section>
+
+    <!-- Floating Cart Bar (Shows connected Table) -->
+    <a href="{{ route('customer.cart.index') }}" class="floating-cart" id="floatingCart">
+      <div class="cart-icon">🛍</div>
+      <div>
+        <strong>{{ $activeTable ? 'Meja ' . $activeTable->table_number : 'Scan QR Meja' }}</strong>
+        <small><span id="floatingCount">{{ $cartCount }}</span> item di keranjang</small>
+      </div>
+      <span class="arrow">→</span>
+    </a>
+
+    <!-- Bottom Navigation Dock -->
+    <nav class="bottom-nav">
+      <a href="{{ route('customer.home') }}" class="nav-item active">
+        <span>⌂</span>
+        <small>Beranda</small>
       </a>
-      <a href="{{ route('customer.order.history') }}" class="dock-item" aria-label="Riwayat">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-        <span>Riwayat</span>
+      <a href="{{ route('customer.order.history') }}" class="nav-item">
+        <span>◷</span>
+        <small>Riwayat</small>
       </a>
-      <a href="{{ route('customer.cart.index') }}" class="dock-item" aria-label="Keranjang">
-        <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-        <span>Keranjang</span>
+      <a href="{{ route('customer.cart.index') }}" class="nav-item cart-nav" id="cartNav">
+        <span>🛒<b id="navBadge" style="{{ $cartCount > 0 ? '' : 'display:none;' }}">{{ $cartCount }}</b></span>
+        <small>Keranjang</small>
       </a>
-      <a href="{{ route('customer.profile.index') }}" class="dock-item" aria-label="Profil">
-        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-        <span>Profil</span>
+      <a href="{{ route('customer.profile.index') }}" class="nav-item">
+        <span>♙</span>
+        <small>Profil</small>
       </a>
     </nav>
+  </main>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Modal Panggil Pelayan -->
+  <div class="modal-backdrop" id="callModalOverlay">
+    <div class="modal-sheet">
+      <div class="modal-top">
+        <div>
+          <h3 class="modal-title">🛎️ Panggil Pelayan</h3>
+          <p class="modal-desc">Butuh bantuan staf? Kami siap melayani mejamu.</p>
+        </div>
+        <button type="button" class="modal-close-btn" id="btnCloseCallModal">&times;</button>
+      </div>
+
+      <form id="callWaiterForm">
+        @csrf
+        @if($activeTable)
+          <input type="hidden" name="table_id" value="{{ $activeTable->id }}">
+          <div class="modal-table-badge">
+            📍 Meja Terhubung: <strong>Meja {{ $activeTable->table_number }}</strong>
+          </div>
+        @else
+          <div class="modal-table-badge" style="background: #fff1f2; border-color: #fecdd3; color: #9f1239;">
+            ⚠️ Kamu belum terhubung ke meja. Silakan scan QR code di mejamu untuk memesan atau memanggil pelayan.
+          </div>
+        @endif
+
+        <div style="margin-bottom: 14px;">
+          <label style="display:block; font-size: 12.5px; font-weight: 700; margin-bottom: 8px; color: var(--ink);">Pilih Kebutuhan:</label>
+          <div class="service-grid">
+            <label class="service-opt active">
+              <input type="radio" name="type" value="panggil_pelayan" checked>
+              <span>🙋 Bantuan Pelayan</span>
+            </label>
+            <label class="service-opt">
+              <input type="radio" name="type" value="minta_bill">
+              <span>🧾 Minta Bill / Nota</span>
+            </label>
+            <label class="service-opt">
+              <input type="radio" name="type" value="minta_air">
+              <span>💧 Air Putih / Es</span>
+            </label>
+            <label class="service-opt">
+              <input type="radio" name="type" value="bersih_meja">
+              <span>🧹 Bersihkan Meja</span>
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <label style="display:block; font-size: 12.5px; font-weight: 700; margin-bottom: 6px; color: var(--ink);">Catatan Tambahan (Opsional):</label>
+          <input type="text" name="notes" class="service-notes" placeholder="Contoh: Minta tissue atau sedotan tambahan..." maxlength="150">
+        </div>
+
+        <button type="submit" class="btn-submit-action" id="btnSubmitCall" {{ $activeTable ? '' : 'disabled' }}>
+          {{ $activeTable ? 'Kirim Panggilan 🛎️' : 'Scan QR Meja Dulu' }}
+        </button>
+      </form>
+
+      <div id="callSuccessState" style="display:none; text-align:center; padding: 24px 10px;">
+        <div style="font-size: 44px; margin-bottom: 8px;">🏃💨</div>
+        <h4 style="font-size: 18px; font-weight: 800; margin-bottom: 4px; color: var(--ink);">Panggilan Terkirim!</h4>
+        <p style="font-size: 13px; color: var(--muted); margin-bottom: 20px;">Staf kami sedang menuju ke mejamu. Mohon ditunggu ya!</p>
+        <button type="button" class="btn-submit-action" id="btnCloseSuccess">Selesai</button>
+      </div>
+    </div>
   </div>
 
-</div>
+  <script>
+    (function() {
+      const grid = document.getElementById('menuGrid');
+      const sectionTitle = document.getElementById('sectionTitle');
+      const itemCount = document.getElementById('itemCount');
+      const searchInput = document.getElementById('searchInput');
+      const sortBtn = document.getElementById('sortBtn');
+      const toast = document.getElementById('toast');
+      const categories = document.getElementById('categories');
+      const cards = Array.from(document.querySelectorAll('#menuGrid .menu-card'));
 
-<!-- Modal Panggil Pelayan -->
-<div class="modal-backdrop" id="callModalOverlay">
-  <div class="modal-sheet">
-    <div class="modal-top">
-      <div>
-        <h3 class="modal-title">🛎️ Panggil Pelayan</h3>
-        <p class="modal-desc">Butuh bantuan staf? Kami siap melayani mejamu.</p>
-      </div>
-      <button type="button" class="modal-close-btn" id="btnCloseCallModal">&times;</button>
-    </div>
+      let sortAsc = null; // null, 'asc', 'desc'
 
-    <form id="callWaiterForm">
-      @csrf
-      @if($activeTable)
-        <input type="hidden" name="table_id" value="{{ $activeTable->id }}">
-        <div class="modal-table-badge">
-          📍 Meja Terhubung: <strong>Meja {{ $activeTable->table_number }}</strong>
-        </div>
-      @else
-        <div class="modal-table-badge" style="background: #fff1f2; border-color: #fecdd3; color: #9f1239;">
-          ⚠️ Kamu belum terhubung ke meja. Silakan scan QR code di mejamu untuk memesan atau memanggil pelayan.
-        </div>
-      @endif
-
-      <div style="margin-bottom: 14px;">
-        <label style="display:block; font-size: 12.5px; font-weight: 700; margin-bottom: 8px; color: #1e293b;">Pilih Kebutuhan:</label>
-        <div class="service-grid">
-          <label class="service-opt active">
-            <input type="radio" name="type" value="panggil_pelayan" checked>
-            <span>🙋 Bantuan Pelayan</span>
-          </label>
-          <label class="service-opt">
-            <input type="radio" name="type" value="minta_bill">
-            <span>🧾 Minta Bill / Nota</span>
-          </label>
-          <label class="service-opt">
-            <input type="radio" name="type" value="minta_air">
-            <span>💧 Air Putih / Es</span>
-          </label>
-          <label class="service-opt">
-            <input type="radio" name="type" value="bersih_meja">
-            <span>🧹 Bersihkan Meja</span>
-          </label>
-        </div>
-      </div>
-
-      <div>
-        <label style="display:block; font-size: 12.5px; font-weight: 700; margin-bottom: 6px; color: #1e293b;">Catatan Tambahan (Opsional):</label>
-        <input type="text" name="notes" class="service-notes" placeholder="Contoh: Minta tissue atau sendok tambahan..." maxlength="150">
-      </div>
-
-      <button type="submit" class="btn-submit-action" id="btnSubmitCall" {{ $activeTable ? '' : 'disabled' }}>
-        {{ $activeTable ? 'Kirim Panggilan 🛎️' : 'Scan Meja Dulu' }}
-      </button>
-    </form>
-
-    <div id="callSuccessState" style="display:none; text-align:center; padding: 20px 10px;">
-      <div style="font-size: 40px; margin-bottom: 8px;">🏃💨</div>
-      <h4 style="font-size: 17px; font-weight: 800; margin-bottom: 4px; color: #0f172a;">Panggilan Terkirim!</h4>
-      <p style="font-size: 13px; color: #64748b; margin-bottom: 20px;">Staf kami sedang menuju ke mejamu. Mohon ditunggu ya kak!</p>
-      <button type="button" class="btn-submit-action" id="btnCloseSuccess">Selesai</button>
-    </div>
-  </div>
-</div>
-
-<script>
-  const grid = document.getElementById('menuGrid');
-  const sectionTitle = document.getElementById('sectionTitle');
-  const menuCount = document.getElementById('menuCount');
-  const searchInput = document.getElementById('searchInput');
-  const cards = Array.from(document.querySelectorAll('#menuGrid .menu-card'));
-
-  function renderMenu() {
-    const activeChip = document.querySelector('.chip.active');
-    const category = activeChip ? activeChip.dataset.category : 'Semua';
-    const keyword = searchInput.value.trim().toLowerCase();
-
-    let visible = 0;
-    cards.forEach(card => {
-      const name = (card.dataset.name || '').toLowerCase();
-      const cat = card.dataset.category || '';
-
-      const matchCategory = category === 'Semua' || cat === category;
-      const matchKeyword = name.includes(keyword);
-
-      if (matchCategory && matchKeyword) {
-        card.style.display = '';
-        visible++;
-      } else {
-        card.style.display = 'none';
+      function showToast(msg) {
+        if (!toast) return;
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
       }
-    });
 
-    sectionTitle.textContent = category === 'Semua' ? 'Semua Menu' : category;
-    menuCount.textContent = visible + ' item';
+      function filterMenus() {
+        const activeBtn = categories.querySelector('.category.active');
+        const activeCategory = activeBtn ? activeBtn.dataset.category : 'Semua';
+        const keyword = searchInput.value.trim().toLowerCase();
 
-    let empty = grid.querySelector('.grid-empty');
-    if (visible === 0) {
-      if (!empty) {
-        empty = document.createElement('div');
-        empty.className = 'grid-empty';
-        empty.style.cssText = 'grid-column:1/-1; text-align:center; color:var(--text-muted); padding:36px 0; font-size:13px;';
-        empty.textContent = 'Menu tidak ditemukan.';
-        grid.appendChild(empty);
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+          const name = card.dataset.name || '';
+          const category = card.dataset.category || '';
+
+          const matchCat = (activeCategory === 'Semua') || (category === activeCategory);
+          const matchKey = !keyword || name.includes(keyword);
+
+          if (matchCat && matchKey) {
+            card.style.display = '';
+            visibleCount++;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        sectionTitle.textContent = activeCategory === 'Semua' ? 'Semua Menu' : activeCategory;
+        itemCount.textContent = visibleCount + ' item';
+
+        let emptyElem = grid.querySelector('.empty');
+        if (visibleCount === 0) {
+          if (!emptyElem) {
+            emptyElem = document.createElement('div');
+            emptyElem.className = 'empty';
+            emptyElem.textContent = 'Menu yang kamu cari tidak ditemukan.';
+            grid.appendChild(emptyElem);
+          }
+        } else if (emptyElem && emptyElem.parentNode) {
+          emptyElem.remove();
+        }
       }
-    } else if (empty) {
-      empty.remove();
-    }
-  }
 
-  // Filter category interaction
-  const chips = document.querySelectorAll('.chip');
-  chips.forEach(chip => {
-    chip.addEventListener('click', () => {
-      chips.forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-      renderMenu();
-    });
-  });
+      // Category Pill Click
+      categories?.addEventListener('click', function(e) {
+        const btn = e.target.closest('.category');
+        if (!btn) return;
 
-  // Search input interaction
-  searchInput.addEventListener('input', renderMenu);
+        categories.querySelectorAll('.category').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        filterMenus();
+      });
 
-  // Call Waiter Modal Interaction
-  const btnOpenCallWaiter = document.getElementById('btnOpenCallWaiter');
-  const callModalOverlay = document.getElementById('callModalOverlay');
-  const btnCloseCallModal = document.getElementById('btnCloseCallModal');
-  const btnCloseSuccess = document.getElementById('btnCloseSuccess');
-  const callWaiterForm = document.getElementById('callWaiterForm');
-  const callSuccessState = document.getElementById('callSuccessState');
-  const btnSubmitCall = document.getElementById('btnSubmitCall');
+      // Search Input
+      searchInput?.addEventListener('input', filterMenus);
 
-  function openCallModal() {
-    callModalOverlay.classList.add('show');
-    callWaiterForm.style.display = '';
-    callSuccessState.style.display = 'none';
-  }
-  function closeCallModal() {
-    callModalOverlay.classList.remove('show');
-  }
+      // Sort button
+      sortBtn?.addEventListener('click', function() {
+        if (sortAsc === null || sortAsc === 'desc') {
+          sortAsc = 'asc';
+          showToast('Urutan: Harga Termurah ↗');
+        } else {
+          sortAsc = 'desc';
+          showToast('Urutan: Harga Tertinggi ↘');
+        }
 
-  btnOpenCallWaiter?.addEventListener('click', openCallModal);
-  btnCloseCallModal?.addEventListener('click', closeCallModal);
-  btnCloseSuccess?.addEventListener('click', closeCallModal);
-  callModalOverlay?.addEventListener('click', (e) => {
-    if (e.target === callModalOverlay) closeCallModal();
-  });
+        cards.sort((a, b) => {
+          const priceA = parseFloat(a.dataset.price) || 0;
+          const priceB = parseFloat(b.dataset.price) || 0;
+          return sortAsc === 'asc' ? (priceA - priceB) : (priceB - priceA);
+        });
 
-  const serviceOpts = document.querySelectorAll('.service-opt');
-  serviceOpts.forEach(opt => {
-    opt.addEventListener('click', () => {
-      serviceOpts.forEach(o => o.classList.remove('active'));
-      opt.classList.add('active');
-    });
-  });
+        cards.forEach(card => grid.appendChild(card));
+        filterMenus();
+      });
 
-  callWaiterForm?.addEventListener('submit', function(e) {
-    e.preventDefault();
-    btnSubmitCall.disabled = true;
-    btnSubmitCall.textContent = 'Mengirim...';
+      // Call Waiter Modal
+      const btnOpenCall = document.getElementById('btnOpenCallWaiter');
+      const modalOverlay = document.getElementById('callModalOverlay');
+      const btnCloseModal = document.getElementById('btnCloseCallModal');
+      const btnCloseSuccess = document.getElementById('btnCloseSuccess');
+      const callForm = document.getElementById('callWaiterForm');
+      const callSuccess = document.getElementById('callSuccessState');
+      const btnSubmitCall = document.getElementById('btnSubmitCall');
 
-    const formData = new FormData(callWaiterForm);
-    const postData = {
-      table_id: formData.get('table_id'),
-      type: formData.get('type'),
-      notes: formData.get('notes')
-    };
-
-    fetch("{{ route('customer.call-waiter') }}", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-      },
-      body: JSON.stringify(postData)
-    })
-    .then(res => res.json())
-    .then(data => {
-      btnSubmitCall.disabled = false;
-      btnSubmitCall.textContent = 'Kirim Panggilan 🛎️';
-      if (data.success) {
-        callWaiterForm.style.display = 'none';
-        callSuccessState.style.display = 'block';
-      } else {
-        alert(data.message || 'Gagal mengirim panggilan.');
+      function openModal() {
+        modalOverlay.classList.add('show');
+        if (callForm) callForm.style.display = '';
+        if (callSuccess) callSuccess.style.display = 'none';
       }
-    })
-    .catch(() => {
-      btnSubmitCall.disabled = false;
-      btnSubmitCall.textContent = 'Kirim Panggilan 🛎️';
-      alert('Terjadi kesalahan jaringan.');
-    });
-  });
-</script>
-@include('customer.include.order_notifications')
+
+      function closeModal() {
+        modalOverlay.classList.remove('show');
+      }
+
+      btnOpenCall?.addEventListener('click', openModal);
+      btnCloseModal?.addEventListener('click', closeModal);
+      btnCloseSuccess?.addEventListener('click', closeModal);
+      modalOverlay?.addEventListener('click', function(e) {
+        if (e.target === modalOverlay) closeModal();
+      });
+
+      const serviceOpts = document.querySelectorAll('.service-opt');
+      serviceOpts.forEach(opt => {
+        opt.addEventListener('click', () => {
+          serviceOpts.forEach(o => o.classList.remove('active'));
+          opt.classList.add('active');
+        });
+      });
+
+      callForm?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        btnSubmitCall.disabled = true;
+        btnSubmitCall.textContent = 'Mengirim...';
+
+        const formData = new FormData(callForm);
+        const postData = {
+          table_id: formData.get('table_id'),
+          type: formData.get('type'),
+          notes: formData.get('notes')
+        };
+
+        fetch("{{ route('customer.call-waiter') }}", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+          },
+          body: JSON.stringify(postData)
+        })
+        .then(res => res.json())
+        .then(data => {
+          btnSubmitCall.disabled = false;
+          btnSubmitCall.textContent = 'Kirim Panggilan 🛎️';
+          if (data.success) {
+            callForm.style.display = 'none';
+            callSuccess.style.display = 'block';
+          } else {
+            alert(data.message || 'Gagal mengirim panggilan.');
+          }
+        })
+        .catch(() => {
+          btnSubmitCall.disabled = false;
+          btnSubmitCall.textContent = 'Kirim Panggilan 🛎️';
+          alert('Terjadi kendala koneksi.');
+        });
+      });
+    })();
+  </script>
+
+  <!-- Web Push Real-Time Notifications -->
+  @include('customer.include.order_notifications')
 </body>
 </html>

@@ -532,20 +532,8 @@
 </div>
 
 <script>
-  // Auto-refresh order status live every 5 seconds
-  (function(){
-    const currentStage = {{ $currentStage }};
-    setInterval(function(){
-      fetch('{{ route("customer.order.status", $order->id) }}')
-        .then(r => r.json())
-        .then(data => {
-          if(data.stage !== currentStage){
-            location.reload();
-          }
-        })
-        .catch(e => console.error(e));
-    }, 5000);
-  })();
+  window.RS_CURRENT_ORDER_ID = {{ $order->id }};
 </script>
+@include('customer.include.order_notifications')
 </body>
 </html>

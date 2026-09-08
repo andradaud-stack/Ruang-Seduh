@@ -154,6 +154,43 @@ public function showRegister()
         ]);
     }
 
+    public function getActiveOrdersStatus()
+    {
+        $user = Auth::guard('customer')->user();
+        if (!$user) {
+            return response()->json(['success' => false, 'orders' => []], 401);
+        }
+
+        $orders = Orders::where('pengguna_id', $user->id)
+            ->where('created_at', '>=', now()->subHours(24))
+            ->with('tabel')
+            ->orderBy('updated_at', 'desc')
+            ->get(['id', 'table_id', 'status', 'total', 'updated_at']);
+
+        $statusStage = [
+            'menunggu_konfirmasi' => 0,
+            'diproses'            => 1,
+            'siap_disajikan'      => 2,
+            'selesai'             => 3,
+            'dibatalkan'          => -1,
+        ];
+
+        return response()->json([
+            'success' => true,
+            'orders'  => $orders->map(function ($order) use ($statusStage) {
+                return [
+                    'id'           => $order->id,
+                    'order_number' => str_pad($order->id, 5, '0', STR_PAD_LEFT),
+                    'status'       => $order->status,
+                    'stage'        => $statusStage[$order->status] ?? -1,
+                    'table_number' => $order->tabel->table_number ?? '-',
+                    'detail_url'   => route('customer.order.detail', $order->id),
+                    'updated_at'   => $order->updated_at ? $order->updated_at->timestamp : 0,
+                ];
+            }),
+        ]);
+    }
+
     public function editProfile()
     {
         $user = Auth::guard('customer')->user();

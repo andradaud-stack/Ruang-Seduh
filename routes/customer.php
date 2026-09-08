@@ -10,6 +10,7 @@ Route::get('/customer/home', [CustomerController::class, 'home'])->middleware('c
 Route::get('/customer/menu/{menu}', [CustomerController::class, 'show'])->middleware('customer.auth')->name('customer.menu.show');
 Route::get('/customer/profile', [CustomerController::class, 'profile'])->middleware('customer.auth')->name('customer.profile.index');
 Route::get('/customer/order/history', [CustomerController::class, 'orderHistory'])->middleware('customer.auth')->name('customer.order.history');
+Route::get('/customer/orders/active-status', [CustomerController::class, 'getActiveOrdersStatus'])->middleware('customer.auth')->name('customer.orders.active-status');
 Route::get('/customer/order/{order}', [CustomerController::class, 'showOrder'])->middleware('customer.auth')->name('customer.order.detail');
 Route::get('/customer/order/{order}/status', [CustomerController::class, 'getOrderStatus'])->middleware('customer.auth')->name('customer.order.status');
 Route::get('/customer/profile/password', [CustomerController::class, 'showChangePassword'])->middleware('customer.auth')->name('customer.password.edit');

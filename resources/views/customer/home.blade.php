@@ -861,5 +861,6 @@
     });
   });
 </script>
+@include('customer.include.order_notifications')
 </body>
 </html>

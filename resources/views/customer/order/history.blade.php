@@ -352,5 +352,6 @@
   </div>
 
 </div>
+@include('customer.include.order_notifications')
 </body>
 </html>

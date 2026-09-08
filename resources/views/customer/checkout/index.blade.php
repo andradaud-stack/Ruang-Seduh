@@ -1,384 +1,409 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Checkout - Ruang Seduh</title>
-<link rel="icon" href="{{ asset('assets/images/LOGO_RUANG_SEDUH(putih).png') }}" type="image/png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg-page: #f8fafc;
-    --card-bg: #ffffff;
-    --border: #e2e8f0;
-    --border-hover: #cbd5e1;
-    --text-primary: #0f172a;
-    --text-secondary: #475569;
-    --text-muted: #94a3b8;
-    --brand: #0f172a;
-    --brand-hover: #1e293b;
-    --success: #10b981;
-    --success-light: #ecfdf5;
-    --radius-lg: 18px;
-    --radius-md: 12px;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Checkout — Ruang Seduh</title>
+  <link rel="icon" href="{{ asset('assets/images/LOGO_RUANG_SEDUH(putih).png') }}" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600;1,700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { min-height: 100%; background: #0f172a; }
-  body {
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    color: var(--text-primary);
-    -webkit-font-smoothing: antialiased;
-  }
+    :root {
+      --ink: #24170f;
+      --muted: #84776e;
+      --cream: #f7f1e9;
+      --paper: #fffdf9;
+      --brown: #5a351f;
+      --brown-2: #754a2c;
+      --line: #e9e0d6;
+      --green: #39775b;
+      --green-bg: #e7f3eb;
+      --gold: #c99b51;
+    }
 
-  .co-wrap {
-    width: 100%;
-    max-width: 480px;
-    margin: 0 auto;
-    min-height: 100vh;
-    background: var(--bg-page);
-    position: relative;
-    padding-bottom: 120px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  }
+    body {
+      min-height: 100vh;
+      background: #eee8df;
+      color: var(--ink);
+      font-family: "DM Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
 
-  /* Header */
-  .co-header {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 24px 20px 18px;
-    background: #ffffff;
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 30;
-  }
-  .co-back {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background: #f8fafc;
-    border: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    color: var(--text-primary);
-    flex-shrink: 0;
-    transition: all 0.15s ease;
-  }
-  .co-back:hover {
-    background: #ffffff;
-    border-color: var(--border-hover);
-  }
-  .co-back svg {
-    width: 18px;
-    height: 18px;
-    stroke: currentColor;
-    stroke-width: 2.2;
-    fill: none;
-  }
-  .co-header h1 {
-    font-size: 18px;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    color: var(--text-primary);
-  }
+    button, input, textarea { font: inherit; }
+    button { border: 0; cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
 
-  /* Main Form Area */
-  .co-body {
-    padding: 18px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-  }
+    .co-wrap {
+      width: min(100%, 720px);
+      margin: 0 auto;
+      min-height: 100vh;
+      background: var(--cream);
+      position: relative;
+      padding-bottom: 130px;
+      box-shadow: 0 0 50px rgba(36, 23, 15, 0.08);
+    }
 
-  /* Table Badge Card */
-  .table-card {
-    background: #ffffff;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 14px 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .table-card-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-secondary);
-  }
-  .table-card-label span.dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--success);
-    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
-  }
-  .table-card-val {
-    font-size: 14px;
-    font-weight: 800;
-    color: var(--text-primary);
-  }
+    /* Header */
+    .co-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 24px 28px 18px;
+      background: rgba(247, 241, 233, 0.95);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(233, 224, 214, 0.8);
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
 
-  /* Section Headings */
-  .section-title {
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--text-secondary);
-    margin-bottom: 8px;
-    display: block;
-  }
+    .co-back {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink);
+      box-shadow: 0 4px 12px rgba(36, 23, 15, 0.06);
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+    .co-back:hover {
+      background: #fffdfa;
+      transform: scale(1.05);
+    }
+    .co-back svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      stroke-width: 2.3;
+      fill: none;
+    }
 
-  /* Payment Options */
-  .payment-options {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .pay-option {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 16px;
-    background: #ffffff;
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    transition: all 0.15s ease;
-    text-align: left;
-  }
-  .pay-option:hover {
-    border-color: var(--border-hover);
-  }
-  .pay-option.active {
-    border-color: var(--brand);
-    background: #f8fafc;
-    box-shadow: 0 0 0 1px var(--brand);
-  }
-  .pay-option-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .pay-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
-    background: #f1f5f9;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    color: var(--text-primary);
-  }
-  .pay-name {
-    font-size: 14.5px;
-    font-weight: 700;
-    color: var(--text-primary);
-  }
-  .pay-sub {
-    font-size: 11.5px;
-    color: var(--text-muted);
-  }
-  .pay-radio {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 2px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.15s ease;
-  }
-  .pay-option.active .pay-radio {
-    border-color: var(--brand);
-  }
-  .pay-option.active .pay-radio::after {
-    content: "";
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--brand);
-  }
+    .co-header h1 {
+      font-family: "Playfair Display", serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--ink);
+    }
 
-  /* Order Summary List */
-  .order-summary-card {
-    background: #ffffff;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 16px;
-  }
-  .summary-item {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid #f1f5f9;
-  }
-  .summary-item:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-  }
-  .summary-item:first-child {
-    padding-top: 0;
-  }
-  .summary-thumb {
-    width: 48px;
-    height: 48px;
-    border-radius: 8px;
-    background: #f1f5f9;
-    overflow: hidden;
-    flex-shrink: 0;
-  }
-  .summary-thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .summary-info {
-    flex: 1;
-    min-width: 0;
-  }
-  .summary-title-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 8px;
-  }
-  .summary-name {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--text-primary);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .summary-qty {
-    font-size: 12.5px;
-    font-weight: 600;
-    color: var(--text-muted);
-  }
-  .summary-price {
-    font-size: 13.5px;
-    font-weight: 700;
-    color: var(--brand);
-    margin-top: 2px;
-    font-variant-numeric: tabular-nums;
-  }
-  .summary-meta {
-    font-size: 11.5px;
-    color: var(--text-secondary);
-    margin-top: 2px;
-  }
+    .co-body {
+      padding: 22px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
 
-  /* Kitchen Notes */
-  .textarea-notes {
-    width: 100%;
-    padding: 12px 14px;
-    border-radius: var(--radius-md);
-    background: #ffffff;
-    border: 1px solid var(--border);
-    font-family: inherit;
-    font-size: 13.5px;
-    color: var(--text-primary);
-    outline: none;
-    resize: none;
-    transition: all 0.15s ease;
-  }
-  .textarea-notes:focus {
-    border-color: var(--brand);
-    box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
-  }
-  .textarea-notes::placeholder {
-    color: var(--text-muted);
-  }
+    /* Table Badge Card */
+    .table-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 14px rgba(36, 23, 15, 0.04);
+    }
+    .table-card-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #655950;
+    }
+    .table-card-label span.dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 3px rgba(57, 119, 91, 0.2);
+      animation: pulseGreen 2s infinite;
+    }
+    @keyframes pulseGreen {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+    .table-card-val {
+      font-family: "Playfair Display", serif;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--brown);
+    }
 
-  /* Total Price Card */
-  .total-card {
-    background: #ffffff;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .total-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-secondary);
-  }
-  .total-num {
-    font-size: 20px;
-    font-weight: 800;
-    color: var(--text-primary);
-    font-variant-numeric: tabular-nums;
-  }
+    /* Section Title */
+    .section-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--brown-2);
+      margin-bottom: 10px;
+      display: block;
+    }
 
-  /* Sticky Bottom Pay Button */
-  .co-bottom-wrap {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-    z-index: 40;
-    pointer-events: none;
-  }
-  .co-bottom {
-    width: 100%;
-    max-width: 480px;
-    pointer-events: auto;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-top: 1px solid var(--border);
-    padding: 16px 20px calc(16px + env(safe-area-inset-bottom));
-    box-shadow: 0 -10px 25px rgba(15, 23, 42, 0.05);
-  }
-  .btn-pay {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 15px;
-    border-radius: var(--radius-md);
-    background: var(--brand);
-    color: #ffffff;
-    border: none;
-    font-family: inherit;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.15);
-    transition: all 0.15s ease;
-  }
-  .btn-pay:hover {
-    background: var(--brand-hover);
-  }
-  .btn-pay:active {
-    transform: scale(0.98);
-  }
-  .btn-pay svg {
-    width: 16px;
-    height: 16px;
-    stroke: currentColor;
-    stroke-width: 2.2;
-    fill: none;
-  }
-</style>
+    /* Payment Options */
+    .payment-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .pay-option {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 18px;
+      background: var(--paper);
+      border: 1.5px solid var(--line);
+      border-radius: 18px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+    }
+    .pay-option:hover {
+      border-color: var(--brown);
+    }
+    .pay-option.active {
+      border-color: var(--brown);
+      background: #fbf5ee;
+      box-shadow: 0 4px 14px rgba(90, 53, 31, 0.12);
+    }
+    .pay-option-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .pay-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: #f3eae0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .pay-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .pay-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+    .pay-radio {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .pay-option.active .pay-radio {
+      border-color: var(--brown);
+    }
+    .pay-option.active .pay-radio::after {
+      content: "";
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--brown);
+    }
+
+    /* Order Summary */
+    .order-summary-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 18px 20px;
+      box-shadow: 0 4px 16px rgba(36, 23, 15, 0.04);
+    }
+    .summary-item {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .summary-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .summary-item:first-child {
+      padding-top: 0;
+    }
+    .summary-thumb {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      background: #eddccb;
+      overflow: hidden;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .summary-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .summary-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .summary-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .summary-name {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .summary-qty {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+    .summary-price {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--brown);
+      margin-top: 2px;
+      font-variant-numeric: tabular-nums;
+    }
+    .summary-meta {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* Notes Textarea */
+    .textarea-notes {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      font-family: inherit;
+      font-size: 13.5px;
+      color: var(--ink);
+      outline: none;
+      resize: none;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px rgba(36, 23, 15, 0.04);
+    }
+    .textarea-notes:focus {
+      border-color: var(--brown);
+      box-shadow: 0 0 0 3px rgba(90, 53, 31, 0.1);
+    }
+    .textarea-notes::placeholder {
+      color: #a89f97;
+    }
+
+    /* Total Card */
+    .total-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 14px rgba(36, 23, 15, 0.04);
+    }
+    .total-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #655950;
+    }
+    .total-num {
+      font-family: "Playfair Display", serif;
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Sticky Bottom */
+    .co-bottom-wrap {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      z-index: 40;
+      pointer-events: none;
+    }
+    .co-bottom {
+      width: min(100%, 720px);
+      pointer-events: auto;
+      background: rgba(255, 253, 249, 0.95);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-top: 1px solid var(--line);
+      padding: 16px 28px calc(16px + env(safe-area-inset-bottom));
+      box-shadow: 0 -12px 35px rgba(36, 23, 15, 0.08);
+    }
+    .btn-pay {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 15px;
+      border-radius: 16px;
+      background: var(--brown);
+      color: #ffffff;
+      border: none;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 22px rgba(90, 53, 31, 0.25);
+      transition: all 0.15s ease;
+    }
+    .btn-pay:hover {
+      background: var(--brown-2);
+      transform: translateY(-2px);
+    }
+    .btn-pay:active {
+      transform: scale(0.98);
+    }
+    .btn-pay svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      fill: none;
+    }
+
+    @media (max-width: 480px) {
+      .co-header { padding: 18px 20px 14px; }
+      .co-body { padding: 18px 20px; gap: 16px; }
+      .co-bottom { padding: 14px 20px calc(14px + env(safe-area-inset-bottom)); }
+    }
+  </style>
 </head>
 <body>
 
@@ -389,7 +414,7 @@
     <a href="{{ route('customer.cart.index') }}" class="co-back" aria-label="Kembali ke Keranjang">
       <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
     </a>
-    <h1>Checkout & Bayar</h1>
+    <h1>Checkout & Pembayaran</h1>
   </header>
 
   <main class="co-body">
@@ -419,8 +444,8 @@
             <div class="pay-option-left">
               <div class="pay-icon">📱</div>
               <div>
-                <div class="pay-name">QRIS</div>
-                <div class="pay-sub">GoPay, OVO, Dana, BCA, Livin</div>
+                <div class="pay-name">QRIS Instant</div>
+                <div class="pay-sub">GoPay, OVO, Dana, BCA, Livin, ShopeePay</div>
               </div>
             </div>
             <div class="pay-radio"></div>
@@ -431,7 +456,7 @@
               <div class="pay-icon">💵</div>
               <div>
                 <div class="pay-name">Tunai di Kasir</div>
-                <div class="pay-sub">Bayar langsung ke kasir setelah pesan</div>
+                <div class="pay-sub">Bayar langsung ke kasir setelah membuat pesanan</div>
               </div>
             </div>
             <div class="pay-radio"></div>
@@ -442,7 +467,7 @@
               <div class="pay-icon">🏦</div>
               <div>
                 <div class="pay-name">Transfer Bank</div>
-                <div class="pay-sub">Virtual account / rekening resmi</div>
+                <div class="pay-sub">Virtual account / rekening resmi Ruang Seduh</div>
               </div>
             </div>
             <div class="pay-radio"></div>
@@ -462,13 +487,13 @@
                 @if(!empty($item['image']))
                   <img src="{{ asset('storage/' . $item['image']) }}" alt="{{ $item['name'] }}">
                 @else
-                  <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:18px;">☕</div>
+                  <div style="font-size:20px;">☕</div>
                 @endif
               </div>
               <div class="summary-info">
                 <div class="summary-title-row">
                   <div class="summary-name">{{ $item['name'] }}</div>
-                  <span class="summary-qty">x{{ $item['qty'] }}</span>
+                  <span class="summary-qty">&times;{{ $item['qty'] }}</span>
                 </div>
                 <div class="summary-price">Rp {{ number_format($item['price'], 0, ',', '.') }}</div>
                 @php
@@ -480,7 +505,7 @@
                   <div class="summary-meta">{{ implode(' · ', $itemDetails) }}</div>
                 @endif
                 @if(!empty($item['notes']))
-                  <div class="summary-meta" style="color:#b45309; font-style:italic;">"{{ $item['notes'] }}"</div>
+                  <div class="summary-meta" style="color:var(--brown-2); font-style:italic;">"{{ $item['notes'] }}"</div>
                 @endif
               </div>
             </div>
@@ -508,7 +533,7 @@
     <div class="co-bottom">
       <button type="submit" form="checkoutForm" class="btn-pay">
         <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-        <span>Konfirmasi & Bayar Sekarang</span>
+        <span>Konfirmasi & Buat Pesanan</span>
       </button>
     </div>
   </div>
@@ -529,5 +554,7 @@
     document.getElementById('metode_pembayaran').value = methodMap[method] || 'Qris';
   }
 </script>
+
+@include('customer.include.order_notifications')
 </body>
 </html>

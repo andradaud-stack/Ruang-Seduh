@@ -1,268 +1,285 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Profil Saya - Ruang Seduh</title>
-<link rel="icon" href="{{ asset('assets/images/LOGO_RUANG_SEDUH(putih).png') }}" type="image/png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg-page: #f8fafc;
-    --card-bg: #ffffff;
-    --border: #e2e8f0;
-    --border-hover: #cbd5e1;
-    --text-primary: #0f172a;
-    --text-secondary: #475569;
-    --text-muted: #94a3b8;
-    --brand: #0f172a;
-    --brand-hover: #1e293b;
-    --danger: #ef4444;
-    --radius-lg: 18px;
-    --radius-md: 12px;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Profil Saya — Ruang Seduh</title>
+  <link rel="icon" href="{{ asset('assets/images/LOGO_RUANG_SEDUH(putih).png') }}" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600;1,700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { min-height: 100%; background: #0f172a; }
-  body {
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    color: var(--text-primary);
-    -webkit-font-smoothing: antialiased;
-  }
+    :root {
+      --ink: #24170f;
+      --muted: #84776e;
+      --cream: #f7f1e9;
+      --paper: #fffdf9;
+      --brown: #5a351f;
+      --brown-2: #754a2c;
+      --line: #e9e0d6;
+      --green: #39775b;
+      --green-bg: #e7f3eb;
+      --gold: #c99b51;
+    }
 
-  .pf-wrap {
-    width: 100%;
-    max-width: 480px;
-    margin: 0 auto;
-    min-height: 100vh;
-    background: var(--bg-page);
-    position: relative;
-    padding-bottom: 110px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  }
+    body {
+      min-height: 100vh;
+      background: #eee8df;
+      color: var(--ink);
+      font-family: "DM Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
 
-  /* Header */
-  .pf-header {
-    padding: 24px 20px 18px;
-    background: #ffffff;
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 30;
-  }
-  .pf-header h1 {
-    font-size: 18px;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    color: var(--text-primary);
-  }
+    button { font: inherit; border: 0; cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
 
-  .pf-body {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
+    .pf-wrap {
+      width: min(100%, 720px);
+      margin: 0 auto;
+      min-height: 100vh;
+      background: var(--cream);
+      position: relative;
+      padding-bottom: 120px;
+      box-shadow: 0 0 50px rgba(36, 23, 15, 0.08);
+    }
 
-  /* Success Alert */
-  .pf-alert {
-    background: #ecfdf5;
-    border: 1px solid #a7f3d0;
-    border-radius: var(--radius-md);
-    padding: 12px 16px;
-    font-size: 13px;
-    font-weight: 600;
-    color: #065f46;
-  }
+    /* Header */
+    .pf-header {
+      padding: 24px 28px 18px;
+      background: rgba(247, 241, 233, 0.95);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(233, 224, 214, 0.8);
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
 
-  /* User Info Card */
-  .user-card {
-    background: #ffffff;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 24px 20px;
-    text-align: center;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
-  }
-  .avatar-circle {
-    width: 68px;
-    height: 68px;
-    border-radius: 50%;
-    background: #0f172a;
-    color: #ffffff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    font-weight: 800;
-    margin: 0 auto 12px;
-    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.15);
-  }
-  .user-name {
-    font-size: 18px;
-    font-weight: 800;
-    color: var(--text-primary);
-    margin-bottom: 3px;
-  }
-  .user-email {
-    font-size: 13px;
-    color: var(--text-muted);
-  }
+    .pf-header h1 {
+      font-family: "Playfair Display", serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--ink);
+    }
 
-  /* Menu Links Group */
-  .menu-group {
-    background: #ffffff;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-  }
-  .menu-item {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 16px 18px;
-    border-bottom: 1px solid #f1f5f9;
-    text-decoration: none;
-    color: var(--text-primary);
-    transition: background 0.15s ease;
-  }
-  .menu-item:last-child {
-    border-bottom: none;
-  }
-  .menu-item:hover {
-    background: #f8fafc;
-  }
-  .menu-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    background: #f1f5f9;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-primary);
-    flex-shrink: 0;
-  }
-  .menu-icon svg {
-    width: 18px;
-    height: 18px;
-    stroke: currentColor;
-    stroke-width: 2;
-    fill: none;
-  }
-  .menu-text {
-    flex: 1;
-    font-size: 14px;
-    font-weight: 600;
-  }
-  .menu-chevron {
-    color: var(--text-muted);
-  }
-  .menu-chevron svg {
-    width: 16px;
-    height: 16px;
-    stroke: currentColor;
-    stroke-width: 2.2;
-    fill: none;
-  }
+    .pf-body {
+      padding: 24px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
 
-  /* Logout Button */
-  .btn-logout {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    background: #ffffff;
-    border: 1px solid #fecaca;
-    color: #dc2626;
-    padding: 14px;
-    border-radius: var(--radius-md);
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.15s ease;
-  }
-  .btn-logout:hover {
-    background: #fef2f2;
-    border-color: #f87171;
-  }
-  .btn-logout svg {
-    width: 16px;
-    height: 16px;
-    stroke: currentColor;
-    stroke-width: 2.2;
-    fill: none;
-  }
+    /* Success Alert */
+    .pf-alert {
+      background: var(--green-bg);
+      border: 1px solid #bbf7d0;
+      border-radius: 16px;
+      padding: 13px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--green);
+    }
 
-  /* Floating Bottom Dock Navigation */
-  .dock-wrap {
-    position: fixed;
-    bottom: 16px;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-    z-index: 45;
-    pointer-events: none;
-  }
-  .dock-nav {
-    width: calc(100% - 32px);
-    max-width: 440px;
-    pointer-events: auto;
-    background: rgba(255, 255, 255, 0.94);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(226, 232, 240, 0.9);
-    border-radius: 24px;
-    padding: 8px 12px;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    box-shadow: 0 12px 30px -8px rgba(15, 23, 42, 0.12);
-  }
-  .dock-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3px;
-    text-decoration: none;
-    color: var(--text-muted);
-    padding: 6px 14px;
-    border-radius: 16px;
-    transition: all 0.15s ease;
-  }
-  .dock-item svg {
-    width: 20px;
-    height: 20px;
-    stroke: currentColor;
-    stroke-width: 2;
-    fill: none;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    transition: transform 0.15s ease;
-  }
-  .dock-item span {
-    font-size: 11px;
-    font-weight: 600;
-  }
-  .dock-item:hover {
-    color: var(--text-primary);
-  }
-  .dock-item.active {
-    color: #0f172a;
-    background: #f1f5f9;
-  }
-  .dock-item.active svg {
-    stroke-width: 2.3;
-    transform: translateY(-1px);
-  }
-</style>
+    /* User Info Card */
+    .user-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 28px 20px;
+      text-align: center;
+      box-shadow: 0 6px 20px rgba(36, 23, 15, 0.04);
+    }
+    .avatar-circle {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: var(--brown);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Playfair Display", serif;
+      font-size: 28px;
+      font-weight: 800;
+      margin: 0 auto 14px;
+      box-shadow: 0 8px 20px rgba(90, 53, 31, 0.25);
+    }
+    .user-name {
+      font-family: "Playfair Display", serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .user-email {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* Menu Links Group */
+    .menu-group {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 6px 20px rgba(36, 23, 15, 0.04);
+    }
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--line);
+      color: var(--ink);
+      transition: background 0.15s ease;
+    }
+    .menu-item:last-child {
+      border-bottom: none;
+    }
+    .menu-item:hover {
+      background: #fbf6f0;
+    }
+    .menu-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: #f3eae0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--brown);
+      flex-shrink: 0;
+    }
+    .menu-icon svg {
+      width: 19px;
+      height: 19px;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      fill: none;
+    }
+    .menu-text {
+      flex: 1;
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .menu-chevron {
+      color: var(--muted);
+    }
+    .menu-chevron svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 2.3;
+      fill: none;
+    }
+
+    /* Logout Button */
+    .btn-logout {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: var(--paper);
+      border: 1.5px solid #fecdd3;
+      color: #be123c;
+      padding: 15px;
+      border-radius: 18px;
+      font-family: inherit;
+      font-size: 14.5px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(190, 18, 60, 0.05);
+      transition: all 0.2s ease;
+    }
+    .btn-logout:hover {
+      background: #fff1f2;
+      border-color: #fda4af;
+      transform: translateY(-1px);
+    }
+    .btn-logout svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      fill: none;
+    }
+
+    /* Bottom Navigation Dock */
+    .bottom-nav {
+      position: fixed;
+      z-index: 24;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 18px;
+      width: min(calc(100% - 36px), 540px);
+      height: 74px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      padding: 6px;
+      border-radius: 25px;
+      background: rgba(255, 253, 249, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 16px 45px rgba(54, 35, 22, 0.17);
+    }
+
+    .nav-item {
+      background: transparent;
+      color: #a29a93;
+      border-radius: 19px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      position: relative;
+      transition: all 0.15s ease;
+    }
+    .nav-item > span {
+      font-size: 20px;
+      line-height: 1;
+    }
+    .nav-item small {
+      font-size: 10.5px;
+      font-weight: 700;
+    }
+    .nav-item.active {
+      background: #f2e9df;
+      color: var(--brown);
+    }
+    .nav-item b {
+      position: absolute;
+      top: 6px;
+      margin-left: 6px;
+      width: 17px;
+      height: 17px;
+      display: grid;
+      place-items: center;
+      background: var(--brown);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 9px;
+      font-weight: 800;
+    }
+
+    @media (max-width: 480px) {
+      .pf-header { padding: 18px 20px 14px; }
+      .pf-body { padding: 18px 20px; }
+      .menu-item { padding: 16px 18px; }
+    }
+  </style>
 </head>
 <body>
+
+@php
+  $cart = session('cart', []);
+  $cartCount = is_array($cart) ? array_sum(array_column($cart, 'qty')) : 0;
+@endphp
 
 <div class="pf-wrap">
 
@@ -284,7 +301,7 @@
       <div class="avatar-circle">
         {{ strtoupper(substr($user->name ?? 'C', 0, 1)) }}
       </div>
-      <h2 class="user-name">{{ $user->name ?? 'Customer' }}</h2>
+      <h2 class="user-name">{{ $user->name ?? 'Pelanggan' }}</h2>
       <p class="user-email">{{ $user->email ?? '' }}</p>
     </div>
 
@@ -321,7 +338,7 @@
       </a>
     </div>
 
-    <!-- Logout -->
+    <!-- Logout Form -->
     <form action="{{ route('customer.logout') }}" method="POST">
       @csrf
       <button type="submit" class="btn-logout">
@@ -332,28 +349,28 @@
 
   </main>
 
-  <!-- Floating Bottom Dock Navigation -->
-  <div class="dock-wrap">
-    <nav class="dock-nav">
-      <a href="{{ route('customer.home') }}" class="dock-item" aria-label="Beranda">
-        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-        <span>Beranda</span>
-      </a>
-      <a href="{{ route('customer.order.history') }}" class="dock-item" aria-label="Riwayat">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-        <span>Riwayat</span>
-      </a>
-      <a href="{{ route('customer.cart.index') }}" class="dock-item" aria-label="Keranjang">
-        <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-        <span>Keranjang</span>
-      </a>
-      <a href="{{ route('customer.profile.index') }}" class="dock-item active" aria-label="Profil">
-        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-        <span>Profil</span>
-      </a>
-    </nav>
-  </div>
+  <!-- Bottom Navigation Dock -->
+  <nav class="bottom-nav">
+    <a href="{{ route('customer.home') }}" class="nav-item">
+      <span>⌂</span>
+      <small>Beranda</small>
+    </a>
+    <a href="{{ route('customer.order.history') }}" class="nav-item">
+      <span>◷</span>
+      <small>Riwayat</small>
+    </a>
+    <a href="{{ route('customer.cart.index') }}" class="nav-item">
+      <span>🛒<b id="navBadge" style="{{ $cartCount > 0 ? '' : 'display:none;' }}">{{ $cartCount }}</b></span>
+      <small>Keranjang</small>
+    </a>
+    <a href="{{ route('customer.profile.index') }}" class="nav-item active">
+      <span>♙</span>
+      <small>Profil</small>
+    </a>
+  </nav>
 
 </div>
+
+@include('customer.include.order_notifications')
 </body>
 </html>

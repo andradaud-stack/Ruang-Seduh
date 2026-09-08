@@ -1,170 +1,185 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Ubah Kata Sandi - Ruang Seduh</title>
-<link rel="icon" href="{{ asset('assets/images/LOGO_RUANG_SEDUH(putih).png') }}" type="image/png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg-page: #f8fafc;
-    --card-bg: #ffffff;
-    --border: #e2e8f0;
-    --border-hover: #cbd5e1;
-    --text-primary: #0f172a;
-    --text-secondary: #475569;
-    --text-muted: #94a3b8;
-    --brand: #0f172a;
-    --brand-hover: #1e293b;
-    --radius-lg: 18px;
-    --radius-md: 12px;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Ubah Kata Sandi — Ruang Seduh</title>
+  <link rel="icon" href="{{ asset('assets/images/LOGO_RUANG_SEDUH(putih).png') }}" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600;1,700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { min-height: 100%; background: #0f172a; }
-  body {
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    color: var(--text-primary);
-    -webkit-font-smoothing: antialiased;
-  }
+    :root {
+      --ink: #24170f;
+      --muted: #84776e;
+      --cream: #f7f1e9;
+      --paper: #fffdf9;
+      --brown: #5a351f;
+      --brown-2: #754a2c;
+      --line: #e9e0d6;
+      --green: #39775b;
+      --green-bg: #e7f3eb;
+      --gold: #c99b51;
+    }
 
-  .cp-wrap {
-    width: 100%;
-    max-width: 480px;
-    margin: 0 auto;
-    min-height: 100vh;
-    background: var(--bg-page);
-    position: relative;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  }
+    body {
+      min-height: 100vh;
+      background: #eee8df;
+      color: var(--ink);
+      font-family: "DM Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
 
-  /* Header */
-  .cp-header {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 24px 20px 18px;
-    background: #ffffff;
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 30;
-  }
-  .cp-back {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background: #f8fafc;
-    border: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    color: var(--text-primary);
-    flex-shrink: 0;
-    transition: all 0.15s ease;
-  }
-  .cp-back:hover {
-    background: #ffffff;
-    border-color: var(--border-hover);
-  }
-  .cp-back svg {
-    width: 18px;
-    height: 18px;
-    stroke: currentColor;
-    stroke-width: 2.2;
-    fill: none;
-  }
-  .cp-header h1 {
-    font-size: 18px;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    color: var(--text-primary);
-  }
+    button, input { font: inherit; }
+    button { border: 0; cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
 
-  .cp-body {
-    padding: 20px;
-  }
+    .cp-wrap {
+      width: min(100%, 720px);
+      margin: 0 auto;
+      min-height: 100vh;
+      background: var(--cream);
+      position: relative;
+      box-shadow: 0 0 50px rgba(36, 23, 15, 0.08);
+    }
 
-  .cp-alert {
-    background: #ecfdf5;
-    border: 1px solid #a7f3d0;
-    border-radius: var(--radius-md);
-    padding: 12px 16px;
-    font-size: 13px;
-    font-weight: 600;
-    color: #065f46;
-    margin-bottom: 16px;
-  }
+    /* Header */
+    .cp-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 24px 28px 18px;
+      background: rgba(247, 241, 233, 0.95);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(233, 224, 214, 0.8);
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
 
-  .form-card {
-    background: #ffffff;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 24px 20px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
-  }
+    .cp-back {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink);
+      box-shadow: 0 4px 12px rgba(36, 23, 15, 0.06);
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+    .cp-back:hover {
+      background: #fffdfa;
+      transform: scale(1.05);
+    }
+    .cp-back svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      stroke-width: 2.3;
+      fill: none;
+    }
 
-  .form-group {
-    margin-bottom: 18px;
-  }
-  .form-label {
-    display: block;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--text-secondary);
-    margin-bottom: 8px;
-  }
-  .form-input {
-    width: 100%;
-    padding: 12px 14px;
-    border-radius: var(--radius-md);
-    background: #ffffff;
-    border: 1px solid var(--border);
-    font-family: inherit;
-    font-size: 14px;
-    color: var(--text-primary);
-    outline: none;
-    transition: all 0.15s ease;
-  }
-  .form-input:focus {
-    border-color: var(--brand);
-    box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
-  }
-  .form-error {
-    color: #dc2626;
-    font-size: 12px;
-    font-weight: 600;
-    margin-top: 6px;
-  }
+    .cp-header h1 {
+      font-family: "Playfair Display", serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--ink);
+    }
 
-  .btn-submit {
-    width: 100%;
-    padding: 14px;
-    border-radius: var(--radius-md);
-    background: var(--brand);
-    color: #ffffff;
-    border: none;
-    font-family: inherit;
-    font-size: 14.5px;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.15);
-    transition: all 0.15s ease;
-    margin-top: 10px;
-  }
-  .btn-submit:hover {
-    background: var(--brand-hover);
-  }
-  .btn-submit:active {
-    transform: scale(0.98);
-  }
-</style>
+    .cp-body {
+      padding: 24px 28px;
+    }
+
+    .cp-alert {
+      background: var(--green-bg);
+      border: 1px solid #bbf7d0;
+      border-radius: 16px;
+      padding: 13px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--green);
+      margin-bottom: 18px;
+    }
+
+    .form-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 28px 24px;
+      box-shadow: 0 6px 20px rgba(36, 23, 15, 0.04);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--brown-2);
+      margin-bottom: 8px;
+    }
+    .form-input {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--ink);
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    .form-input:focus {
+      border-color: var(--brown);
+      box-shadow: 0 0 0 3px rgba(90, 53, 31, 0.1);
+    }
+    .form-error {
+      color: #be123c;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 6px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 15px;
+      border-radius: 16px;
+      background: var(--brown);
+      color: #ffffff;
+      border: none;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 22px rgba(90, 53, 31, 0.25);
+      transition: all 0.15s ease;
+      margin-top: 10px;
+    }
+    .btn-submit:hover {
+      background: var(--brown-2);
+      transform: translateY(-2px);
+    }
+    .btn-submit:active {
+      transform: scale(0.98);
+    }
+
+    @media (max-width: 480px) {
+      .cp-header { padding: 18px 20px 14px; }
+      .cp-body { padding: 18px 20px; }
+      .form-card { padding: 22px 18px; }
+    }
+  </style>
 </head>
 <body>
 
@@ -197,7 +212,7 @@
 
         <div class="form-group">
           <label class="form-label" for="password">Kata Sandi Baru</label>
-          <input type="password" id="password" name="password" class="form-input" placeholder="••••••••" required>
+          <input type="password" id="password" name="password" class="form-input" placeholder="Minimal 8 karakter" required>
           @error('password')
             <div class="form-error">{{ $message }}</div>
           @enderror
@@ -205,7 +220,7 @@
 
         <div class="form-group">
           <label class="form-label" for="password_confirmation">Konfirmasi Kata Sandi Baru</label>
-          <input type="password" id="password_confirmation" name="password_confirmation" class="form-input" placeholder="••••••••" required>
+          <input type="password" id="password_confirmation" name="password_confirmation" class="form-input" placeholder="Ulangi kata sandi baru" required>
         </div>
 
         <button type="submit" class="btn-submit">Simpan Kata Sandi</button>
@@ -214,5 +229,7 @@
   </main>
 
 </div>
+
+@include('customer.include.order_notifications')
 </body>
 </html>

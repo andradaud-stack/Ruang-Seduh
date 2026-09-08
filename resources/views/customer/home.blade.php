@@ -3,529 +3,691 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Ruang Seduh</title>
+<title>Ruang Seduh - Order Online</title>
 <link rel="icon" href="{{ asset('assets/images/LOGO_RUANG_SEDUH(putih).png') }}" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg: #f7f3ee;
+  :root {
+    --bg-page: #f8fafc;
     --card-bg: #ffffff;
-    --dark: #141414;
-    --maroon: #5a1f1f;
-    --price: #d1352e;
-    --muted: #8a8580;
-    --accent: #e07a5f;
-  }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  html, body{
-    height:100%;
-  }
-  body{
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background:var(--bg);
-  }
-
-  .phone{
-    width:100%;
-    max-width:480px;
-    margin:0 auto;
-    background:var(--bg);
-    position:relative;
-    min-height:100dvh;
+    --border: #e2e8f0;
+    --border-hover: #cbd5e1;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --brand: #0f172a;
+    --brand-hover: #1e293b;
+    --accent: #d97706;
+    --accent-light: #fef3c7;
+    --success: #10b981;
+    --success-light: #ecfdf5;
+    --radius-lg: 16px;
+    --radius-md: 12px;
   }
 
-  .content{
-    padding:24px 20px 120px;
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { min-height: 100%; background: #0f172a; }
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
   }
 
-  /* Header */
-  .header{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    margin-bottom:20px;
-  }
-  .greet-sub{
-    font-size:13px;
-    color:var(--muted);
-    margin-bottom:2px;
-  }
-  .greet-name{
-    font-size:19px;
-    font-weight:700;
-    color:var(--dark);
-  }
-  .logo{
-    width: 75px;
-    height: auto; 
-    object-fit: contain; 
+  /* Main Container */
+  .app-wrap {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: var(--bg-page);
+    position: relative;
+    padding-bottom: 120px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   }
 
-  /* Search */
-  .search-bar{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    background:#fff;
-    border:1px solid #eee2d8;
-    border-radius:14px;
-    padding:12px 16px;
-    margin-bottom:16px;
+  /* Header Section */
+  .header-bar {
+    padding: 24px 20px 16px;
+    background: #ffffff;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 40;
   }
-  .search-bar svg{
-    width:18px; height:18px;
-    stroke:var(--muted);
-    fill:none;
-    stroke-width:2;
-    flex-shrink:0;
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
   }
-  .search-bar input{
-    border:none;
-    outline:none;
-    background:none;
-    font-size:14px;
-    width:100%;
-    color:var(--dark);
+  .brand-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
-  .search-bar input::placeholder{ color:#b5afa7; }
-
-  /* Category pills */
-  .categories{
-    display:flex;
-    gap:8px;
-    overflow-x:auto;
-    margin-bottom:22px;
-    scrollbar-width:none;
+  .brand-logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: #0f172a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
   }
-  .categories::-webkit-scrollbar{display:none;}
-  .chip{
-    flex-shrink:0;
-    padding:9px 18px;
-    border-radius:999px;
-    font-size:13px;
-    font-weight:600;
-    background:#fff;
-    color:var(--maroon);
-    border:1px solid #eee2d8;
-    cursor:pointer;
-    white-space:nowrap;
-    transition: all .15s ease;
+  .brand-logo img {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
   }
-  .chip.active{
-    background:var(--maroon);
-    color:#fff;
-    border-color:var(--maroon);
+  .brand-title {
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    line-height: 1.2;
+  }
+  .brand-sub {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-muted);
   }
 
-  .section-title{
-    font-size:17px;
-    font-weight:700;
-    color:var(--dark);
-    margin-bottom:14px;
+  /* Table Pill Indicator */
+  .table-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    background: #f1f5f9;
+    color: #334155;
+    border: 1px solid #e2e8f0;
+  }
+  .table-pill.active {
+    background: var(--success-light);
+    color: #065f46;
+    border-color: #a7f3d0;
+  }
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #94a3b8;
+  }
+  .table-pill.active .status-dot {
+    background: var(--success);
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+    animation: pulseDot 2s infinite;
+  }
+  @keyframes pulseDot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
   }
 
-  /* Menu grid */
-  .grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:14px;
+  /* Search Input */
+  .search-wrap {
+    position: relative;
+    width: 100%;
   }
-  .card{
-    display:block;
-    background:var(--card-bg);
-    border-radius:16px;
-    overflow:hidden;
-    box-shadow: 0 4px 14px rgba(0,0,0,.05);
-    cursor:pointer;
-    text-decoration:none;
-    color:inherit;
-    transition: transform .15s ease;
+  .search-wrap svg {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    stroke: var(--text-muted);
+    stroke-width: 2;
+    fill: none;
+    pointer-events: none;
   }
-  .card:hover{ transform: translateY(-3px); }
-
-  .thumb{
-    height:110px;
-    width:100%;
-    position:relative;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    overflow:hidden;
+  .search-input {
+    width: 100%;
+    padding: 10px 14px 10px 40px;
+    border-radius: var(--radius-md);
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    font-family: inherit;
+    font-size: 13.5px;
+    color: var(--text-primary);
+    outline: none;
+    transition: all 0.15s ease;
   }
-  .thumb svg{ width:100%; height:100%; }
-
-  .card-body{
-    padding:10px 12px 14px;
+  .search-input:focus {
+    background: #ffffff;
+    border-color: #0f172a;
+    box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
   }
-  .card-tag{
-    font-size:10px;
-    letter-spacing:.03em;
-    text-transform:uppercase;
-    color:var(--muted);
-    margin-bottom:4px;
-  }
-  .card-name{
-    font-size:14px;
-    font-weight:700;
-    color:var(--dark);
-    margin-bottom:4px;
-  }
-  .card-price{
-    font-size:13px;
-    font-weight:700;
-    color:var(--price);
-  }
-  .card-stock{
-    margin-top:6px;
-    font-size:11px;
-    font-weight:600;
-    color:var(--muted);
+  .search-input::placeholder {
+    color: var(--text-muted);
   }
 
-  /* Bottom Navbar (floating, fixed to real screen) */
-  .navbar-wrap{
-    position:fixed;
-    left:0;
-    right:0;
-    bottom:0;
-    display:flex;
-    justify-content:center;
-    padding:0 20px 20px;
-    pointer-events:none;
-  }
-  .navbar{
-    width:100%;
-    max-width:440px;
-    pointer-events:auto;
-    display:flex;
-    align-items:center;
-    justify-content:space-around;
-    background:#ffffff;
-    border-radius:999px;
-    padding:14px 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,.25);
-  }
-  .nav-item{
-    background:none;
-    border:none;
-    padding:9px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    cursor:pointer;
-    transition: background .2s ease, transform .15s ease;
-  }
-  .nav-item img{
-    width:22px;
-    height:22px;
-    object-fit:contain;
-  }
-  .nav-item:hover{ transform: translateY(-2px); }
-  .nav-item.active{
-    background: var(--accent);
-    box-shadow: 0 0 0 4px #ffffff, 0 4px 10px rgba(224,122,95,0.5);
+  /* Body Content */
+  .main-content {
+    padding: 18px 20px;
   }
 
-  @media (max-width: 340px){
-    .content{ padding:20px 14px 120px; }
-    .greet-name{ font-size:17px; }
-    .logo{ font-size:19px; }
-    .grid{ gap:10px; }
-    .card-name{ font-size:13px; }
-    .nav-item{ padding:7px; }
-    .nav-item img{ width:25px; height:25px; }
+  /* Category Filter Pills */
+  .category-bar {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 14px;
+    margin-bottom: 12px;
+    scrollbar-width: none;
+  }
+  .category-bar::-webkit-scrollbar { display: none; }
+  .chip {
+    flex-shrink: 0;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    background: #ffffff;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+  }
+  .chip:hover {
+    border-color: var(--border-hover);
+    color: var(--text-primary);
+  }
+  .chip.active {
+    background: #0f172a;
+    color: #ffffff;
+    border-color: #0f172a;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15);
   }
 
-  @media (min-width: 700px){
-    .phone{ max-width:420px; margin-top:24px; margin-bottom:24px; border-radius:28px; box-shadow:0 20px 60px rgba(0,0,0,.25); overflow:hidden; }
-    body{ background:#1b1b1b; }
+  /* Section Title */
+  .section-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
   }
+  .section-heading {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+  }
+  .section-count {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  /* Menu Cards Grid */
+  .menu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .menu-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.02);
+  }
+  .menu-card:hover {
+    transform: translateY(-2px);
+    border-color: #cbd5e1;
+    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.06);
+  }
+  .card-image-wrap {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    position: relative;
+    background: #f1f5f9;
+    overflow: hidden;
+  }
+  .card-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+  .menu-card:hover .card-image-wrap img {
+    transform: scale(1.04);
+  }
+  .card-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    color: #94a3b8;
+    font-size: 28px;
+  }
+
+  .card-content {
+    padding: 12px 14px 14px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .card-category {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.35;
+    margin-bottom: 6px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .card-footer-info {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-top: 8px;
+  }
+  .card-price {
+    font-size: 14px;
+    font-weight: 800;
+    color: #0f172a;
+    font-variant-numeric: tabular-nums;
+  }
+  .card-stock {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+  .card-stock.in-stock { color: #059669; }
+  .card-stock.out-stock { color: #dc2626; }
 
   /* Floating Call Waiter Button */
-  .btn-call-waiter{
-    position:fixed;
-    bottom:88px;
-    right:18px;
-    z-index:90;
-    display:flex;
-    align-items:center;
-    gap:8px;
-    background:linear-gradient(135deg, #5a1f1f 0%, #3d1414 100%);
-    color:#fff;
-    border:2px solid #e07a5f;
-    border-radius:999px;
-    padding:10px 16px;
-    font-size:13px;
-    font-weight:700;
-    cursor:pointer;
-    box-shadow:0 8px 25px rgba(90,31,31,0.35);
-    transition:all .2s ease;
+  .btn-call-waiter {
+    position: fixed;
+    bottom: 84px;
+    right: max(18px, calc(50% - 220px));
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #0f172a;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 999px;
+    padding: 10px 18px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.35);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  .btn-call-waiter:hover{
-    transform:translateY(-2px);
-    box-shadow:0 12px 28px rgba(90,31,31,0.45);
+  .btn-call-waiter:hover {
+    background: #1e293b;
+    transform: translateY(-2px);
   }
-  .btn-call-waiter:active{
-    transform:scale(0.96);
+  .btn-call-waiter:active {
+    transform: scale(0.96);
   }
-  .btn-call-waiter .bell-icon{
-    font-size:16px;
-    display:inline-block;
-    animation:ring 2.5s infinite ease-in-out;
-  }
-  @keyframes ring{
-    0%, 80%, 100%{ transform:rotate(0); }
-    85%{ transform:rotate(15deg); }
-    90%{ transform:rotate(-15deg); }
-    95%{ transform:rotate(8deg); }
+  .bell-icon {
+    font-size: 15px;
+    display: inline-block;
   }
 
-  /* Call Waiter Modal Overlay */
-  .call-modal-overlay{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.6);
-    backdrop-filter:blur(4px);
-    z-index:150;
-    display:none;
-    align-items:flex-end;
-    justify-content:center;
-    opacity:0;
-    transition:opacity .25s ease;
+  /* Floating Bottom Navigation Dock */
+  .dock-wrap {
+    position: fixed;
+    bottom: 16px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    z-index: 45;
+    pointer-events: none;
   }
-  .call-modal-overlay.show{
-    display:flex;
-    opacity:1;
+  .dock-nav {
+    width: calc(100% - 32px);
+    max-width: 440px;
+    pointer-events: auto;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: 24px;
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0 12px 30px -8px rgba(15, 23, 42, 0.12);
   }
-  .call-modal{
-    width:100%;
-    max-width:480px;
-    background:#ffffff;
-    border-radius:28px 28px 0 0;
-    padding:24px 22px calc(24px + env(safe-area-inset-bottom));
-    box-shadow:0 -10px 40px rgba(0,0,0,0.2);
-    transform:translateY(100%);
-    transition:transform .25s ease-out;
-    max-height:90vh;
-    overflow-y:auto;
+  .dock-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    text-decoration: none;
+    color: var(--text-muted);
+    padding: 6px 14px;
+    border-radius: 16px;
+    transition: all 0.15s ease;
+    position: relative;
   }
-  .call-modal-overlay.show .call-modal{
-    transform:translateY(0);
+  .dock-item svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.15s ease;
   }
-  .call-modal-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    margin-bottom:18px;
+  .dock-item span {
+    font-size: 11px;
+    font-weight: 600;
   }
-  .call-modal-title{
-    font-size:18px;
-    font-weight:800;
-    color:var(--dark);
+  .dock-item:hover {
+    color: var(--text-primary);
   }
-  .call-modal-subtitle{
-    font-size:12.5px;
-    color:var(--muted);
-    margin-top:3px;
+  .dock-item.active {
+    color: #0f172a;
+    background: #f1f5f9;
   }
-  .call-modal-close{
-    background:none;
-    border:none;
-    font-size:26px;
-    color:var(--muted);
-    cursor:pointer;
-    line-height:1;
-    padding:0 4px;
+  .dock-item.active svg {
+    stroke-width: 2.3;
+    transform: translateY(-1px);
   }
-  .table-info-badge{
-    background:#fdf5ee;
-    border:1px solid #ebd4c1;
-    color:#7a3c18;
-    padding:10px 14px;
-    border-radius:12px;
-    font-size:13px;
-    margin-bottom:16px;
-    display:flex;
-    align-items:center;
-    gap:8px;
+
+  /* Call Waiter Modal */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 100;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
   }
-  .table-select{
-    width:100%;
-    padding:11px 14px;
-    border-radius:12px;
-    border:1px solid #eee2d8;
-    background:#fff;
-    font-size:13.5px;
-    font-weight:600;
-    color:var(--dark);
-    outline:none;
-    margin-bottom:16px;
+  .modal-backdrop.show {
+    display: flex;
+    opacity: 1;
   }
-  .service-type-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    margin-bottom:16px;
+  .modal-sheet {
+    width: 100%;
+    max-width: 480px;
+    background: #ffffff;
+    border-radius: 28px 28px 0 0;
+    padding: 24px 22px calc(24px + env(safe-area-inset-bottom));
+    box-shadow: 0 -20px 40px rgba(0, 0, 0, 0.15);
+    transform: translateY(100%);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    max-height: 90vh;
+    overflow-y: auto;
   }
-  .service-type-option{
-    border:1.5px solid #eee2d8;
-    border-radius:14px;
-    padding:12px 10px;
-    text-align:center;
-    font-size:12.5px;
-    font-weight:700;
-    color:var(--dark);
-    cursor:pointer;
-    transition:all .15s ease;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    user-select:none;
+  .modal-backdrop.show .modal-sheet {
+    transform: translateY(0);
   }
-  .service-type-option input{ display:none; }
-  .service-type-option.active{
-    background:#fcf2eb;
-    border-color:var(--accent);
-    color:var(--maroon);
+  .modal-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 18px;
   }
-  .service-notes-input{
-    width:100%;
-    padding:11px 14px;
-    border-radius:12px;
-    border:1px solid #eee2d8;
-    font-size:13px;
-    outline:none;
-    margin-bottom:20px;
-    box-sizing:border-box;
+  .modal-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
   }
-  .service-notes-input:focus{ border-color:var(--accent); }
-  .btn-submit-call{
-    width:100%;
-    border:none;
-    background:var(--maroon);
-    color:#fff;
-    padding:15px;
-    border-radius:999px;
-    font-size:15px;
-    font-weight:700;
-    cursor:pointer;
-    box-shadow:0 6px 18px rgba(90,31,31,0.3);
-    transition:all .15s ease;
+  .modal-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 2px;
   }
-  .btn-submit-call:hover{ background:#421515; }
-  .btn-submit-call:disabled{ opacity:.6; cursor:not-allowed; }
-  .call-success-state{
-    text-align:center;
-    padding:20px 10px;
+  .modal-close-btn {
+    background: #f1f5f9;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #64748b;
+    cursor: pointer;
   }
-  .success-icon{ font-size:44px; margin-bottom:12px; }
-  .success-title{ font-size:18px; font-weight:800; color:var(--dark); margin-bottom:6px; }
-  .success-desc{ font-size:13px; color:var(--muted); line-height:1.5; margin-bottom:20px; }
+  .modal-table-badge {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    color: #1e293b;
+    padding: 10px 14px;
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .service-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .service-opt {
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 12px 10px;
+    text-align: center;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+  }
+  .service-opt input { display: none; }
+  .service-opt.active {
+    background: #f8fafc;
+    border-color: #0f172a;
+    color: #0f172a;
+    box-shadow: 0 0 0 1px #0f172a;
+  }
+  .service-notes {
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    font-family: inherit;
+    font-size: 13px;
+    outline: none;
+    margin-bottom: 20px;
+    transition: border-color 0.15s ease;
+  }
+  .service-notes:focus {
+    border-color: #0f172a;
+  }
+  .btn-submit-action {
+    width: 100%;
+    border: none;
+    background: #0f172a;
+    color: #ffffff;
+    padding: 14px;
+    border-radius: var(--radius-md);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .btn-submit-action:hover { background: #1e293b; }
+  .btn-submit-action:disabled { opacity: 0.6; cursor: not-allowed; }
 </style>
 </head>
 <body>
 
-<div class="phone">
-  <div class="content">
+<div class="app-wrap">
 
-    <div class="header">
-      <div>
-        <div class="greet-sub">Selamat Datang,</div>
-        <div class="greet-name">{{ Auth::guard('customer')->user()->name ?? 'Pengunjung' }}</div>
+  <!-- Header Section -->
+  <header class="header-bar">
+    <div class="header-top">
+      <div class="brand-area">
+        <div class="brand-logo">
+          <img src="{{ asset('assets/images/LOGO_RUANG_SEDUH(putih).png') }}" alt="RS">
+        </div>
+        <div>
+          <h1 class="brand-title">Ruang Seduh</h1>
+          <p class="brand-sub">Coffee & Artisan Brew</p>
+        </div>
       </div>
-      <img
-            src="{{ asset('assets/images/LOGO_RUANG_SEDUH(coklat).png') }}"
-            class="logo"
-            alt="Logo">
+      
+      @if($activeTable)
+        <div class="table-pill active" title="Meja terhubung">
+          <span class="status-dot"></span>
+          <span>Meja {{ $activeTable->table_number }}</span>
+        </div>
+      @else
+        <div class="table-pill" title="Silakan scan QR Meja">
+          <span class="status-dot"></span>
+          <span>Pilih Meja</span>
+        </div>
+      @endif
     </div>
 
-    <div class="search-bar">
-      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-      <input type="text" id="searchInput" placeholder="Cari menu, misal: Americano">
+    <!-- Search Box -->
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <input type="text" class="search-input" id="searchInput" placeholder="Cari menu favorit kamu...">
     </div>
+  </header>
 
-    <div class="categories">
-      <div class="chip active" data-category="Semua">Semua</div>
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- Categories Filter Pills -->
+    <div class="category-bar">
+      <button type="button" class="chip active" data-category="Semua">Semua</button>
       @foreach($categories as $category)
-        <div class="chip" data-category="{{ $category->name }}">{{ $category->name }}</div>
+        <button type="button" class="chip" data-category="{{ $category->name }}">{{ $category->name }}</button>
       @endforeach
     </div>
 
-    <div class="section-title" id="sectionTitle">Semua Menu</div>
+    <!-- Section Heading -->
+    <div class="section-row">
+      <h2 class="section-heading" id="sectionTitle">Semua Menu</h2>
+      <span class="section-count" id="menuCount">{{ $menus->count() }} item</span>
+    </div>
 
-    <div class="grid" id="menuGrid">
-      @forelse($menus as $index => $menu)
-        <a href="{{ route('customer.menu.show', $menu->id) }}" class="card" data-name="{{ $menu->name }}" data-category="{{ $menu->kategori->name ?? '' }}">
-          <div class="thumb">
+    <!-- Menu Cards Grid -->
+    <div class="menu-grid" id="menuGrid">
+      @forelse($menus as $menu)
+        <a href="{{ route('customer.menu.show', $menu->id) }}" class="menu-card" data-name="{{ $menu->name }}" data-category="{{ $menu->kategori->name ?? '' }}">
+          <div class="card-image-wrap">
             @if($menu->image)
-              <img src="{{ asset('storage/' . $menu->image) }}" alt="{{ $menu->name }}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;">
+              <img src="{{ asset('storage/' . $menu->image) }}" alt="{{ $menu->name }}" loading="lazy" decoding="async">
             @else
-              {!! $index % 2 === 0
-                ? '<svg viewBox="0 0 200 140" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="g'. $index .'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3d2b1f"/><stop offset="1" stop-color="#1a1210"/></linearGradient></defs><rect width="200" height="140" fill="#1a1210"/><ellipse cx="100" cy="70" rx="55" ry="38" fill="url(#g'. $index .')"/><rect x="60" y="60" width="80" height="55" rx="8" fill="#3d2b1f" opacity="0.9"/><ellipse cx="100" cy="60" rx="40" ry="14" fill="#1a1210" opacity="0.85"/></svg>'
-                : '<svg viewBox="0 0 200 140" preserveAspectRatio="xMidYMid slice"><defs><radialGradient id="p'. $index .'" cx="50%" cy="40%" r="70%"><stop offset="0" stop-color="#e0a83c"/><stop offset="1" stop-color="#a5501c"/></radialGradient></defs><rect width="200" height="140" fill="#a5501c"/><ellipse cx="100" cy="75" rx="70" ry="42" fill="url(#p'. $index .')"/><path d="M50 80 Q100 40 150 80" stroke="#a5501c" stroke-width="4" fill="none" opacity="0.5"/></svg>'
-              !!}
+              <div class="card-fallback">☕</div>
             @endif
           </div>
-          <div class="card-body">
-            <div class="card-tag">{{ $menu->kategori->name ?? 'Lainnya' }}</div>
-            <div class="card-name">{{ $menu->name }}</div>
-            <div class="card-price">{{ $menu->hargaRupiah() }}</div>
-            <div class="card-stock">Stok: {{ $menu->stock }}</div>
+          <div class="card-content">
+            <span class="card-category">{{ $menu->kategori->name ?? 'Menu' }}</span>
+            <h3 class="card-title">{{ $menu->name }}</h3>
+            <div class="card-footer-info">
+              <span class="card-price">{{ $menu->hargaRupiah() }}</span>
+              <span class="card-stock {{ $menu->stock > 0 ? 'in-stock' : 'out-stock' }}">
+                {{ $menu->stock > 0 ? 'Tersedia ' . $menu->stock : 'Habis' }}
+              </span>
+            </div>
           </div>
         </a>
       @empty
-        <div style="grid-column:1/-1; text-align:center; color:var(--muted); padding:30px 0; font-size:13px;">Menu tidak tersedia</div>
+        <div style="grid-column: 1/-1; text-align: center; padding: 40px 0; color: var(--text-muted); font-size: 13px;">
+          Belum ada menu yang tersedia.
+        </div>
       @endforelse
     </div>
 
-  </div>
-
-  <div class="navbar-wrap">
-  <nav class="navbar" id="navbar">
-    <a href="{{ route('customer.profile.index') }}" class="nav-item" data-name="profile" aria-label="Profil">
-      <img src="{{ asset('assets/images/navbar/profile.png') }}" alt="" aria-hidden="true">
-    </a>
-    <a href="{{ route('customer.order.history') }}" class="nav-item" data-name="history" aria-label="Riwayat">
-      <img src="{{ asset('assets/images/navbar/history.png') }}" alt="" aria-hidden="true">
-    </a>
-    <a href="{{ route('customer.home') }}" class="nav-item active" data-name="home" aria-label="Beranda">
-      <img src="{{ asset('assets/images/navbar/home.png') }}" alt="" aria-hidden="true">
-    </a>
-    <a href="{{ route('customer.cart.index') }}" class="nav-item" data-name="cart" aria-label="Keranjang">
-      <img src="{{ asset('assets/images/navbar/cart.png') }}" alt="" aria-hidden="true">
-    </a>
-  </nav>
-  </div>
+  </main>
 
   <!-- Floating Call Waiter Button -->
   <button type="button" class="btn-call-waiter" id="btnOpenCallWaiter" aria-label="Panggil Pelayan">
     <span class="bell-icon">🛎️</span>
-    <span class="btn-call-text">{{ $activeTable ? 'Meja ' . $activeTable->table_number : 'Panggil Pelayan' }}</span>
+    <span>{{ $activeTable ? 'Meja ' . $activeTable->table_number : 'Panggil Pelayan' }}</span>
   </button>
+
+  <!-- Floating Dock Navigation Bar -->
+  <div class="dock-wrap">
+    <nav class="dock-nav">
+      <a href="{{ route('customer.home') }}" class="dock-item active" aria-label="Beranda">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        <span>Beranda</span>
+      </a>
+      <a href="{{ route('customer.order.history') }}" class="dock-item" aria-label="Riwayat">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        <span>Riwayat</span>
+      </a>
+      <a href="{{ route('customer.cart.index') }}" class="dock-item" aria-label="Keranjang">
+        <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+        <span>Keranjang</span>
+      </a>
+      <a href="{{ route('customer.profile.index') }}" class="dock-item" aria-label="Profil">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        <span>Profil</span>
+      </a>
+    </nav>
+  </div>
+
 </div>
 
 <!-- Modal Panggil Pelayan -->
-<div class="call-modal-overlay" id="callModalOverlay">
-  <div class="call-modal">
-    <div class="call-modal-header">
+<div class="modal-backdrop" id="callModalOverlay">
+  <div class="modal-sheet">
+    <div class="modal-top">
       <div>
-        <div class="call-modal-title">🛎️ Panggil Pelayan</div>
-        <div class="call-modal-subtitle">Butuh bantuan di mejamu? Staf kami siap melayani.</div>
+        <h3 class="modal-title">🛎️ Panggil Pelayan</h3>
+        <p class="modal-desc">Butuh bantuan staf? Kami siap melayani mejamu.</p>
       </div>
-      <button type="button" class="call-modal-close" id="btnCloseCallModal">&times;</button>
+      <button type="button" class="modal-close-btn" id="btnCloseCallModal">&times;</button>
     </div>
 
     <form id="callWaiterForm">
       @csrf
       @if($activeTable)
         <input type="hidden" name="table_id" value="{{ $activeTable->id }}">
-        <div class="table-info-badge">
-          📍 Meja Aktif: <strong>Meja {{ $activeTable->table_number }}</strong>
+        <div class="modal-table-badge">
+          📍 Meja Terhubung: <strong>Meja {{ $activeTable->table_number }}</strong>
         </div>
       @else
-        <div style="margin-bottom:14px;">
-          <label style="display:block; font-size:12.5px; font-weight:700; color:var(--dark); margin-bottom:6px;">Pilih Nomor Mejamu:</label>
-          <select name="table_id" class="table-select" required>
+        <div style="margin-bottom: 14px;">
+          <label style="display:block; font-size: 12.5px; font-weight: 700; margin-bottom: 6px; color: #1e293b;">Pilih Nomor Mejamu:</label>
+          <select name="table_id" class="service-notes" style="margin-bottom:0;" required>
             <option value="">-- Pilih Nomor Meja --</option>
             @foreach($tables as $t)
               <option value="{{ $t->id }}">Meja {{ $t->table_number }}</option>
@@ -534,22 +696,22 @@
         </div>
       @endif
 
-      <div style="margin-bottom:14px;">
-        <label style="display:block; font-size:12.5px; font-weight:700; color:var(--dark); margin-bottom:8px;">Pilih Kebutuhan:</label>
-        <div class="service-type-grid" id="serviceTypeGrid">
-          <label class="service-type-option active">
+      <div style="margin-bottom: 14px;">
+        <label style="display:block; font-size: 12.5px; font-weight: 700; margin-bottom: 8px; color: #1e293b;">Pilih Kebutuhan:</label>
+        <div class="service-grid">
+          <label class="service-opt active">
             <input type="radio" name="type" value="panggil_pelayan" checked>
-            <span>🙋 Panggil Pelayan</span>
+            <span>🙋 Bantuan Pelayan</span>
           </label>
-          <label class="service-type-option">
+          <label class="service-opt">
             <input type="radio" name="type" value="minta_bill">
             <span>🧾 Minta Bill / Nota</span>
           </label>
-          <label class="service-type-option">
+          <label class="service-opt">
             <input type="radio" name="type" value="minta_air">
             <span>💧 Air Putih / Es</span>
           </label>
-          <label class="service-type-option">
+          <label class="service-opt">
             <input type="radio" name="type" value="bersih_meja">
             <span>🧹 Bersihkan Meja</span>
           </label>
@@ -557,20 +719,20 @@
       </div>
 
       <div>
-        <label style="display:block; font-size:12.5px; font-weight:700; color:var(--dark); margin-bottom:6px;">Catatan Tambahan (Opsional):</label>
-        <input type="text" name="notes" class="service-notes-input" placeholder="Contoh: Minta tissue atau sendok tambahan..." maxlength="150">
+        <label style="display:block; font-size: 12.5px; font-weight: 700; margin-bottom: 6px; color: #1e293b;">Catatan Tambahan (Opsional):</label>
+        <input type="text" name="notes" class="service-notes" placeholder="Contoh: Minta tissue atau sendok tambahan..." maxlength="150">
       </div>
 
-      <button type="submit" class="btn-submit-call" id="btnSubmitCall">
+      <button type="submit" class="btn-submit-action" id="btnSubmitCall">
         Kirim Panggilan 🛎️
       </button>
     </form>
 
-    <div class="call-success-state" id="callSuccessState" style="display:none;">
-      <div class="success-icon">🏃💨</div>
-      <div class="success-title">Panggilan Berhasil Dikirim!</div>
-      <div class="success-desc">Pelayan kami sedang menuju ke mejamu. Mohon ditunggu sebentar ya kak!</div>
-      <button type="button" class="btn-submit-call" style="background:#3d1414;" id="btnCloseSuccess">Selesai</button>
+    <div id="callSuccessState" style="display:none; text-align:center; padding: 20px 10px;">
+      <div style="font-size: 40px; margin-bottom: 8px;">🏃💨</div>
+      <h4 style="font-size: 17px; font-weight: 800; margin-bottom: 4px; color: #0f172a;">Panggilan Terkirim!</h4>
+      <p style="font-size: 13px; color: #64748b; margin-bottom: 20px;">Staf kami sedang menuju ke mejamu. Mohon ditunggu ya kak!</p>
+      <button type="button" class="btn-submit-action" id="btnCloseSuccess">Selesai</button>
     </div>
   </div>
 </div>
@@ -578,23 +740,24 @@
 <script>
   const grid = document.getElementById('menuGrid');
   const sectionTitle = document.getElementById('sectionTitle');
+  const menuCount = document.getElementById('menuCount');
   const searchInput = document.getElementById('searchInput');
-  const cards = Array.from(document.querySelectorAll('#menuGrid .card'));
+  const cards = Array.from(document.querySelectorAll('#menuGrid .menu-card'));
 
-  function renderMenu(){
+  function renderMenu() {
     const activeChip = document.querySelector('.chip.active');
     const category = activeChip ? activeChip.dataset.category : 'Semua';
     const keyword = searchInput.value.trim().toLowerCase();
 
     let visible = 0;
-    cards.forEach(card=>{
-      const name = card.dataset.name || '';
+    cards.forEach(card => {
+      const name = (card.dataset.name || '').toLowerCase();
       const cat = card.dataset.category || '';
 
       const matchCategory = category === 'Semua' || cat === category;
-      const matchKeyword = name.toLowerCase().includes(keyword);
+      const matchKeyword = name.includes(keyword);
 
-      if (matchCategory && matchKeyword){
+      if (matchCategory && matchKeyword) {
         card.style.display = '';
         visible++;
       } else {
@@ -603,46 +766,36 @@
     });
 
     sectionTitle.textContent = category === 'Semua' ? 'Semua Menu' : category;
+    menuCount.textContent = visible + ' item';
 
     let empty = grid.querySelector('.grid-empty');
-    if (visible === 0){
-      if (!empty){
+    if (visible === 0) {
+      if (!empty) {
         empty = document.createElement('div');
         empty.className = 'grid-empty';
-        empty.style.cssText = 'grid-column:1/-1; text-align:center; color:var(--muted); padding:30px 0; font-size:13px;';
-        empty.textContent = 'Menu tidak ditemukan';
+        empty.style.cssText = 'grid-column:1/-1; text-align:center; color:var(--text-muted); padding:36px 0; font-size:13px;';
+        empty.textContent = 'Menu tidak ditemukan.';
         grid.appendChild(empty);
       }
-    } else if (empty){
+    } else if (empty) {
       empty.remove();
     }
   }
 
-  renderMenu();
-
-  // ---- Navbar interaction ----
-  const items = document.querySelectorAll('.nav-item');
-  items.forEach(item=>{
-    item.addEventListener('click', ()=>{
-      items.forEach(i=>i.classList.remove('active'));
-      item.classList.add('active');
-    });
-  });
-
-  // ---- Category chip interaction ----
+  // Filter category interaction
   const chips = document.querySelectorAll('.chip');
-  chips.forEach(chip=>{
-    chip.addEventListener('click', ()=>{
-      chips.forEach(c=>c.classList.remove('active'));
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      chips.forEach(c => c.classList.remove('active'));
       chip.classList.add('active');
       renderMenu();
     });
   });
 
-  // ---- Search interaction ----
+  // Search input interaction
   searchInput.addEventListener('input', renderMenu);
 
-  // ---- Call Waiter Interaction ----
+  // Call Waiter Modal Interaction
   const btnOpenCallWaiter = document.getElementById('btnOpenCallWaiter');
   const callModalOverlay = document.getElementById('callModalOverlay');
   const btnCloseCallModal = document.getElementById('btnCloseCallModal');
@@ -651,33 +804,31 @@
   const callSuccessState = document.getElementById('callSuccessState');
   const btnSubmitCall = document.getElementById('btnSubmitCall');
 
-  function openCallModal(){
+  function openCallModal() {
     callModalOverlay.classList.add('show');
     callWaiterForm.style.display = '';
     callSuccessState.style.display = 'none';
   }
-  function closeCallModal(){
+  function closeCallModal() {
     callModalOverlay.classList.remove('show');
   }
 
   btnOpenCallWaiter?.addEventListener('click', openCallModal);
   btnCloseCallModal?.addEventListener('click', closeCallModal);
   btnCloseSuccess?.addEventListener('click', closeCallModal);
-  callModalOverlay?.addEventListener('click', (e)=>{
+  callModalOverlay?.addEventListener('click', (e) => {
     if (e.target === callModalOverlay) closeCallModal();
   });
 
-  // Type selection highlight
-  const typeOptions = document.querySelectorAll('.service-type-option');
-  typeOptions.forEach(opt => {
+  const serviceOpts = document.querySelectorAll('.service-opt');
+  serviceOpts.forEach(opt => {
     opt.addEventListener('click', () => {
-      typeOptions.forEach(o => o.classList.remove('active'));
+      serviceOpts.forEach(o => o.classList.remove('active'));
       opt.classList.add('active');
     });
   });
 
-  // Submit Call
-  callWaiterForm?.addEventListener('submit', function(e){
+  callWaiterForm?.addEventListener('submit', function(e) {
     e.preventDefault();
     btnSubmitCall.disabled = true;
     btnSubmitCall.textContent = 'Mengirim...';
@@ -705,14 +856,8 @@
       if (data.success) {
         callWaiterForm.style.display = 'none';
         callSuccessState.style.display = 'block';
-        if (data.data && data.data.table_id) {
-          const btnText = document.querySelector('.btn-call-text');
-          if (btnText && !btnText.textContent.includes('Meja')) {
-            btnText.textContent = 'Meja Dipilih';
-          }
-        }
       } else {
-        alert(data.message || 'Gagal mengirim panggilan. Silakan coba lagi.');
+        alert(data.message || 'Gagal mengirim panggilan.');
       }
     })
     .catch(() => {

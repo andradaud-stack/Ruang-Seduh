@@ -1,4 +1,4 @@
-﻿<!-- Ruang Seduh Real-Time Order Notifications (System Web Push & In-App Toast) -->
+<!-- Ruang Seduh Real-Time Order Notifications (VAPID Mobile Web Push & In-App Toast) -->
 <style>
   /* Permission Prompt Banner */
   .rs-notify-prompt {
@@ -8,11 +8,12 @@
     transform: translateX(-50%);
     width: calc(100% - 32px);
     max-width: 440px;
-    background: #0f172a;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
     color: #ffffff;
     padding: 14px 16px;
     border-radius: 18px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     z-index: 9999;
     display: none;
     animation: rsSlideDown 0.35s cubic-bezier(0.16, 1, 0.3, 1);
@@ -24,8 +25,15 @@
     margin-bottom: 12px;
   }
   .rs-notify-prompt-icon {
-    font-size: 24px;
+    font-size: 26px;
     line-height: 1;
+    animation: rsBellShake 2.5s infinite;
+  }
+  @keyframes rsBellShake {
+    0%, 80%, 100% { transform: rotate(0); }
+    85% { transform: rotate(14deg); }
+    90% { transform: rotate(-14deg); }
+    95% { transform: rotate(8deg); }
   }
   .rs-notify-prompt-text {
     flex: 1;
@@ -34,18 +42,19 @@
     display: block;
     font-size: 13.5px;
     font-weight: 700;
-    margin-bottom: 2px;
+    margin-bottom: 3px;
     color: #f8fafc;
   }
   .rs-notify-prompt-text span {
     font-size: 11.5px;
-    color: #94a3b8;
-    line-height: 1.4;
+    color: #cbd5e1;
+    line-height: 1.45;
     display: block;
   }
   .rs-notify-prompt-actions {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
     gap: 8px;
   }
   .rs-notify-btn-dismiss {
@@ -54,7 +63,7 @@
     color: #94a3b8;
     font-size: 12px;
     font-weight: 600;
-    padding: 6px 12px;
+    padding: 7px 12px;
     border-radius: 8px;
     cursor: pointer;
   }
@@ -63,10 +72,43 @@
     border: none;
     color: #0f172a;
     font-size: 12px;
-    font-weight: 700;
-    padding: 6px 14px;
-    border-radius: 8px;
+    font-weight: 800;
+    padding: 7px 16px;
+    border-radius: 10px;
     cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.15s ease;
+  }
+  .rs-notify-btn-allow:active {
+    transform: scale(0.96);
+  }
+
+  /* Floating Enable Bell Button (When banner dismissed but notifications still disabled) */
+  .rs-notify-floating-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 20px;
+    z-index: 999;
+    background: #0f172a;
+    color: #ffffff;
+    border: 1.5px solid rgba(255, 255, 255, 0.2);
+    border-radius: 999px;
+    padding: 8px 14px 8px 10px;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    animation: rsBounceIn 0.4s ease;
+  }
+  .rs-notify-floating-btn span.bell {
+    font-size: 16px;
+    animation: rsBellShake 3s infinite;
   }
 
   /* In-App Toast Notification */
@@ -132,21 +174,40 @@
       transform: translate(-50%, 0);
     }
   }
+
+  @keyframes rsBounceIn {
+    from {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
 </style>
 
-<!-- Banner Prompt Izin Notifikasi -->
+<!-- Banner Prompt Izin Notifikasi HP -->
 <div id="rsNotificationPrompt" class="rs-notify-prompt">
   <div class="rs-notify-prompt-content">
     <div class="rs-notify-prompt-icon">🔔</div>
     <div class="rs-notify-prompt-text">
-      <strong>Notifikasi Pesanan HP</strong>
-      <span>Izinkan notifikasi agar kamu tahu saat pesananmu siap saji, meski sedang buka aplikasi lain atau layar HP dikunci.</span>
+      <strong>Notifikasi HP (Seperti Notif WA / Web)</strong>
+      <span>Izinkan notifikasi agar kamu tahu saat pesanan diproses atau siap disajikan, meskipun sedang membuka aplikasi lain atau layar HP dikunci.</span>
     </div>
   </div>
   <div class="rs-notify-prompt-actions">
     <button type="button" class="rs-notify-btn-dismiss" id="btnDismissNotify">Nanti</button>
-    <button type="button" class="rs-notify-btn-allow" id="btnAllowNotify">Aktifkan Notifikasi</button>
+    <button type="button" class="rs-notify-btn-allow" id="btnAllowNotify">
+      <span>🔔 Aktifkan Notifikasi</span>
+    </button>
   </div>
+</div>
+
+<!-- Floating Bell Button -->
+<div id="rsNotifyFloatBtn" class="rs-notify-floating-btn">
+  <span class="bell">🔔</span>
+  <span>Aktifkan Notif HP</span>
 </div>
 
 <!-- In-App Toast Dropdown -->
@@ -162,20 +223,28 @@
 <script>
 (function() {
   const CHECK_URL = "{{ route('customer.orders.active-status') }}";
+  const VAPID_KEY_URL = "{{ route('customer.vapid.key') }}";
+  const SUBSCRIBE_URL = "{{ route('customer.push.subscribe') }}";
+  const CSRF_TOKEN = "{{ csrf_token() }}";
   const LOGO_URL = "{{ asset('assets/images/LOGO_RUANG_SEDUH(coklat).png') }}";
   const CURRENT_PAGE_ORDER_ID = typeof RS_CURRENT_ORDER_ID !== 'undefined' ? RS_CURRENT_ORDER_ID : null;
 
   let swRegistration = null;
 
-  // 1. Register Service Worker for background system notifications
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js')
-      .then(reg => {
-        swRegistration = reg;
-      })
-      .catch(err => {
-        console.warn('Service worker registration failed:', err);
-      });
+  // 1. Helper: Convert base64 VAPID public key to Uint8Array
+  function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+    const base64 = (base64String + padding)
+      .replace(/-/g, '+')
+      .replace(/_/g, '/');
+
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
   }
 
   // 2. Pleasant Web Audio Chime Sound (Ding-Dong)
@@ -212,11 +281,11 @@
     } catch (e) {}
   }
 
-  // 3. Trigger Haptic Vibration on Phones
+  // 3. Trigger Haptic Vibration on Mobile
   function triggerVibrate() {
     if ('vibrate' in navigator) {
       try {
-        navigator.vibrate([250, 100, 250, 100, 250]);
+        navigator.vibrate([300, 150, 300, 150, 300]);
       } catch (e) {}
     }
   }
@@ -234,7 +303,7 @@
     toastIcon.textContent = icon;
     toastTitle.textContent = title;
     toastDesc.textContent = desc;
-    toastLink.href = url;
+    toastLink.href = url || '#';
     toastElem.style.display = 'flex';
 
     if (toastTimer) clearTimeout(toastTimer);
@@ -243,82 +312,152 @@
     }, 7000);
   }
 
-  // 5. Trigger System Notification (Works even when user is outside web / tab minimized)
-  function showSystemNotification(icon, title, body, targetUrl, orderId, status) {
-    playNotificationChime();
-    triggerVibrate();
-    showInAppToast(icon, title, body, targetUrl);
+  // 5. Subscribe to Native Web Push (VAPID)
+  async function subscribeToPush(sendTestNotification = false) {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+      console.log('Push messaging is not supported in this browser.');
+      return false;
+    }
 
-    if (!('Notification' in window)) return;
+    try {
+      const reg = swRegistration || (await navigator.serviceWorker.ready);
+      if (!reg) return false;
 
-    if (Notification.permission === 'granted') {
-      const options = {
-        body: body,
-        icon: LOGO_URL,
-        badge: LOGO_URL,
-        vibrate: [250, 100, 250, 100, 250],
-        tag: 'rs-order-' + orderId + '-' + status,
-        renotify: true,
-        data: { url: targetUrl }
-      };
+      // 1. Fetch public VAPID key
+      const keyRes = await fetch(VAPID_KEY_URL, { headers: { 'Accept': 'application/json' } });
+      const keyData = await keyRes.json();
+      const publicKey = keyData.publicKey;
 
-      if (swRegistration && swRegistration.showNotification) {
-        swRegistration.showNotification(title, options);
-      } else {
-        try {
-          const notif = new Notification(title, options);
-          notif.onclick = function() {
-            window.focus();
-            window.location.href = targetUrl;
-          };
-        } catch (e) {
-          console.warn('Standard Notification creation error:', e);
-        }
+      if (!publicKey) {
+        console.warn('VAPID public key not found.');
+        return false;
       }
+
+      const convertedKey = urlBase64ToUint8Array(publicKey);
+
+      // 2. Subscribe with PushManager
+      let subscription = await reg.pushManager.getSubscription();
+      if (!subscription) {
+        subscription = await reg.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: convertedKey
+        });
+      }
+
+      const subData = subscription.toJSON();
+
+      // 3. Send subscription to server
+      const saveRes = await fetch(SUBSCRIBE_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': CSRF_TOKEN,
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          endpoint: subData.endpoint,
+          keys: subData.keys,
+          test: sendTestNotification
+        })
+      });
+
+      const resJson = await saveRes.json();
+      return resJson.success;
+    } catch (err) {
+      console.warn('Push subscription error:', err);
+      return false;
     }
   }
 
-  // 6. Manage Notification Permission Prompt
+  // 6. Manage Service Worker & Permission UI
   const promptElem = document.getElementById('rsNotificationPrompt');
+  const floatBtn = document.getElementById('rsNotifyFloatBtn');
   const btnAllow = document.getElementById('btnAllowNotify');
   const btnDismiss = document.getElementById('btnDismissNotify');
 
-  function checkPermissionPrompt(hasActiveOrders) {
-    if (!('Notification' in window)) return;
-    const dismissed = sessionStorage.getItem('rs_notify_dismissed');
-
-    if (Notification.permission === 'default' && !dismissed && hasActiveOrders) {
-      if (promptElem) promptElem.style.display = 'block';
-    } else {
+  function updatePermissionUI() {
+    if (!('Notification' in window)) {
       if (promptElem) promptElem.style.display = 'none';
+      if (floatBtn) floatBtn.style.display = 'none';
+      return;
+    }
+
+    if (Notification.permission === 'granted') {
+      if (promptElem) promptElem.style.display = 'none';
+      if (floatBtn) floatBtn.style.display = 'none';
+      // Automatically ensure push subscription is synced with current customer
+      subscribeToPush(false);
+    } else if (Notification.permission === 'default') {
+      const dismissed = sessionStorage.getItem('rs_notify_dismissed');
+      if (!dismissed) {
+        if (promptElem) promptElem.style.display = 'block';
+        if (floatBtn) floatBtn.style.display = 'none';
+      } else {
+        if (promptElem) promptElem.style.display = 'none';
+        if (floatBtn) floatBtn.style.display = 'flex';
+      }
+    } else {
+      // Permission denied
+      if (promptElem) promptElem.style.display = 'none';
+      if (floatBtn) floatBtn.style.display = 'none';
     }
   }
 
-  btnAllow?.addEventListener('click', function() {
-    if ('Notification' in window) {
-      Notification.requestPermission().then(permission => {
-        if (promptElem) promptElem.style.display = 'none';
-        if (permission === 'granted') {
-          playNotificationChime();
-          showSystemNotification(
-            '🔔',
-            'Notifikasi Aktif!',
-            'Kamu akan menerima pemberitahuan langsung di HP saat pesanan disiapkan dan siap disajikan.',
-            window.location.href,
-            'welcome',
-            'init'
-          );
-        }
-      });
+  async function handleAllowNotifications() {
+    if (!('Notification' in window)) {
+      alert('Browser perangkat ini tidak mendukung fitur notifikasi.');
+      return;
     }
-  });
+
+    try {
+      const permission = await Notification.requestPermission();
+      if (promptElem) promptElem.style.display = 'none';
+      if (floatBtn) floatBtn.style.display = 'none';
+
+      if (permission === 'granted') {
+        playNotificationChime();
+        triggerVibrate();
+        showInAppToast('🔄', 'Mengaktifkan Notifikasi...', 'Sedang mendaftarkan HP ke sistem push...', '#');
+
+        const success = await subscribeToPush(true);
+        if (success) {
+          showInAppToast('✅', 'Notifikasi HP Aktif!', 'Pemberitahuan uji coba baru saja dikirim ke status bar HP kamu.', '#');
+        } else {
+          showInAppToast('🔔', 'Notifikasi Aktif!', 'Kamu akan menerima notifikasi saat status pesanan berubah.', '#');
+        }
+      } else if (permission === 'denied') {
+        alert('Izin notifikasi diblokir di browsermu. Untuk mengaktifkannya, buka info situs (ikon gembok di sebelah alamat web) lalu izinkan Notifikasi.');
+      }
+    } catch (e) {
+      console.warn('Error requesting notification permission:', e);
+    }
+  }
+
+  btnAllow?.addEventListener('click', handleAllowNotifications);
+  floatBtn?.addEventListener('click', handleAllowNotifications);
 
   btnDismiss?.addEventListener('click', function() {
     sessionStorage.setItem('rs_notify_dismissed', 'true');
     if (promptElem) promptElem.style.display = 'none';
+    if (floatBtn) floatBtn.style.display = 'flex';
   });
 
-  // 7. Order Status Checker & Notification Trigger
+  // 7. Register Service Worker on Load
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js', { scope: '/' })
+      .then(reg => {
+        swRegistration = reg;
+        updatePermissionUI();
+      })
+      .catch(err => {
+        console.warn('Service worker registration failed:', err);
+        updatePermissionUI();
+      });
+  } else {
+    updatePermissionUI();
+  }
+
+  // 8. Order Status Checker & Foreground Notification Trigger
   const STATUS_DETAILS = {
     'diproses': {
       icon: '☕',
@@ -355,15 +494,12 @@
     .then(data => {
       if (!data.success || !Array.isArray(data.orders)) return;
 
-      const activeOrders = data.orders.filter(o => ['menunggu_konfirmasi', 'diproses', 'siap_disajikan'].includes(o.status));
-      checkPermissionPrompt(activeOrders.length > 0 || CURRENT_PAGE_ORDER_ID !== null);
-
       data.orders.forEach(order => {
         const storageKey = 'rs_order_status_' + order.id;
         const previousStatus = localStorage.getItem(storageKey);
 
         if (previousStatus === null) {
-          // First time seeing this order in this browser session - seed without triggering alert
+          // First time seeing this order in this session
           localStorage.setItem(storageKey, order.status);
         } else if (previousStatus !== order.status) {
           // Status has changed! Save immediately
@@ -371,17 +507,16 @@
 
           const detail = STATUS_DETAILS[order.status];
           if (detail) {
-            const bodyText = detail.body(order);
-            showSystemNotification(
+            playNotificationChime();
+            triggerVibrate();
+            showInAppToast(
               detail.icon,
               detail.icon + ' ' + detail.title,
-              bodyText,
-              order.detail_url,
-              order.id,
-              order.status
+              detail.body(order),
+              order.detail_url
             );
 
-            // If user is currently looking at this order's detail page, refresh/update stage
+            // If user is currently looking at this order's detail page, refresh to update stage
             if (CURRENT_PAGE_ORDER_ID && CURRENT_PAGE_ORDER_ID == order.id) {
               setTimeout(() => {
                 window.location.reload();
@@ -399,7 +534,7 @@
   // Initial check on load
   checkOrderStatusUpdates();
 
-  // Background polling every 4 seconds
+  // Polling every 4 seconds when tab is active
   setInterval(checkOrderStatusUpdates, 4000);
 
   // Check immediately when user brings the tab back to focus / unlocks screen

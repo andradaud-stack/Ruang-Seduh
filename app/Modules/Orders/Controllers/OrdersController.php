@@ -206,6 +206,13 @@ class OrdersController extends Controller
 		$orders->save();
 
 		$this->log($request, "mengubah status pesanan dari {$oldStatus} ke {$orders->status}", ['orders.id' => $orders->id]);
+
+		// Send real-time Web Push notification to customer's phone!
+		try {
+			app(\App\Services\WebPushService::class)->sendOrderStatusNotification($orders);
+		} catch (\Throwable $e) {
+			\Illuminate\Support\Facades\Log::warning('Failed sending webpush: ' . $e->getMessage());
+		}
 		
 		return back()->with('message_success', "Status pesanan berhasil diubah menjadi " . ucfirst(str_replace('_', ' ', $orders->status)) . "!");
 	}

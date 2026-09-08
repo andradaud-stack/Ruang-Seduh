@@ -41,4 +41,10 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI', '/auth/google/callback'),
     ],
 
+    'webpush' => [
+        'public_key'  => env('VAPID_PUBLIC_KEY', 'BK872yQ1H21cCLL_QGvMKLprLXLUQNY_7-iUixUgE_olDfJmXjaN_t1guKbEFQ9Far5N-R2mU3VhxKWI9fbS6w4'),
+        'private_key' => env('VAPID_PRIVATE_KEY', 'LAQiB3PCLxdU9Cobe6TFHV8WUJgZGIsmUnkqWoitFcY'),
+        'subject'     => env('VAPID_SUBJECT', 'mailto:admin@ruangseduh.com'),
+    ],
+
 ];

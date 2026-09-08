@@ -16,3 +16,14 @@ Route::middleware(['auth'])->group(function(){
 });
 
 require __DIR__.'/auth.php';
+
+Route::get('/sw.js', function () {
+    $path = public_path('sw.js');
+    if (file_exists($path)) {
+        return response()->file($path, [
+            'Content-Type' => 'text/javascript',
+            'Service-Worker-Allowed' => '/'
+        ]);
+    }
+    return response('// sw not found', 404, ['Content-Type' => 'text/javascript']);
+});

@@ -24,7 +24,7 @@
       "dest": "/public/js/$1"
     },
     {
-      "src": "/(favicon\\.ico|robots\\.txt)",
+      "src": "/(favicon\\.ico|robots\\.txt|sw\\.js)",
       "dest": "/public/$1"
     },
     {

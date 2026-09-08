@@ -25,6 +25,8 @@ Route::get('/customer/checkout', [CustomerController::class, 'checkoutIndex'])->
 Route::post('/customer/checkout', [CustomerController::class, 'checkoutStore'])->middleware('customer.auth')->name('customer.checkout.store');
 Route::post('/customer/call-waiter', [CustomerController::class, 'callWaiter'])->middleware('customer.auth')->name('customer.call-waiter');
 Route::get('/customer/call-waiter/status', [CustomerController::class, 'getCallWaiterStatus'])->middleware('customer.auth')->name('customer.call-waiter.status');
+Route::get('/customer/vapid-key', [CustomerController::class, 'getVapidPublicKey'])->name('customer.vapid.key');
+Route::post('/customer/push-subscribe', [CustomerController::class, 'savePushSubscription'])->name('customer.push.subscribe');
 
 Route::middleware('customer.guest')->group(function () {
     Route::get('/', [CustomerController::class,'index'])->name('frontend.index');

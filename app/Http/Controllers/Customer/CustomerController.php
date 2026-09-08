@@ -16,6 +16,8 @@ use App\Modules\Orders\Models\Orders;
 use App\Modules\Pengguna\Models\Pengguna;
 use App\Modules\Tables\Models\Tables;
 use App\Models\ServiceCall;
+use App\Models\CustomerPushSubscription;
+use App\Services\WebPushService;
 
 class CustomerController extends Controller
 {
@@ -493,6 +495,56 @@ public function showRegister()
         return response()->json([
             'active' => (bool) $call,
             'call'   => $call,
+        ]);
+    }
+
+    public function getVapidPublicKey()
+    {
+        return response()->json([
+            'publicKey' => config('services.webpush.public_key') ?? 'BK872yQ1H21cCLL_QGvMKLprLXLUQNY_7-iUixUgE_olDfJmXjaN_t1guKbEFQ9Far5N-R2mU3VhxKWI9fbS6w4',
+        ]);
+    }
+
+    public function savePushSubscription(Request $request)
+    {
+        $request->validate([
+            'endpoint'    => 'required|string',
+            'keys.p256dh' => 'required|string',
+            'keys.auth'   => 'required|string',
+        ]);
+
+        $customerId   = Auth::guard('customer')->id();
+        $endpoint     = (string) $request->input('endpoint');
+        $endpointHash = hash('sha256', $endpoint);
+
+        $subscription = CustomerPushSubscription::updateOrCreate(
+            ['endpoint_hash' => $endpointHash],
+            [
+                'pengguna_id' => $customerId,
+                'endpoint'    => $endpoint,
+                'p256dh'      => (string) $request->input('keys.p256dh'),
+                'auth'        => (string) $request->input('keys.auth'),
+            ]
+        );
+
+        if ($request->boolean('test')) {
+            try {
+                app(WebPushService::class)->sendNotificationToSubscription($subscription, [
+                    'title' => '🔔 Notifikasi Ruang Seduh Aktif!',
+                    'body'  => 'Notifikasi HP berhasil aktif! Anda akan menerima update langsung saat pesanan diproses atau siap saji.',
+                    'icon'  => asset('assets/images/LOGO_RUANG_SEDUH(coklat).png'),
+                    'badge' => asset('assets/images/LOGO_RUANG_SEDUH(coklat).png'),
+                    'tag'   => 'rs-welcome-test',
+                    'url'   => route('customer.home'),
+                ]);
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning('Push test failed: ' . $e->getMessage());
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Notifikasi push berhasil diaktifkan.',
         ]);
     }
 }

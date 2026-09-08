@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Pengguna\Models\Pengguna;
+use App\Modules\Tables\Models\Tables;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,16 +34,26 @@ class CustomerAuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        $savedTableId = $request->input('table_id')
+        $tableNumber = $request->input('table');
+        $tableId = $request->input('table_id')
             ?? $request->session()->get('customer_table_id')
             ?? $request->cookie('customer_table_id');
+
+        if (!$tableNumber && $tableId) {
+            $tbl = Tables::find($tableId);
+            $tableNumber = $tbl ? $tbl->table_number : null;
+        }
 
         if (Auth::guard('customer')->attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
 
-            if ($savedTableId) {
-                $request->session()->put('customer_table_id', $savedTableId);
-                cookie()->queue(cookie()->make('customer_table_id', (string) $savedTableId, 60 * 24 * 7));
+            if ($tableId) {
+                $request->session()->put('customer_table_id', $tableId);
+                cookie()->queue(cookie()->make('customer_table_id', (string) $tableId, 60 * 24 * 7));
+            }
+
+            if ($tableNumber) {
+                return redirect()->route('customer.home', ['table' => $tableNumber]);
             }
 
             return redirect()->intended(route('customer.home'));
@@ -80,17 +91,27 @@ class CustomerAuthController extends Controller
             'role' => 'user',
         ]);
 
-        $savedTableId = $request->input('table_id')
+        $tableNumber = $request->input('table');
+        $tableId = $request->input('table_id')
             ?? $request->session()->get('customer_table_id')
             ?? $request->cookie('customer_table_id');
+
+        if (!$tableNumber && $tableId) {
+            $tbl = Tables::find($tableId);
+            $tableNumber = $tbl ? $tbl->table_number : null;
+        }
 
         Auth::guard('customer')->login($pengguna);
 
         $request->session()->regenerate();
 
-        if ($savedTableId) {
-            $request->session()->put('customer_table_id', $savedTableId);
-            cookie()->queue(cookie()->make('customer_table_id', (string) $savedTableId, 60 * 24 * 7));
+        if ($tableId) {
+            $request->session()->put('customer_table_id', $tableId);
+            cookie()->queue(cookie()->make('customer_table_id', (string) $tableId, 60 * 24 * 7));
+        }
+
+        if ($tableNumber) {
+            return redirect()->route('customer.home', ['table' => $tableNumber]);
         }
 
         return redirect()->route('customer.home');
@@ -112,8 +133,17 @@ class CustomerAuthController extends Controller
     /**
      * Redirect the user to the Google authentication page.
      */
-    public function redirectToGoogle(): RedirectResponse
+    public function redirectToGoogle(Request $request): RedirectResponse
     {
+        if ($request->filled('table')) {
+            session(['customer_table_number' => $request->get('table')]);
+            cookie()->queue(cookie()->make('customer_table_number', (string) $request->get('table'), 60 * 60));
+        }
+        if ($request->filled('table_id')) {
+            session(['customer_table_id' => $request->get('table_id')]);
+            cookie()->queue(cookie()->make('customer_table_id', (string) $request->get('table_id'), 60 * 24 * 7));
+        }
+
         return Socialite::driver('google')->redirect();
     }
 
@@ -155,8 +185,15 @@ class CustomerAuthController extends Controller
             ]);
         }
 
+        $savedTableNumber = request()->session()->get('customer_table_number')
+            ?? request()->cookie('customer_table_number');
         $savedTableId = request()->session()->get('customer_table_id')
             ?? request()->cookie('customer_table_id');
+
+        if (!$savedTableNumber && $savedTableId) {
+            $tbl = Tables::find($savedTableId);
+            $savedTableNumber = $tbl ? $tbl->table_number : null;
+        }
 
         Auth::guard('customer')->login($pengguna, true);
         request()->session()->regenerate();
@@ -164,6 +201,10 @@ class CustomerAuthController extends Controller
         if ($savedTableId) {
             request()->session()->put('customer_table_id', $savedTableId);
             cookie()->queue(cookie()->make('customer_table_id', (string) $savedTableId, 60 * 24 * 7));
+        }
+
+        if ($savedTableNumber) {
+            return redirect()->route('customer.home', ['table' => $savedTableNumber]);
         }
 
         return redirect()->intended(route('customer.home'));

@@ -100,28 +100,18 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 6px 14px;
+    padding: 6px 12px;
     border-radius: 999px;
     font-size: 12px;
     font-weight: 700;
     background: #f1f5f9;
-    color: #334155;
+    color: #475569;
     border: 1px solid #e2e8f0;
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.15s ease;
-  }
-  .table-pill:hover {
-    background: #e2e8f0;
-    transform: translateY(-1px);
   }
   .table-pill.active {
     background: var(--success-light);
     color: #065f46;
     border-color: #a7f3d0;
-  }
-  .table-pill.active:hover {
-    background: #d1fae5;
   }
   .status-dot {
     width: 6px;
@@ -137,56 +127,6 @@
   @keyframes pulseDot {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.4; }
-  }
-
-  /* Table Selection Grid */
-  .table-selection-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    margin-top: 10px;
-  }
-  .table-select-card {
-    background: #ffffff;
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 14px 12px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.15s ease;
-  }
-  .table-select-card:hover {
-    border-color: var(--border-hover);
-    background: #f8fafc;
-  }
-  .table-select-card.active {
-    background: #0f172a;
-    border-color: #0f172a;
-    color: #ffffff;
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
-  }
-  .table-card-icon {
-    font-size: 20px;
-  }
-  .table-card-num {
-    font-size: 15px;
-    font-weight: 800;
-  }
-  .table-card-badge {
-    font-size: 10.5px;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 999px;
-    background: #f1f5f9;
-    color: var(--text-secondary);
-  }
-  .table-select-card.active .table-card-badge {
-    background: rgba(255, 255, 255, 0.2);
-    color: #ffffff;
   }
 
   /* Search Input */
@@ -628,11 +568,17 @@
         </div>
       </div>
       
-      <button type="button" class="table-pill {{ $activeTable ? 'active' : '' }}" id="btnOpenTableModal" title="{{ $activeTable ? 'Meja ' . $activeTable->table_number . ' (Klik untuk ganti)' : 'Klik untuk memilih nomor meja' }}">
-        <span class="status-dot"></span>
-        <span id="headerTableLabel">{{ $activeTable ? 'Meja ' . $activeTable->table_number : 'Pilih Meja' }}</span>
-        <svg style="width:11px; height:11px; stroke:currentColor; stroke-width:2.5; fill:none; margin-left:1px;" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
-      </button>
+      @if($activeTable)
+        <div class="table-pill active" title="Terhubung ke Meja {{ $activeTable->table_number }}">
+          <span class="status-dot"></span>
+          <span>Meja {{ $activeTable->table_number }}</span>
+        </div>
+      @else
+        <div class="table-pill" title="Silakan scan QR code di mejamu">
+          <span class="status-dot"></span>
+          <span>Scan QR Meja</span>
+        </div>
+      @endif
     </div>
 
     <!-- Search Box -->
@@ -739,14 +685,8 @@
           📍 Meja Terhubung: <strong>Meja {{ $activeTable->table_number }}</strong>
         </div>
       @else
-        <div style="margin-bottom: 14px;">
-          <label style="display:block; font-size: 12.5px; font-weight: 700; margin-bottom: 6px; color: #1e293b;">Pilih Nomor Mejamu:</label>
-          <select name="table_id" class="service-notes" style="margin-bottom:0;" required>
-            <option value="">-- Pilih Nomor Meja --</option>
-            @foreach($tables as $t)
-              <option value="{{ $t->id }}">Meja {{ $t->table_number }}</option>
-            @endforeach
-          </select>
+        <div class="modal-table-badge" style="background: #fff1f2; border-color: #fecdd3; color: #9f1239;">
+          ⚠️ Kamu belum terhubung ke meja. Silakan scan QR code di mejamu untuk memesan atau memanggil pelayan.
         </div>
       @endif
 
@@ -777,8 +717,8 @@
         <input type="text" name="notes" class="service-notes" placeholder="Contoh: Minta tissue atau sendok tambahan..." maxlength="150">
       </div>
 
-      <button type="submit" class="btn-submit-action" id="btnSubmitCall">
-        Kirim Panggilan 🛎️
+      <button type="submit" class="btn-submit-action" id="btnSubmitCall" {{ $activeTable ? '' : 'disabled' }}>
+        {{ $activeTable ? 'Kirim Panggilan 🛎️' : 'Scan Meja Dulu' }}
       </button>
     </form>
 
@@ -787,32 +727,6 @@
       <h4 style="font-size: 17px; font-weight: 800; margin-bottom: 4px; color: #0f172a;">Panggilan Terkirim!</h4>
       <p style="font-size: 13px; color: #64748b; margin-bottom: 20px;">Staf kami sedang menuju ke mejamu. Mohon ditunggu ya kak!</p>
       <button type="button" class="btn-submit-action" id="btnCloseSuccess">Selesai</button>
-    </div>
-  </div>
-</div>
-
-<!-- Modal Pilih Meja -->
-<div class="modal-backdrop" id="tableModalOverlay">
-  <div class="modal-sheet">
-    <div class="modal-top">
-      <div>
-        <h3 class="modal-title">📍 Pilih Nomor Meja</h3>
-        <p class="modal-desc">Pilih meja tempat kamu duduk untuk menghubungkan pesanan.</p>
-      </div>
-      <button type="button" class="modal-close-btn" id="btnCloseTableModal">&times;</button>
-    </div>
-
-    <div class="table-selection-grid">
-      @foreach($tables as $t)
-        <button type="button" 
-                class="table-select-card {{ ($activeTable && $activeTable->id === $t->id) ? 'active' : '' }}" 
-                data-id="{{ $t->id }}" 
-                data-number="{{ $t->table_number }}">
-          <span class="table-card-icon">🪑</span>
-          <span class="table-card-num">Meja {{ $t->table_number }}</span>
-          <span class="table-card-badge">{{ ($activeTable && $activeTable->id === $t->id) ? '✓ Terhubung' : 'Pilih' }}</span>
-        </button>
-      @endforeach
     </div>
   </div>
 </div>
@@ -874,75 +788,6 @@
 
   // Search input interaction
   searchInput.addEventListener('input', renderMenu);
-
-  // Table Selection Modal Interaction
-  const btnOpenTableModal = document.getElementById('btnOpenTableModal');
-  const tableModalOverlay = document.getElementById('tableModalOverlay');
-  const btnCloseTableModal = document.getElementById('btnCloseTableModal');
-  const tableCards = document.querySelectorAll('.table-select-card');
-  const headerTableLabel = document.getElementById('headerTableLabel');
-
-  function openTableModal() {
-    tableModalOverlay?.classList.add('show');
-  }
-  function closeTableModal() {
-    tableModalOverlay?.classList.remove('show');
-  }
-
-  btnOpenTableModal?.addEventListener('click', openTableModal);
-  btnCloseTableModal?.addEventListener('click', closeTableModal);
-  tableModalOverlay?.addEventListener('click', (e) => {
-    if (e.target === tableModalOverlay) closeTableModal();
-  });
-
-  tableCards.forEach(card => {
-    card.addEventListener('click', function() {
-      const tableId = this.dataset.id;
-      const tableNum = this.dataset.number;
-      const badge = this.querySelector('.table-card-badge');
-      const originalBadgeText = badge ? badge.textContent : 'Pilih';
-
-      if (badge) badge.textContent = 'Menyimpan...';
-
-      fetch("{{ route('customer.table.set') }}", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        },
-        body: JSON.stringify({ table_id: tableId })
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          tableCards.forEach(c => {
-            c.classList.remove('active');
-            const b = c.querySelector('.table-card-badge');
-            if (b) b.textContent = 'Pilih';
-          });
-          this.classList.add('active');
-          if (badge) badge.textContent = '✓ Terhubung';
-
-          if (headerTableLabel) {
-            headerTableLabel.textContent = 'Meja ' + tableNum;
-          }
-          btnOpenTableModal?.classList.add('active');
-
-          setTimeout(() => {
-            window.location.reload();
-          }, 350);
-        } else {
-          if (badge) badge.textContent = originalBadgeText;
-          alert(data.message || 'Gagal memilih meja');
-        }
-      })
-      .catch(() => {
-        if (badge) badge.textContent = originalBadgeText;
-        alert('Terjadi kesalahan jaringan.');
-      });
-    });
-  });
 
   // Call Waiter Modal Interaction
   const btnOpenCallWaiter = document.getElementById('btnOpenCallWaiter');

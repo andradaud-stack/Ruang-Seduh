@@ -261,6 +261,37 @@
 
     <div class="content">
 
+        @php
+            $detectedTable = null;
+            $tableParam = request('table') ?? request('table_id');
+            if ($tableParam) {
+                $detectedTable = \App\Modules\Tables\Models\Tables::where('table_number', $tableParam)
+                    ->orWhere('table_number', str_pad($tableParam, 2, '0', STR_PAD_LEFT))
+                    ->orWhere('id', $tableParam)
+                    ->orWhere('qr_token', $tableParam)
+                    ->first();
+            }
+            if (!$detectedTable && ($cookieTbl = request()->cookie('customer_table_id'))) {
+                $detectedTable = \App\Modules\Tables\Models\Tables::find($cookieTbl);
+            }
+            if (!$detectedTable && ($sessTbl = session('customer_table_id'))) {
+                $detectedTable = \App\Modules\Tables\Models\Tables::find($sessTbl);
+            }
+        @endphp
+
+        @if($detectedTable)
+            <div style="background:#f0fdf4; border:1px solid #bbf7d0; color:#15803d; padding:11px 14px; border-radius:14px; font-size:13px; font-weight:700; margin-bottom:18px; display:flex; align-items:center; gap:8px;">
+                <span style="font-size:16px;">📍</span>
+                <span>Terhubung ke <strong>Meja {{ $detectedTable->table_number }}</strong></span>
+            </div>
+        @endif
+
+        @if (session('message_info'))
+            <div style="background:#eff6ff; border:1px solid #bfdbfe; color:#1d4ed8; padding:11px 14px; border-radius:14px; font-size:13px; font-weight:600; margin-bottom:18px;">
+                {{ session('message_info') }}
+            </div>
+        @endif
+
         @if ($errors->any())
             <div class="error">
                 {{ $errors->first() }}
@@ -270,6 +301,11 @@
         <form action="{{ route('customer.login.store') }}" method="POST">
 
             @csrf
+
+            @if($detectedTable)
+                <input type="hidden" name="table" value="{{ $detectedTable->table_number }}">
+                <input type="hidden" name="table_id" value="{{ $detectedTable->id }}">
+            @endif
 
             <div class="form-group">
 
@@ -314,7 +350,7 @@
             <span>atau</span>
         </div>
 
-        <a href="{{ route('auth.google.redirect') }}" class="btn-google">
+        <a href="{{ route('auth.google.redirect', $detectedTable ? ['table' => $detectedTable->table_number, 'table_id' => $detectedTable->id] : []) }}" class="btn-google">
             <svg width="20" height="20" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -328,7 +364,7 @@
 
             Belum punya akun?
 
-            <a href="{{ route('customer.register') }}">
+            <a href="{{ route('customer.register', $detectedTable ? ['table' => $detectedTable->table_number, 'table_id' => $detectedTable->id] : []) }}">
 
                 Daftar
 

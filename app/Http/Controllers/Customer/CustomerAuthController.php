@@ -33,8 +33,17 @@ class CustomerAuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
+        $savedTableId = $request->input('table_id')
+            ?? $request->session()->get('customer_table_id')
+            ?? $request->cookie('customer_table_id');
+
         if (Auth::guard('customer')->attempt($credentials, $request->boolean('remember'))) {
-        $request->session()->regenerate();
+            $request->session()->regenerate();
+
+            if ($savedTableId) {
+                $request->session()->put('customer_table_id', $savedTableId);
+                cookie()->queue(cookie()->make('customer_table_id', (string) $savedTableId, 60 * 24 * 7));
+            }
 
             return redirect()->intended(route('customer.home'));
         }
@@ -71,9 +80,18 @@ class CustomerAuthController extends Controller
             'role' => 'user',
         ]);
 
+        $savedTableId = $request->input('table_id')
+            ?? $request->session()->get('customer_table_id')
+            ?? $request->cookie('customer_table_id');
+
         Auth::guard('customer')->login($pengguna);
 
         $request->session()->regenerate();
+
+        if ($savedTableId) {
+            $request->session()->put('customer_table_id', $savedTableId);
+            cookie()->queue(cookie()->make('customer_table_id', (string) $savedTableId, 60 * 24 * 7));
+        }
 
         return redirect()->route('customer.home');
     }
@@ -137,8 +155,16 @@ class CustomerAuthController extends Controller
             ]);
         }
 
+        $savedTableId = request()->session()->get('customer_table_id')
+            ?? request()->cookie('customer_table_id');
+
         Auth::guard('customer')->login($pengguna, true);
         request()->session()->regenerate();
+
+        if ($savedTableId) {
+            request()->session()->put('customer_table_id', $savedTableId);
+            cookie()->queue(cookie()->make('customer_table_id', (string) $savedTableId, 60 * 24 * 7));
+        }
 
         return redirect()->intended(route('customer.home'));
     }

@@ -32,12 +32,48 @@ public function showRegister()
     return view('customer.auth.register');
 }
 
-    public function home()
+    public function home(Request $request)
     {
         $categories  = Categories::orderBy('name')->get();
         $menus       = Menus::active()->with('kategori')->get();
         $tables      = Tables::orderBy('table_number')->get();
-        $activeTable = session('customer_table_id') ? Tables::find(session('customer_table_id')) : null;
+
+        // Check if query parameter specifies table (e.g. ?table=01, ?table=1, or ?table_id=3)
+        if ($request->filled('table')) {
+            $tableParam = (string) $request->get('table');
+            $found = Tables::where('table_number', $tableParam)
+                ->orWhere('table_number', str_pad($tableParam, 2, '0', STR_PAD_LEFT))
+                ->orWhere('qr_token', $tableParam)
+                ->first();
+            if ($found) {
+                session(['customer_table_id' => $found->id]);
+                cookie()->queue(cookie()->make('customer_table_id', (string) $found->id, 60 * 24 * 7));
+            }
+        } elseif ($request->filled('table_id')) {
+            $found = Tables::find($request->get('table_id'));
+            if ($found) {
+                session(['customer_table_id' => $found->id]);
+                cookie()->queue(cookie()->make('customer_table_id', (string) $found->id, 60 * 24 * 7));
+            }
+        }
+
+        $tableId = session('customer_table_id') ?? $request->cookie('customer_table_id');
+        $activeTable = $tableId ? Tables::find($tableId) : null;
+
+        // Auto-detect table from customer's active uncompleted orders if not in session/cookie
+        if (!$activeTable && Auth::guard('customer')->check()) {
+            $latestOrder = Orders::where('pengguna_id', Auth::guard('customer')->id())
+                ->whereIn('status', ['menunggu_konfirmasi', 'diproses', 'siap_disajikan'])
+                ->latest()
+                ->first();
+            if ($latestOrder && $latestOrder->table_id) {
+                $activeTable = Tables::find($latestOrder->table_id);
+                if ($activeTable) {
+                    session(['customer_table_id' => $activeTable->id]);
+                    cookie()->queue(cookie()->make('customer_table_id', (string) $activeTable->id, 60 * 24 * 7));
+                }
+            }
+        }
 
         return view('customer.home', compact('categories', 'menus', 'tables', 'activeTable'));
     }
@@ -155,15 +191,41 @@ public function showRegister()
 
     public function scanTableQr(string $token)
     {
-        $table = Tables::where('qr_token', $token)->firstOrFail();
+        $table = Tables::where('qr_token', $token)
+            ->orWhere('table_number', $token)
+            ->orWhere('table_number', str_pad($token, 2, '0', STR_PAD_LEFT))
+            ->firstOrFail();
 
         session(['customer_table_id' => $table->id]);
+        cookie()->queue(cookie()->make('customer_table_id', (string) $table->id, 60 * 24 * 7));
 
         if (Auth::guard('customer')->check()) {
-            return redirect()->route('customer.home');
+            return redirect()->route('customer.home')->with('message_success', 'Terhubung ke Meja ' . $table->table_number);
         }
 
-        return redirect()->route('customer.login');
+        return redirect()->route('customer.login', ['table_id' => $table->id])
+            ->with('message_info', 'Meja ' . $table->table_number . ' terdeteksi. Silakan login untuk memesan.');
+    }
+
+    public function setTable(Request $request)
+    {
+        $request->validate([
+            'table_id' => ['required', 'exists:tables,id'],
+        ]);
+
+        $table = Tables::findOrFail($request->table_id);
+        session(['customer_table_id' => $table->id]);
+        cookie()->queue(cookie()->make('customer_table_id', (string) $table->id, 60 * 24 * 7));
+
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'table'   => $table,
+                'message' => 'Berhasil terhubung ke Meja ' . $table->table_number,
+            ]);
+        }
+
+        return back()->with('message_success', 'Terhubung ke Meja ' . $table->table_number);
     }
 
     public function cartIndex()
@@ -265,7 +327,7 @@ public function showRegister()
             $total += $item['price'] * $item['qty'];
         }
 
-        $selectedTableId = session('customer_table_id');
+        $selectedTableId = session('customer_table_id') ?? request()->cookie('customer_table_id');
         $tableOptions = Tables::orderBy('table_number')->pluck('table_number', 'id');
 
         return view('customer.checkout.index', compact('cart', 'total', 'selectedTableId', 'tableOptions'));
@@ -294,6 +356,8 @@ public function showRegister()
         }
 
         $table = Tables::findOrFail($request->table_id);
+        session(['customer_table_id' => $table->id]);
+        cookie()->queue(cookie()->make('customer_table_id', (string) $table->id, 60 * 24 * 7));
 
         $total = 0;
         foreach ($cart as $item) {

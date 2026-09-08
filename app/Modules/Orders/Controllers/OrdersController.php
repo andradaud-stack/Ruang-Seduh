@@ -24,7 +24,7 @@ class OrdersController extends Controller
 
 	public function index(Request $request)
 	{
-		$query = Orders::query();
+		$query = Orders::with(['pengguna', 'tabel'])->latest();
 		if($request->has('search')){
 			$search = $request->get('search');
 			// $query->where('name', 'like', "%$search%");
@@ -84,7 +84,7 @@ class OrdersController extends Controller
 
 	public function show(Request $request, Orders $orders)
 	{
-		$orders->load('orderItems');
+		$orders->load(['orderItems', 'pengguna', 'tabel']);
 		$data['orders'] = $orders;
 
 		$text = 'melihat detail '.$this->title;//.' '.$orders->what;
@@ -194,7 +194,14 @@ class OrdersController extends Controller
 		]);
 
 		$oldStatus = $orders->status;
-		$orders->status = $request->input('status');
+		$newStatus = $request->input('status');
+		$orders->status = $newStatus;
+
+		// Jika pesanan selesai, otomatis tandai pembayaran sebagai sudah_bayar
+		if ($newStatus === 'selesai') {
+			$orders->status_pembayaran = 'sudah_bayar';
+		}
+
 		$orders->updated_by = Auth::id();
 		$orders->save();
 

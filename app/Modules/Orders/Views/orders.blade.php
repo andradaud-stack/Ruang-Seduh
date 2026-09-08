@@ -59,29 +59,41 @@
                             @forelse ($data as $item)
                                 <tr>
                                     <td>{{ $no++ }}</td>
-                                    <td>{{ $item->user_id }}</td>
-									<td>{{ $item->table_id }}</td>
-												<td>
-                                            @php
-                                                $statusMap = [
-                                                    'menunggu_konfirmasi' => 'Menunggu Konfirmasi',
-                                                    'diproses' => 'Diproses',
-                                                    'siap_disajikan' => 'Siap Disajikan',
-                                                    'selesai' => 'Selesai',
-                                                    'dibatalkan' => 'Dibatalkan',
-                                                ];
-                                                $nextStatus = match($item->status) {
-                                                    'menunggu_konfirmasi' => 'diproses',
-                                                    'diproses' => 'siap_disajikan',
-                                                    'siap_disajikan' => 'selesai',
-                                                    default => null,
-                                                };
-                                            @endphp
-                                            <span class="badge bg-light-secondary text-secondary">{{ $statusMap[$item->status] ?? ucfirst(str_replace('_', ' ', $item->status)) }}</span>
-                                        </td>
-												<td>{{ $item->metode_pembayaran }}</td>
-												<td>{{ $item->status_pembayaran }}</td>
-												<td>{{ $item->total }}</td>
+                                    <td>
+                                        <span class="fw-bold">{{ $item->user_id ?? $item->pengguna_id ?? '-' }}</span>
+                                        @if($item->pengguna)
+                                            <small class="text-muted d-block">{{ $item->pengguna->name }}</small>
+                                        @endif
+                                    </td>
+									<td>{{ $item->tabel->table_number ?? $item->table_id ?? '-' }}</td>
+									<td>
+                                        @php
+                                            $statusMap = [
+                                                'menunggu_konfirmasi' => 'Menunggu Konfirmasi',
+                                                'diproses' => 'Diproses',
+                                                'siap_disajikan' => 'Siap Disajikan',
+                                                'selesai' => 'Selesai',
+                                                'dibatalkan' => 'Dibatalkan',
+                                            ];
+                                            $nextStatus = match($item->status) {
+                                                'menunggu_konfirmasi' => 'diproses',
+                                                'diproses' => 'siap_disajikan',
+                                                'siap_disajikan' => 'selesai',
+                                                default => null,
+                                            };
+                                        @endphp
+                                        <span class="badge {{ $item->status === 'selesai' ? 'bg-light-success text-success' : 'bg-light-secondary text-secondary' }}">{{ $statusMap[$item->status] ?? ucfirst(str_replace('_', ' ', $item->status)) }}</span>
+                                    </td>
+									<td>{{ ucfirst($item->metode_pembayaran ?? '-') }}</td>
+									<td>
+                                        @php
+                                            $isLunas = in_array($item->status_pembayaran, ['sudah_bayar', 'lunas']) || $item->status === 'selesai';
+                                        @endphp
+                                        <span class="badge {{ $isLunas ? 'bg-light-success text-success' : 'bg-light-warning text-warning' }} fw-bold">
+                                            {{ $isLunas ? 'sudah_bayar' : ($item->status_pembayaran ?? 'belum_bayar') }}
+                                        </span>
+                                    </td>
+									<td>Rp {{ number_format($item->total, 0, ',', '.') }}</td>
 												
                                     <td>
                                         @if($nextStatus)

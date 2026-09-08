@@ -312,7 +312,7 @@ public function showRegister()
             ];
 
             if (Schema::hasColumn('orders', 'user_id')) {
-                $orderData['user_id'] = null;
+                $orderData['user_id'] = (string) Auth::guard('customer')->id();
             }
 
             $order = Orders::create($orderData);

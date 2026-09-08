@@ -31,11 +31,11 @@
                 <div class="row">
                     <div class="col-lg-10 offset-lg-2">
                         <div class="row kt-detail-grid">
-                            <div class='col-lg-2'><p>User Id</p></div><div class='col-lg-10'><p class='fw-bold'>{{ $orders->user_id }}</p></div>
-									<div class='col-lg-2'><p>Table Id</p></div><div class='col-lg-10'><p class='fw-bold'>{{ $orders->table_id }}</p></div>
-									<div class='col-lg-2'><p>Status</p></div><div class='col-lg-10'><p class='fw-bold'>{{ $orders->status }}</p></div>
-									<div class='col-lg-2'><p>Metode Pembayaran</p></div><div class='col-lg-10'><p class='fw-bold'>{{ $orders->metode_pembayaran }}</p></div>
-									<div class='col-lg-2'><p>Status Pembayaran</p></div><div class='col-lg-10'><p class='fw-bold'>{{ $orders->status_pembayaran }}</p></div>
+                            <div class='col-lg-2'><p>User Id</p></div><div class='col-lg-10'><p class='fw-bold'>{{ $orders->user_id ?? $orders->pengguna_id ?? '-' }} @if($orders->pengguna) ({{ $orders->pengguna->name }}) @endif</p></div>
+									<div class='col-lg-2'><p>Table Id</p></div><div class='col-lg-10'><p class='fw-bold'>{{ $orders->tabel->table_number ?? $orders->table_id ?? '-' }}</p></div>
+									<div class='col-lg-2'><p>Status</p></div><div class='col-lg-10'><p class='fw-bold'>{{ ucfirst(str_replace('_', ' ', $orders->status)) }}</p></div>
+									<div class='col-lg-2'><p>Metode Pembayaran</p></div><div class='col-lg-10'><p class='fw-bold'>{{ ucfirst($orders->metode_pembayaran ?? '-') }}</p></div>
+									<div class='col-lg-2'><p>Status Pembayaran</p></div><div class='col-lg-10'><p class='fw-bold'>{{ ($orders->status === 'selesai' || in_array($orders->status_pembayaran, ['sudah_bayar', 'lunas'])) ? 'sudah_bayar' : ($orders->status_pembayaran ?? 'belum_bayar') }}</p></div>
 									<div class='col-lg-2'><p>Total</p></div><div class='col-lg-10'><p class='fw-bold'>Rp {{ number_format($orders->total, 0, ',', '.') }}</p></div>
 									<div class='col-lg-2'><p>Catatan Pesanan</p></div><div class='col-lg-10'><p class='fw-bold text-muted'>{{ $orders->catatan ?? '-' }}</p></div>
 									

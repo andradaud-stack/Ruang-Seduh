@@ -57,14 +57,14 @@
       background: var(--cream);
       position: relative;
       overflow: hidden;
-      padding-bottom: 135px;
+      padding-bottom: 125px;
       box-shadow: 0 0 50px rgba(36, 23, 15, 0.08);
     }
 
     /* Topbar */
     .topbar {
       height: 86px;
-      padding: 22px 42px 12px;
+      padding: 20px 42px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -74,7 +74,7 @@
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       z-index: 30;
-      border-bottom: 1px solid rgba(233, 224, 214, 0.6);
+      border-bottom: 1px solid rgba(233, 224, 214, 0.7);
     }
 
     .brand {
@@ -83,17 +83,24 @@
       gap: 13px;
     }
 
+    /* Official Logo Ruang Seduh */
     .brand-mark {
       width: 44px;
       height: 44px;
-      border-radius: 15px;
-      display: grid;
-      place-items: center;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       background: var(--ink);
-      color: #fff;
-      font-size: 21px;
-      box-shadow: 0 10px 25px rgba(36, 23, 15, 0.12);
+      box-shadow: 0 8px 20px rgba(36, 23, 15, 0.14);
       flex-shrink: 0;
+      padding: 7px;
+    }
+
+    .brand-mark img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
 
     .brand-name {
@@ -115,73 +122,59 @@
     .top-actions {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
+    }
+
+    .table-pill-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #ffffff;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--brown);
+      box-shadow: 0 4px 14px rgba(36, 23, 15, 0.05);
+    }
+
+    .table-pill-top .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulseDot 2s infinite;
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
     }
 
     .icon-btn {
       width: 46px;
       height: 46px;
       border-radius: 50%;
-      background: #fff;
+      background: #ffffff;
       color: var(--ink);
-      box-shadow: 0 7px 22px rgba(36, 23, 15, 0.09);
-      font-size: 19px;
+      box-shadow: 0 6px 20px rgba(36, 23, 15, 0.08);
+      font-size: 20px;
       display: grid;
       place-items: center;
       position: relative;
       transition: transform 0.15s ease, background 0.15s ease;
+      border: 1px solid var(--line);
     }
 
     .icon-btn:hover {
       transform: translateY(-2px);
       background: #fffdfa;
+      border-color: var(--brown);
     }
 
     .icon-btn:active {
       transform: scale(0.95);
-    }
-
-    .cart-top span {
-      position: absolute;
-      top: -3px;
-      right: -2px;
-      width: 20px;
-      height: 20px;
-      display: grid;
-      place-items: center;
-      background: var(--brown);
-      color: #fff;
-      border-radius: 50%;
-      font-size: 10px;
-      font-weight: 700;
-      box-shadow: 0 2px 6px rgba(90, 53, 31, 0.4);
-    }
-
-    .table-indicator {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      background: #fff;
-      padding: 8px 14px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--brown);
-      box-shadow: 0 4px 14px rgba(36, 23, 15, 0.05);
-    }
-
-    .table-indicator .pulse-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--green);
-      animation: pulseGreen 2s infinite;
-    }
-
-    @keyframes pulseGreen {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.85); }
     }
 
     /* Hero */
@@ -327,7 +320,7 @@
     }
 
     .search-box span {
-      font-size: 26px;
+      font-size: 24px;
       line-height: 0;
       color: var(--muted);
     }
@@ -350,12 +343,13 @@
       height: 61px;
       border-radius: 20px;
       background: var(--brown);
-      color: #fff;
-      font-size: 22px;
+      color: #ffffff;
+      font-size: 24px;
       display: grid;
       place-items: center;
       box-shadow: 0 10px 25px rgba(90, 53, 31, 0.2);
       transition: transform 0.15s, background 0.15s;
+      flex-shrink: 0;
     }
 
     .filter-btn:hover {
@@ -493,7 +487,7 @@
       right: -50px;
     }
 
-    /* Stylized CSS Cup Art (Fallback when no image uploaded) */
+    /* Stylized CSS Cup Art */
     .cup-art {
       width: 125px;
       height: 88px;
@@ -620,73 +614,10 @@
       z-index: 2;
     }
 
-    /* Floating Cart with Table Details */
-    .floating-cart {
-      position: fixed;
-      z-index: 25;
-      right: max(24px, calc((100vw - 1180px) / 2 + 24px));
-      bottom: 104px;
-      min-width: 215px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 13px 18px;
-      border-radius: 22px;
-      background: var(--ink);
-      color: #fff;
-      box-shadow: 0 16px 35px rgba(36, 23, 15, 0.28);
-      cursor: pointer;
-      text-decoration: none;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-    }
-
-    .floating-cart:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 20px 40px rgba(36, 23, 15, 0.35);
-    }
-
-    .cart-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      background: #fff;
-      color: var(--brown);
-      font-size: 18px;
-      flex-shrink: 0;
-    }
-
-    .floating-cart strong {
-      display: block;
-      font-size: 13px;
-      font-weight: 800;
-      color: #ffffff;
-      line-height: 1.2;
-    }
-
-    .floating-cart small {
-      display: block;
-      color: #cbd5e1;
-      margin-top: 2px;
-      font-size: 11px;
-    }
-
-    .arrow {
-      margin-left: auto;
-      font-size: 18px;
-      transition: transform 0.2s;
-    }
-
-    .floating-cart:hover .arrow {
-      transform: translateX(4px);
-    }
-
     /* Bottom Navigation Dock */
     .bottom-nav {
       position: fixed;
-      z-index: 24;
+      z-index: 35;
       left: 50%;
       transform: translateX(-50%);
       bottom: 18px;
@@ -699,7 +630,7 @@
       background: rgba(255, 253, 249, 0.94);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.85);
       box-shadow: 0 16px 45px rgba(54, 35, 22, 0.17);
     }
 
@@ -711,20 +642,38 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 2px;
+      gap: 3px;
       position: relative;
       text-decoration: none;
       transition: all 0.15s ease;
+      padding: 4px 6px;
     }
 
-    .nav-item > span {
-      font-size: 20px;
-      line-height: 1;
+    .nav-icon {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .nav-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform 0.15s ease;
     }
 
     .nav-item small {
-      font-size: 10.5px;
+      font-size: 11px;
       font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1;
     }
 
     .nav-item.active {
@@ -732,10 +681,15 @@
       color: var(--brown);
     }
 
+    .nav-item.active .nav-icon svg {
+      stroke-width: 2.5;
+      transform: translateY(-1px);
+    }
+
     .nav-item b {
       position: absolute;
-      top: 6px;
-      margin-left: 6px;
+      top: -4px;
+      right: -8px;
       width: 17px;
       height: 17px;
       display: grid;
@@ -752,7 +706,7 @@
       position: fixed;
       z-index: 50;
       left: 50%;
-      bottom: 106px;
+      bottom: 104px;
       transform: translate(-50%, 20px);
       opacity: 0;
       pointer-events: none;
@@ -777,6 +731,131 @@
       padding: 60px 20px;
       color: var(--muted);
       font-size: 14px;
+    }
+
+    /* Sort / Filter Modal Sheet */
+    .sort-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(36, 23, 15, 0.65);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      z-index: 100;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .sort-modal-backdrop.show {
+      display: flex;
+      opacity: 1;
+    }
+    .sort-modal-sheet {
+      width: 100%;
+      max-width: 520px;
+      background: var(--paper);
+      border-radius: 28px 28px 0 0;
+      padding: 26px 24px calc(24px + env(safe-area-inset-bottom));
+      box-shadow: 0 -20px 40px rgba(36, 23, 15, 0.2);
+      transform: translateY(100%);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      border-top: 1px solid rgba(255, 255, 255, 0.8);
+    }
+    .sort-modal-backdrop.show .sort-modal-sheet {
+      transform: translateY(0);
+    }
+    .sort-modal-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+    .sort-modal-title {
+      font-family: "Playfair Display", serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .sort-modal-desc {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .sort-close-btn {
+      background: #f1e8dd;
+      border: none;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: var(--ink);
+      cursor: pointer;
+      line-height: 1;
+    }
+    .sort-options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .sort-option-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      background: #ffffff;
+      border: 1.5px solid var(--line);
+      border-radius: 18px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-align: left;
+    }
+    .sort-option-item:hover {
+      border-color: var(--brown);
+    }
+    .sort-option-item.active {
+      background: #fbf5ee;
+      border-color: var(--brown);
+      box-shadow: 0 4px 14px rgba(90, 53, 31, 0.12);
+    }
+    .sort-option-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .sort-opt-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: #f3eae0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .sort-opt-name {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .sort-opt-sub {
+      font-size: 11.5px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .sort-check {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--brown);
+      display: none;
+    }
+    .sort-option-item.active .sort-check {
+      display: block;
     }
 
     /* Call Waiter Modal */
@@ -929,7 +1008,7 @@
 
     @media (max-width: 720px) {
       .topbar {
-        padding: 16px 20px 10px;
+        padding: 16px 20px 12px;
       }
       .hero {
         margin: 8px 20px 20px;
@@ -975,24 +1054,20 @@
       .stock {
         font-size: 9px;
       }
-      .floating-cart {
-        right: 18px;
-        bottom: 100px;
-      }
     }
 
     @media (max-width: 430px) {
       .brand-name {
-        font-size: 19px;
+        font-size: 18px;
       }
       .brand-sub {
-        font-size: 7.5px;
+        font-size: 7px;
         letter-spacing: 2px;
       }
       .icon-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 17px;
+        width: 42px;
+        height: 42px;
+        font-size: 18px;
       }
       .hero {
         border-radius: 24px;
@@ -1022,22 +1097,6 @@
       .card-bottom {
         margin-top: 8px;
       }
-      .floating-cart {
-        min-width: 175px;
-        padding: 10px 14px;
-      }
-      .floating-cart strong {
-        font-size: 12px;
-      }
-      .floating-cart small {
-        font-size: 9.5px;
-      }
-      .cart-icon {
-        width: 34px;
-        height: 34px;
-        font-size: 15px;
-        border-radius: 10px;
-      }
     }
   </style>
 </head>
@@ -1052,7 +1111,10 @@
     <!-- Topbar -->
     <header class="topbar">
       <div class="brand">
-        <div class="brand-mark">☕</div>
+        <!-- Official Logo Ruang Seduh (Putih on Dark Slate) -->
+        <div class="brand-mark">
+          <img src="{{ asset('assets/images/LOGO_RUANG_SEDUH(putih).png') }}" alt="Logo Ruang Seduh">
+        </div>
         <div>
           <div class="brand-name">Ruang Seduh</div>
           <div class="brand-sub">COFFEE & ARTISAN BREW</div>
@@ -1060,15 +1122,17 @@
       </div>
 
       <div class="top-actions">
+        @if($activeTable)
+          <div class="table-pill-top" title="Terhubung ke Meja {{ $activeTable->table_number }}">
+            <span class="pulse-dot"></span>
+            <span>Meja {{ $activeTable->table_number }}</span>
+          </div>
+        @endif
+
         <!-- Panggil Pelayan Button -->
         <button class="icon-btn" id="btnOpenCallWaiter" aria-label="Panggil Pelayan" title="Panggil Pelayan">
           🛎️
         </button>
-
-        <!-- Cart Top Button -->
-        <a href="{{ route('customer.cart.index') }}" class="icon-btn cart-top" id="cartTop" aria-label="Keranjang">
-          🛒 <span id="cartCount">{{ $cartCount }}</span>
-        </a>
       </div>
     </header>
 
@@ -1090,13 +1154,13 @@
       </div>
     </section>
 
-    <!-- Search Row -->
+    <!-- Search & Filter Row -->
     <div class="search-row">
       <label class="search-box">
         <span>⌕</span>
         <input id="searchInput" type="search" placeholder="Cari menu favorit kamu..." autocomplete="off" />
       </label>
-      <button class="filter-btn" id="sortBtn" title="Urutkan Harga">☷</button>
+      <button class="filter-btn" id="sortBtn" title="Urutkan Menu" aria-label="Urutkan Menu">☷</button>
     </div>
 
     <!-- Category Filter Pills -->
@@ -1193,32 +1257,47 @@
       </div>
     </section>
 
-    <!-- Floating Cart Bar (Shows connected Table) -->
-    <a href="{{ route('customer.cart.index') }}" class="floating-cart" id="floatingCart">
-      <div class="cart-icon">🛍</div>
-      <div>
-        <strong>{{ $activeTable ? 'Meja ' . $activeTable->table_number : 'Scan QR Meja' }}</strong>
-        <small><span id="floatingCount">{{ $cartCount }}</span> item di keranjang</small>
-      </div>
-      <span class="arrow">→</span>
-    </a>
-
     <!-- Bottom Navigation Dock -->
     <nav class="bottom-nav">
       <a href="{{ route('customer.home') }}" class="nav-item active">
-        <span>⌂</span>
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+        </span>
         <small>Beranda</small>
       </a>
+
       <a href="{{ route('customer.order.history') }}" class="nav-item">
-        <span>◷</span>
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+        </span>
         <small>Riwayat</small>
       </a>
+
       <a href="{{ route('customer.cart.index') }}" class="nav-item cart-nav" id="cartNav">
-        <span>🛒<b id="navBadge" style="{{ $cartCount > 0 ? '' : 'display:none;' }}">{{ $cartCount }}</b></span>
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+          <b id="navBadge" style="{{ $cartCount > 0 ? '' : 'display:none;' }}">{{ $cartCount }}</b>
+        </span>
         <small>Keranjang</small>
       </a>
+
       <a href="{{ route('customer.profile.index') }}" class="nav-item">
-        <span>♙</span>
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </span>
         <small>Profil</small>
       </a>
     </nav>
@@ -1226,6 +1305,65 @@
 
   <!-- Toast Notification -->
   <div class="toast" id="toast"></div>
+
+  <!-- Modal Urutkan / Filter Menu -->
+  <div class="sort-modal-backdrop" id="sortModalOverlay">
+    <div class="sort-modal-sheet">
+      <div class="sort-modal-top">
+        <div>
+          <h3 class="sort-modal-title">Urutkan Menu</h3>
+          <p class="sort-modal-desc">Pilih urutan tampilan menu sesuai seleramu</p>
+        </div>
+        <button type="button" class="sort-close-btn" id="btnCloseSortModal">&times;</button>
+      </div>
+
+      <div class="sort-options-list">
+        <button type="button" class="sort-option-item active" data-sort="default">
+          <div class="sort-option-left">
+            <div class="sort-opt-icon">✨</div>
+            <div>
+              <div class="sort-opt-name">Rekomendasi / Default</div>
+              <div class="sort-opt-sub">Urutan bawaan menu Ruang Seduh</div>
+            </div>
+          </div>
+          <span class="sort-check">✓</span>
+        </button>
+
+        <button type="button" class="sort-option-item" data-sort="price_asc">
+          <div class="sort-option-left">
+            <div class="sort-opt-icon">↗️</div>
+            <div>
+              <div class="sort-opt-name">Harga: Termurah ke Tertinggi</div>
+              <div class="sort-opt-sub">Mulai dari harga yang paling hemat</div>
+            </div>
+          </div>
+          <span class="sort-check">✓</span>
+        </button>
+
+        <button type="button" class="sort-option-item" data-sort="price_desc">
+          <div class="sort-option-left">
+            <div class="sort-opt-icon">↘️</div>
+            <div>
+              <div class="sort-opt-name">Harga: Tertinggi ke Termurah</div>
+              <div class="sort-opt-sub">Menu istimewa & racikan premium</div>
+            </div>
+          </div>
+          <span class="sort-check">✓</span>
+        </button>
+
+        <button type="button" class="sort-option-item" data-sort="name_asc">
+          <div class="sort-option-left">
+            <div class="sort-opt-icon">🔤</div>
+            <div>
+              <div class="sort-opt-name">Nama: A ke Z</div>
+              <div class="sort-opt-sub">Urutkan berdasarkan abjad menu</div>
+            </div>
+          </div>
+          <span class="sort-check">✓</span>
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- Modal Panggil Pelayan -->
   <div class="modal-backdrop" id="callModalOverlay">
@@ -1298,12 +1436,14 @@
       const sectionTitle = document.getElementById('sectionTitle');
       const itemCount = document.getElementById('itemCount');
       const searchInput = document.getElementById('searchInput');
-      const sortBtn = document.getElementById('sortBtn');
       const toast = document.getElementById('toast');
       const categories = document.getElementById('categories');
       const cards = Array.from(document.querySelectorAll('#menuGrid .menu-card'));
 
-      let sortAsc = null; // null, 'asc', 'desc'
+      // Store initial index for default sort order restoration
+      cards.forEach((card, idx) => {
+        card.dataset.origIndex = idx;
+      });
 
       function showToast(msg) {
         if (!toast) return;
@@ -1363,24 +1503,50 @@
       // Search Input
       searchInput?.addEventListener('input', filterMenus);
 
-      // Sort button
-      sortBtn?.addEventListener('click', function() {
-        if (sortAsc === null || sortAsc === 'desc') {
-          sortAsc = 'asc';
-          showToast('Urutan: Harga Termurah ↗');
-        } else {
-          sortAsc = 'desc';
-          showToast('Urutan: Harga Tertinggi ↘');
-        }
+      // Sort / Filter Modal Logic
+      const sortBtn = document.getElementById('sortBtn');
+      const sortModalOverlay = document.getElementById('sortModalOverlay');
+      const btnCloseSortModal = document.getElementById('btnCloseSortModal');
+      const sortOptionItems = document.querySelectorAll('.sort-option-item');
 
-        cards.sort((a, b) => {
-          const priceA = parseFloat(a.dataset.price) || 0;
-          const priceB = parseFloat(b.dataset.price) || 0;
-          return sortAsc === 'asc' ? (priceA - priceB) : (priceB - priceA);
+      function openSortModal() {
+        if (sortModalOverlay) sortModalOverlay.classList.add('show');
+      }
+      function closeSortModal() {
+        if (sortModalOverlay) sortModalOverlay.classList.remove('show');
+      }
+
+      sortBtn?.addEventListener('click', openSortModal);
+      btnCloseSortModal?.addEventListener('click', closeSortModal);
+      sortModalOverlay?.addEventListener('click', function(e) {
+        if (e.target === sortModalOverlay) closeSortModal();
+      });
+
+      sortOptionItems.forEach(item => {
+        item.addEventListener('click', function() {
+          const sortMode = this.dataset.sort;
+
+          sortOptionItems.forEach(i => i.classList.remove('active'));
+          this.classList.add('active');
+
+          if (sortMode === 'price_asc') {
+            cards.sort((a, b) => (parseFloat(a.dataset.price) || 0) - (parseFloat(b.dataset.price) || 0));
+            showToast('Urutan: Harga Termurah ↗');
+          } else if (sortMode === 'price_desc') {
+            cards.sort((a, b) => (parseFloat(b.dataset.price) || 0) - (parseFloat(a.dataset.price) || 0));
+            showToast('Urutan: Harga Tertinggi ↘');
+          } else if (sortMode === 'name_asc') {
+            cards.sort((a, b) => (a.dataset.name || '').localeCompare(b.dataset.name || ''));
+            showToast('Urutan: Nama A ke Z 🔤');
+          } else {
+            cards.sort((a, b) => (parseInt(a.dataset.origIndex) || 0) - (parseInt(b.dataset.origIndex) || 0));
+            showToast('Urutan: Rekomendasi / Default ✨');
+          }
+
+          cards.forEach(card => grid.appendChild(card));
+          filterMenus();
+          closeSortModal();
         });
-
-        cards.forEach(card => grid.appendChild(card));
-        filterMenus();
       });
 
       // Call Waiter Modal

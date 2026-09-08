@@ -224,7 +224,7 @@
       background: rgba(255, 253, 249, 0.94);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.85);
       box-shadow: 0 16px 45px rgba(54, 35, 22, 0.17);
     }
 
@@ -236,26 +236,54 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 2px;
+      gap: 3px;
       position: relative;
+      text-decoration: none;
       transition: all 0.15s ease;
+      padding: 4px 6px;
     }
-    .nav-item > span {
-      font-size: 20px;
+
+    .nav-icon {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .nav-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform 0.15s ease;
+    }
+
+    .nav-item small {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
       line-height: 1;
     }
-    .nav-item small {
-      font-size: 10.5px;
-      font-weight: 700;
-    }
+
     .nav-item.active {
       background: #f2e9df;
       color: var(--brown);
     }
+
+    .nav-item.active .nav-icon svg {
+      stroke-width: 2.5;
+      transform: translateY(-1px);
+    }
+
     .nav-item b {
       position: absolute;
-      top: 6px;
-      margin-left: 6px;
+      top: -4px;
+      right: -8px;
       width: 17px;
       height: 17px;
       display: grid;
@@ -352,19 +380,44 @@
   <!-- Bottom Navigation Dock -->
   <nav class="bottom-nav">
     <a href="{{ route('customer.home') }}" class="nav-item">
-      <span>⌂</span>
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+      </span>
       <small>Beranda</small>
     </a>
+
     <a href="{{ route('customer.order.history') }}" class="nav-item">
-      <span>◷</span>
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+      </span>
       <small>Riwayat</small>
     </a>
+
     <a href="{{ route('customer.cart.index') }}" class="nav-item">
-      <span>🛒<b id="navBadge" style="{{ $cartCount > 0 ? '' : 'display:none;' }}">{{ $cartCount }}</b></span>
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        <b id="navBadge" style="{{ $cartCount > 0 ? '' : 'display:none;' }}">{{ $cartCount }}</b>
+      </span>
       <small>Keranjang</small>
     </a>
+
     <a href="{{ route('customer.profile.index') }}" class="nav-item active">
-      <span>♙</span>
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+      </span>
       <small>Profil</small>
     </a>
   </nav>
